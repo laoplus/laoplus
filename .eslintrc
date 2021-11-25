@@ -1,0 +1,21 @@
+{
+    "extends": ["eslint:recommended", "prettier"],
+    "env": { "browser": true, "es6": true },
+    "globals": {
+        "GM_info": true,
+        "GM_setValue": true,
+        "GM_getValue": true,
+        "GM_addStyle": true,
+        "_": true,
+        "MicroModal": true
+    },
+    "rules": {
+        "no-unused-vars": "warn",
+        "no-console": "error"
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "globalReturn": true
+        }
+    }
+}
