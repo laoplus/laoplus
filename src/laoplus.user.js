@@ -21,6 +21,10 @@
 // @supportURL  https://github.com/eai04191/laoplus/issues
 // ==/UserScript==
 
+if (typeof window._ === 'undefined') {
+    require('_', 'lodash');
+}
+
 const log = (name, ...args) => {
     // eslint-disable-next-line no-console
     console.log(
@@ -140,13 +144,16 @@ const addLaoplusButton = () => {
 };
 addLaoplusButton();
 
-const config = GM_getValue("config");
-if (config === undefined) {
+const config = GM_getValue("config") || {
+    "features" : {
+        "discordNotification": {
+            "enabled": false,
+            "webhookURL": ""
+        }
+    }
+};
+if (!GM_getValue("config")) {
     log("Setting", "Config not found. Initialize...", config);
-
-    _.set(config, "features.discordNotification.enabled", false);
-    _.set(config, "features.discordNotification.webhookURL", "");
-
     GM_setValue("config", config);
     log("Setting", "Config Saved", config);
 }
