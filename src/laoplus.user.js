@@ -21,10 +21,6 @@
 // @supportURL  https://github.com/eai04191/laoplus/issues
 // ==/UserScript==
 
-if (typeof window._ === 'undefined') {
-    require('_', 'lodash');
-}
-
 const log = (name, ...args) => {
     // eslint-disable-next-line no-console
     console.log(
