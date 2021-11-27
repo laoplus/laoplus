@@ -140,19 +140,15 @@ const addLaoplusButton = () => {
 };
 addLaoplusButton();
 
-const config = GM_getValue("config") || {
-    "features" : {
-        "discordNotification": {
-            "enabled": false,
-            "webhookURL": ""
-        }
-    }
+const defaultConfig = {
+    features: {
+        discordNotification: {
+            enabled: false,
+            webhookURL: "",
+        },
+    },
 };
-if (!GM_getValue("config")) {
-    log("Setting", "Config not found. Initialize...", config);
-    GM_setValue("config", config);
-    log("Setting", "Config Saved", config);
-}
+const config = GM_getValue("config", defaultConfig);
 log("Config", "Config Loaded", config);
 
 MicroModal.init({
