@@ -31,7 +31,7 @@ const log = (name, ...args) => {
 };
 
 const url = new URL(document.URL);
-if (['pc-play.games.dmm.com', 'pc-play.games.dmm.co.jp'].includes(url.host)) {
+if (["pc-play.games.dmm.com", "pc-play.games.dmm.co.jp"].includes(url.host)) {
     document
         .querySelector(`link[rel="icon"]`)
         .setAttribute(
