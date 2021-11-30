@@ -1,11 +1,10 @@
 {
     "name": "laoplus",
     "version": "0.0.0",
-    "author": "Irie Aoi <eai@mizle.net>",
+    "author": "Eai <eai@mizle.net>",
     "license": "MIT",
     "scripts": {
         "build": "rollup -c",
-        "dev": "run-p watch serve",
         "watch": "rollup -wc",
         "serve": "serve ./dist",
         "lint": "eslint src --ext js,jsx,ts,tsx",
@@ -24,6 +23,7 @@
         "@types/tampermonkey": "^4.0.5",
         "@typescript-eslint/eslint-plugin": "^5.4.0",
         "@typescript-eslint/parser": "^5.4.0",
+        "classnames": "^2.3.1",
         "eslint": "^8.3.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-react": "^7.27.1",
@@ -33,7 +33,6 @@
         "react-hook-form": "^7.20.4",
         "rollup": "^2.60.1",
         "rollup-plugin-userscript": "^0.1.1",
-        "serve": "^13.0.2",
         "stylelint": "^14.1.0",
         "tailwindcss": "^2.2.19",
         "tslib": "^2.3.1",

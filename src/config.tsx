@@ -1,3 +1,5 @@
+import { log } from "utils/log";
+
 // https://stackoverflow.com/questions/61132262/typescript-deep-partial
 type DeepPartial<T> = {
     [P in keyof T]?: DeepPartial<T[P]>;
@@ -22,5 +24,6 @@ export class Config {
     set(value: DeepPartial<Config["config"]>) {
         _.merge(this.config, value);
         GM_setValue("config", this.config);
+        log("Config", "Config Updated", this.config);
     }
 }

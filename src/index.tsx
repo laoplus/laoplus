@@ -1,8 +1,8 @@
-import { initDMMInnerPage } from "init/dmmInner";
-import { initDMMGamePage } from "init/dmmGame";
-import { initGamePage } from "init/game";
-import { initUi } from "ui/index";
+import { injection } from "injection";
 import { Config } from "config";
+import { initUi } from "ui/index";
+import { initInterceptor } from "features/interceptor";
+import { initResizeObserver } from "features/resizeObserver";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -15,24 +15,9 @@ declare global {
 
 // 'return' outside of functionでビルドがコケるのを防ぐ即時実行関数
 (function () {
-    const url = new URL(document.URL);
+    const isGameWindow = injection();
+    if (!isGameWindow) return;
 
-    if (
-        ["pc-play.games.dmm.com", "pc-play.games.dmm.co.jp"].includes(url.host)
-    ) {
-        initDMMGamePage();
-        return;
-    }
-
-    if (url.host === "osapi.dmm.com") {
-        initDMMInnerPage();
-        return;
-    }
-
-    initGamePage();
-
-    const game = document.querySelector("canvas");
-    const body = document.body;
     const config = new Config();
 
     // LAOPLUSオブジェクトを露出させる
@@ -41,4 +26,6 @@ declare global {
     };
 
     initUi();
+    initInterceptor();
+    initResizeObserver();
 })();
