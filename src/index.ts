@@ -12,7 +12,7 @@ declare global {
         LAOPLUS: {
             config: Config;
             tacticsManual: {
-                locale: { [key: string]: string | undefined };
+                locale: { [key: string]: string };
                 unit: TacticsManualUnit[];
             };
         };
