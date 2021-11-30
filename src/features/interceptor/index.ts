@@ -1,4 +1,9 @@
-import { sendToDiscordWebhook } from "features/discordNotification";
+import { rankColor } from "~/constants";
+import {
+    colorHexToInteger,
+    sendToDiscordWebhook,
+} from "features/discordNotification";
+import { gradeToRank } from "utils/gradeToRank";
 import { log } from "utils/log";
 
 // TODO: どっかいけ
@@ -34,6 +39,9 @@ const interceptor = (xhr: XMLHttpRequest): void => {
                     if (c.Grade === 2 || c.Grade === 3) return;
 
                     const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
+                    const name =
+                        unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+                    const rank = gradeToRank(c.Grade);
 
                     // クラゲ
                     if (id.startsWith("Core")) return;
@@ -42,7 +50,11 @@ const interceptor = (xhr: XMLHttpRequest): void => {
                     if (id.startsWith("Module")) return;
 
                     return {
-                        title: id,
+                        title: name || id,
+                        color:
+                            rank !== ""
+                                ? colorHexToInteger(rankColor[rank].hex())
+                                : undefined,
                         url: `https://lo.swaytwig.com/units/${id}`,
                         thumbnail: {
                             url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
