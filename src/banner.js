@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        LAOPLUS
+// @name        process.env.NAME
 // @namespace   net.mizle
 // @version     process.env.VERSION
 // @author      process.env.AUTHOR
