@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
   build:
@@ -9,15 +10,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 16
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 16
+          cache: yarn
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: yarn install --frozen-lockfile
       - name: Build
         run: NODE_ENV=production yarn build
       - run: echo `git rev-parse HEAD` > dist/COMMIT
       - run: echo `node -e "console.log(require('./package.json').version)"` > dist/VERSION
+      - name: Rename when develop
+        if: ${{ github.ref == "refs/heads/develop" }}
+        run: mv ./dist/laoplus.user.js ./dist/laoplus-develop.user.js
       - name: Upload Build Result
         uses: actions/upload-artifact@v1
         with:
@@ -32,17 +37,19 @@ jobs:
         with:
           ref: dist
           fetch-depth: 0
-      - run: rm -rf *
       - name: Download Build Result
         uses: actions/download-artifact@v1
         with:
           name: dist
       - run: mv dist/* ./
       - run: git status
-      - name: Generate Commit and Tagging Message
-        run: |
-          echo "commit_message=update with $(cat COMMIT)" >> $GITHUB_ENV
-          if [ ! $(git tag -l v$(cat VERSION)) ];then echo "tagging_message=v$(cat VERSION)" >> $GITHUB_ENV;fi
+      - name: Generate Commit Message
+        run: echo "commit_message=update with $(cat COMMIT)" >> $GITHUB_ENV
+      - name: Generate Tagging Message
+        # mainブランチでのみ行なう
+        if: ${{ github.ref == "refs/heads/main" }}
+        # 既存のタグがなければタグを打つ
+        run: if [ ! $(git tag -l v$(cat VERSION)) ];then echo "tagging_message=v$(cat VERSION)" >> $GITHUB_ENV;fi
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: dist
