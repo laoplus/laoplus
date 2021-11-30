@@ -1,6 +1,6 @@
 
 // ==UserScript==
-// @name        LAOPLUS
+// @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
 // @version     0.0.1
 // @author      Eai <eai@mizle.net>
