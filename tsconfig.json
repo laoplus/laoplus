@@ -6,6 +6,9 @@
 
         "module": "ESNext",
         "baseUrl": "src",
+        "paths": {
+            "~/*": ["./*"]
+        },
         "moduleResolution": "node",
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
