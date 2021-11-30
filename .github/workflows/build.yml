@@ -21,7 +21,7 @@ jobs:
       - run: echo `git rev-parse HEAD` > dist/COMMIT
       - run: echo `node -e "console.log(require('./package.json').version)"` > dist/VERSION
       - name: Rename when develop
-        if: ${{ github.ref == "refs/heads/develop" }}
+        if: ${{ github.ref == 'refs/heads/develop' }}
         run: mv ./dist/laoplus.user.js ./dist/laoplus-develop.user.js
       - name: Upload Build Result
         uses: actions/upload-artifact@v1
@@ -47,7 +47,7 @@ jobs:
         run: echo "commit_message=update with $(cat COMMIT)" >> $GITHUB_ENV
       - name: Generate Tagging Message
         # mainブランチでのみ行なう
-        if: ${{ github.ref == "refs/heads/main" }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         # 既存のタグがなければタグを打つ
         run: if [ ! $(git tag -l v$(cat VERSION)) ];then echo "tagging_message=v$(cat VERSION)" >> $GITHUB_ENV;fi
       - uses: stefanzweifel/git-auto-commit-action@v4
