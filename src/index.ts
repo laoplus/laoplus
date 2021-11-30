@@ -3,12 +3,18 @@ import { Config } from "config";
 import { initUi } from "ui/index";
 import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
+import { initTacticsManual } from "tacticsManual";
+import { TacticsManualUnit } from "./types";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
     interface Window {
         LAOPLUS: {
             config: Config;
+            tacticsManual: {
+                locale: { [key: string]: string | undefined };
+                unit: TacticsManualUnit[];
+            };
         };
     }
 }
@@ -23,9 +29,14 @@ declare global {
     // LAOPLUSオブジェクトを露出させる
     unsafeWindow.LAOPLUS = {
         config: config,
+        tacticsManual: {
+            locale: {},
+            unit: [],
+        },
     };
 
     initUi();
     initInterceptor();
     initResizeObserver();
+    initTacticsManual();
 })();
