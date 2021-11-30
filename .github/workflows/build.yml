@@ -14,15 +14,15 @@ jobs:
         with:
           node-version: 16
           cache: yarn
+      - name: Rename package when develop
+        if: github.ref == 'refs/heads/develop'
+        run: node -e "const pkg = require('./package.json'); pkg.name += '-develop'; fs.writeFileSync('./package.json',JSON.stringify(pkg))"
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
         run: NODE_ENV=production yarn build
       - run: echo `git rev-parse HEAD` > dist/COMMIT
       - run: echo `node -e "console.log(require('./package.json').version)"` > dist/VERSION
-      - name: Rename when develop
-        if: github.ref == 'refs/heads/develop'
-        run: mv ./dist/laoplus.user.js ./dist/laoplus-develop.user.js
       - name: Upload Build Result
         uses: actions/upload-artifact@v1
         with:
