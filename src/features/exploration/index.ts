@@ -37,13 +37,13 @@ export const explorationInginfo = ({
 }): void => {
     unsafeWindow.LAOPLUS.exploration.forEach((ex: ExplorationSquad) => {
         if (ex.timeoutID) {
-            clearTimeout(ex.timeoutID);
+            window.clearTimeout(ex.timeoutID);
         }
     });
     unsafeWindow.LAOPLUS.exploration = ExplorationList.map((ex) => {
         const milisecondsToFinish = ex.EndTime * 1000 - Date.now();
         if (milisecondsToFinish > 0) {
-            const timeoutID = setTimeout(
+            const timeoutID = window.setTimeout(
                 ExplorationDiscordNotification,
                 milisecondsToFinish
             );
@@ -61,7 +61,7 @@ export const explorationEnter = ({
     EnterInfo: ExplorationSquad;
 }): void => {
     const milisecondsToFinish = EnterInfo.EndTime * 1000 - Date.now();
-    const timeoutID = setTimeout(
+    const timeoutID = window.setTimeout(
         ExplorationDiscordNotification,
         milisecondsToFinish
     );
@@ -88,7 +88,8 @@ export const explorationCancel = ({
     const targetExploration = unsafeWindow.LAOPLUS.exploration.find(
         (ex) => ex.SquadIndex === SquadIndex
     );
-    if (targetExploration?.timeoutID) clearTimeout(targetExploration.timeoutID);
+    if (targetExploration?.timeoutID)
+        window.clearTimeout(targetExploration.timeoutID);
 
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex

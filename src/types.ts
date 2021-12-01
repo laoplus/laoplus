@@ -18,5 +18,5 @@ export interface ExplorationSquad {
     SquadIndex: number;
     StageKeyString: string;
     // Status: number;
-    timeoutID: NodeJS.Timeout | undefined;
+    timeoutID: number | undefined;
 }
