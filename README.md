@@ -40,7 +40,7 @@ PWA としてインストールするとより便利に使えます
 <details>
 <summary><b>ドロップしたキャラクター・装備の通知</b></summary>
 
-![image](https://user-images.githubusercontent.com/3516343/143925781-fc18cb07-7261-4d16-a89d-8ca65e0c3bb4.png)
+![image](https://user-images.githubusercontent.com/3516343/144223625-c5db7279-4756-49ae-ba08-5c755fa69c4d.png)
 
 キャラクタードロップを検知して Discord にメッセージを送信します
 
