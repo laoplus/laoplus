@@ -1,8 +1,55 @@
+import { Dayjs } from "dayjs";
 import { ExplorationSquad } from "types";
 import { sendToDiscordWebhook } from "features/discordNotification";
 import { log } from "utils/log";
 
-const ExplorationDiscordNotification = (): void => {
+/**
+ * 与えられた日時までの時間と分のみの相対時間に変換する
+ * @returns x時間x分
+ */
+const toRelativeTime = (target: Dayjs) => {
+    const now = dayjs();
+    dayjs.extend(dayjs_plugin_relativeTime);
+
+    const hour = target.diff(now, "hour");
+    const minute = target.diff(now.add(hour, "hour"), "minute");
+    if (hour === 0) {
+        return `${minute}分`;
+    }
+    return `${hour}時間${minute}分`;
+};
+
+/**
+ * 1桁の数字を囲み絵文字に変換する
+ * @param SquadIndex 1 | 2| 3 | 4
+ * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
+ */
+const SquadIndexToEmoji = (SquadIndex: number) => {
+    return SquadIndex + "\uFE0F\u20E3";
+};
+
+// TODO: テストを書く
+/**
+ * StageKeyをプレイヤーが慣れてる表記に変換する
+ * @param StageKey Ch01Ev9Stage01Ex
+ * @returns Ev1-1Ex
+ */
+const HumanFriendlyStageKey = (StageKey: string) => {
+    const regex =
+        /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
+    const exec = regex.exec(StageKey);
+    if (exec && exec.groups) {
+        const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
+        const isEvent = !!event;
+        const chapter = Number(c);
+        const stage = Number(s);
+        return `${isEvent && "Ev"}${chapter}-${stage}${side}`;
+    }
+    // うまくパースできなかったらそのまま返す
+    return StageKey;
+};
+
+const sendNotification = (): void => {
     const fields: {
         name: string;
         value: string;
@@ -10,18 +57,24 @@ const ExplorationDiscordNotification = (): void => {
     }[] = unsafeWindow.LAOPLUS.exploration
         .sort((a, b) => a.EndTime - b.EndTime)
         .map((ex) => {
-            const endDateTime = new Date(ex.EndTime * 1000);
-            const dateTimeValue =
-                ex.EndTime * 1000 < Date.now()
-                    ? "**" + endDateTime.toLocaleTimeString() + "**"
-                    : endDateTime.toLocaleTimeString();
+            const endDate = dayjs(ex.EndTime * 1000);
+            const isFinished = endDate.isBefore(dayjs());
+            const value = isFinished
+                ? ":white_check_mark: **完了**"
+                // <t:TIMESTAMP> Discord Timestamp Format
+                // https://discord.com/developers/docs/reference#message-formatting
+                : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
             return {
-                name: ex.StageKeyString,
-                value: dateTimeValue,
-                inline: true,
+                name: [
+                    SquadIndexToEmoji(ex.SquadIndex),
+                    HumanFriendlyStageKey(ex.StageKeyString),
+                ].join(" "),
+                value: value,
+                inline: !isFinished,
             };
         });
     sendToDiscordWebhook({
+        title: "探索完了",
         embeds: [
             {
                 fields: fields,
