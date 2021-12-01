@@ -61,9 +61,9 @@ const sendNotification = (): void => {
             const isFinished = endDate.isBefore(dayjs());
             const value = isFinished
                 ? ":white_check_mark: **完了**"
-                // <t:TIMESTAMP> Discord Timestamp Format
-                // https://discord.com/developers/docs/reference#message-formatting
                 : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
+            // <t:TIMESTAMP> Discord Timestamp Format
+            // https://discord.com/developers/docs/reference#message-formatting
             return {
                 name: [
                     SquadIndexToEmoji(ex.SquadIndex),
@@ -105,7 +105,7 @@ export const explorationInginfo = ({
         }
     });
     log(
-        "Exploration",
+        "Exploration Timer",
         "Restore Exploration Timers",
         unsafeWindow.LAOPLUS.exploration
     );
@@ -119,7 +119,11 @@ export const explorationEnter = ({
     const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
     const timeoutID = window.setTimeout(sendNotification, msToFinish);
     unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
-    log("Exploration", "Add Exploration", unsafeWindow.LAOPLUS.exploration);
+    log(
+        "Exploration Timer",
+        "Add Exploration Timer",
+        unsafeWindow.LAOPLUS.exploration
+    );
 };
 
 export const explorationReward = ({
@@ -130,7 +134,11 @@ export const explorationReward = ({
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
     );
-    log("Exploration", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
+    log(
+        "Exploration Timer",
+        "Remove Exploration Timer",
+        unsafeWindow.LAOPLUS.exploration
+    );
 };
 
 export const explorationCancel = ({
@@ -149,7 +157,7 @@ export const explorationCancel = ({
         (ex) => ex.SquadIndex !== SquadIndex
     );
     log(
-        "explorationCancel",
+        "Exploration Timer",
         "Remove Exploration",
         unsafeWindow.LAOPLUS.exploration
     );

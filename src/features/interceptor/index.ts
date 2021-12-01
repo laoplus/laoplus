@@ -8,7 +8,7 @@ import {
     explorationEnter,
     explorationReward,
     explorationCancel,
-} from "features/exploration";
+} from "~/features/explorationTimer";
 import { gradeToRank } from "utils/gradeToRank";
 import { log } from "utils/log";
 
