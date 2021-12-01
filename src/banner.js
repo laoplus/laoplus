@@ -22,6 +22,8 @@
 // @require     https://unpkg.com/@headlessui/react@1.4.2/dist/headlessui.umd.development.js
 // @require     https://unpkg.com/react-hook-form@7.20.4/dist/index.umd.js
 // @require     https://unpkg.com/chroma-js@2.1.2/chroma.js
+// @require     https://unpkg.com/dayjs@1.10.7/dayjs.min.js
+// @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
 // ==/UserScript==
 
 /**

@@ -7,3 +7,5 @@ declare const ReactHookForm: typeof import("react-hook-form");
 declare const classNames: typeof import("classnames").default;
 declare const _: typeof import("lodash");
 declare const chroma: typeof import("chroma-js");
+declare const dayjs: typeof import("dayjs");
+declare const dayjs_plugin_relativeTime: typeof import("dayjs/plugin/relativeTime");
