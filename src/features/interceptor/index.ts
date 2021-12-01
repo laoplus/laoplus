@@ -3,6 +3,12 @@ import {
     colorHexToInteger,
     sendToDiscordWebhook,
 } from "features/discordNotification";
+import {
+    explorationInginfo,
+    explorationEnter,
+    explorationReward,
+    explorationCancel,
+} from "features/exploration";
 import { gradeToRank } from "utils/gradeToRank";
 import { log } from "utils/log";
 
@@ -66,6 +72,14 @@ const interceptor = (xhr: XMLHttpRequest): void => {
                     sendToDiscordWebhook({ embeds: embeds });
                 }
             }
+        } else if (url.pathname === "/exploration_inginfo") {
+            explorationInginfo(res);
+        } else if (url.pathname === "/exploration_enter") {
+            explorationEnter(res);
+        } else if (url.pathname === "/exploration_reward") {
+            explorationReward(res);
+        } else if (url.pathname === "/exploration_cancel") {
+            explorationCancel(res);
         }
     } catch (error) {
         log("Interceptor", "Error", error);
