@@ -24,7 +24,7 @@ const toRelativeTime = (target: Dayjs) => {
  * @param SquadIndex 1 | 2| 3 | 4
  * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
  */
-const SquadIndexToEmoji = (SquadIndex: number) => {
+const squadIndexToEmoji = (SquadIndex: number) => {
     return SquadIndex + "\uFE0F\u20E3";
 };
 
@@ -34,7 +34,7 @@ const SquadIndexToEmoji = (SquadIndex: number) => {
  * @param StageKey Ch01Ev9Stage01Ex
  * @returns Ev1-1Ex
  */
-const HumanFriendlyStageKey = (StageKey: string) => {
+const humanFriendlyStageKey = (StageKey: string) => {
     const regex =
         /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
     const exec = regex.exec(StageKey);
@@ -66,8 +66,8 @@ const sendNotification = (): void => {
             // https://discord.com/developers/docs/reference#message-formatting
             return {
                 name: [
-                    SquadIndexToEmoji(ex.SquadIndex),
-                    HumanFriendlyStageKey(ex.StageKeyString),
+                    squadIndexToEmoji(ex.SquadIndex),
+                    humanFriendlyStageKey(ex.StageKeyString),
                 ].join(" "),
                 value: value,
                 inline: !isFinished,
