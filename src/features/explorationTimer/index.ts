@@ -50,7 +50,7 @@ const humanFriendlyStageKey = (StageKey: string) => {
 };
 
 const sendNotification = (): void => {
-    const fields: {
+    const embedFields: {
         name: string;
         value: string;
         inline: boolean;
@@ -77,7 +77,7 @@ const sendNotification = (): void => {
         embeds: [
             {
                 title: "探索完了",
-                fields: fields,
+                fields: embedFields,
             },
         ],
     });
