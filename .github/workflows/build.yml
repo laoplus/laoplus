@@ -16,13 +16,7 @@ jobs:
           cache: yarn
       - name: Rename package name and version when develop build
         if: github.ref == 'refs/heads/develop'
-        run: |
-          ls
-          cat ./package.json | jq .
-          cat ./package.json | jq '.name+="-develop"' > ./package.json
-          cat ./package.json | jq .
-          cat ./package.json | jq ".version+=\"-$(git rev-parse HEAD)\"" > ./package.json
-          cat ./package.json | jq .
+        run: cat ./package.json | jq '.name+="-develop"' | jq ".version+=\"-$(git rev-parse HEAD)\"" > ./package.json
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
