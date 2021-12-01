@@ -18,7 +18,9 @@ jobs:
         if: github.ref == 'refs/heads/develop'
         run: |
           cat package.json | jq '.name+="-develop"' > package.json
+          cat package.json | jq .
           cat package.json | jq ".version+=\"-$(git rev-parse HEAD)\"" > package.json
+          cat package.json | jq .
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
