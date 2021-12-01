@@ -40,10 +40,10 @@ const humanFriendlyStageKey = (StageKey: string) => {
     const exec = regex.exec(StageKey);
     if (exec && exec.groups) {
         const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
-        const isEvent = !!event;
+        const isEvent = event !== "";
         const chapter = Number(c);
         const stage = Number(s);
-        return `${isEvent && "Ev"}${chapter}-${stage}${side}`;
+        return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}`;
     }
     // うまくパースできなかったらそのまま返す
     return StageKey;
