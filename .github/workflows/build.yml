@@ -14,9 +14,11 @@ jobs:
         with:
           node-version: 16
           cache: yarn
-      - name: Rename package when develop
+      - name: Rename package name and version when develop build
         if: github.ref == 'refs/heads/develop'
-        run: node -e "const pkg = require('./package.json'); pkg.name += '-develop'; fs.writeFileSync('./package.json',JSON.stringify(pkg))"
+        run: |
+          cat package.json | jq '.name+="-develop"' > package.json
+          cat package.json | jq ".version+=\"-$(git rev-parse HEAD)\"" > package.json
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
