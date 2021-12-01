@@ -74,9 +74,9 @@ const sendNotification = (): void => {
             };
         });
     sendToDiscordWebhook({
-        title: "探索完了",
         embeds: [
             {
+                title: "探索完了",
                 fields: fields,
             },
         ],
