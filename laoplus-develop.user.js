@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.0.1-2ba7210dd4ddbffc1eab6af48c87aee9be141b7e
+// @version     0.0.1-2848268b8641506b81fff6862dc9eb3c0300efa5
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -22,6 +22,7 @@
 // @require     https://unpkg.com/react-modal@3.14.4/dist/react-modal.js
 // @require     https://unpkg.com/@headlessui/react@1.4.2/dist/headlessui.umd.development.js
 // @require     https://unpkg.com/react-hook-form@7.20.4/dist/index.umd.js
+// @require     https://unpkg.com/chroma-js@2.1.2/chroma.js
 // @grant       GM_addStyle
 // @grant       GM_getValue
 // @grant       GM_info
@@ -251,7 +252,7 @@
                                 React.createElement("span", { className: "flex-shrink-0" }, "Discord Webhook URL:"),
                                 React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
                                         required: watch("features.discordNotification.enabled"),
-                                        pattern: /^https:\/\/discord\.com\/api\/webhooks\//,
+                                        pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
                                     }) })),
                             errors.features?.discordNotification
                                 ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
@@ -287,6 +288,13 @@
         document.body.appendChild(root);
     };
 
+    const rankColor = {
+        SS: chroma.rgb(255, 223, 33),
+        S: chroma.rgb(255, 166, 3),
+        A: chroma.rgb(5, 176, 228),
+        B: chroma.rgb(30, 160, 13),
+    };
+
     const sendToDiscordWebhook = (body) => {
         fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .webhookURL, {
@@ -296,6 +304,28 @@
             },
             body: JSON.stringify(body),
         });
+    };
+    /**
+     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
+     */
+    const colorHexToInteger = (hex) => {
+        return parseInt(hex.replace("#", ""), 16);
+    };
+
+    const gradeToRank = (grade) => {
+        switch (grade) {
+            default:
+            case 1:
+                return "";
+            case 2:
+                return "B";
+            case 3:
+                return "A";
+            case 4:
+                return "S";
+            case 5:
+                return "SS";
+        }
     };
 
     const interceptor = (xhr) => {
@@ -319,6 +349,8 @@
                         if (c.Grade === 2 || c.Grade === 3)
                             return;
                         const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
+                        const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+                        const rank = gradeToRank(c.Grade);
                         // クラゲ
                         if (id.startsWith("Core"))
                             return;
@@ -326,7 +358,10 @@
                         if (id.startsWith("Module"))
                             return;
                         return {
-                            title: id,
+                            title: name || id,
+                            color: rank !== ""
+                                ? colorHexToInteger(rankColor[rank].hex())
+                                : undefined,
                             url: `https://lo.swaytwig.com/units/${id}`,
                             thumbnail: {
                                 url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
