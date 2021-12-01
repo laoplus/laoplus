@@ -35,24 +35,27 @@ export const explorationInginfo = ({
 }: {
     ExplorationList: ExplorationSquad[];
 }): void => {
-    unsafeWindow.LAOPLUS.exploration.forEach((ex: ExplorationSquad) => {
+    // 既存のタイマーをすべて破棄する
+    unsafeWindow.LAOPLUS.exploration.forEach((ex) => {
         if (ex.timeoutID) {
             window.clearTimeout(ex.timeoutID);
         }
     });
+
     unsafeWindow.LAOPLUS.exploration = ExplorationList.map((ex) => {
-        const milisecondsToFinish = ex.EndTime * 1000 - Date.now();
-        if (milisecondsToFinish > 0) {
-            const timeoutID = window.setTimeout(
-                ExplorationDiscordNotification,
-                milisecondsToFinish
-            );
+        const msToFinish = ex.EndTime * 1000 - Date.now();
+        if (msToFinish > 0) {
+            const timeoutID = window.setTimeout(sendNotification, msToFinish);
             return { ...ex, timeoutID };
         } else {
             return ex;
         }
     });
-    log("explorationInginfo", unsafeWindow.LAOPLUS.exploration);
+    log(
+        "Exploration",
+        "Restore Exploration Timers",
+        unsafeWindow.LAOPLUS.exploration
+    );
 };
 
 export const explorationEnter = ({
@@ -60,13 +63,10 @@ export const explorationEnter = ({
 }: {
     EnterInfo: ExplorationSquad;
 }): void => {
-    const milisecondsToFinish = EnterInfo.EndTime * 1000 - Date.now();
-    const timeoutID = window.setTimeout(
-        ExplorationDiscordNotification,
-        milisecondsToFinish
-    );
+    const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
+    const timeoutID = window.setTimeout(sendNotification, msToFinish);
     unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
-    log("explorationEnter", unsafeWindow.LAOPLUS.exploration);
+    log("Exploration", "Add Exploration", unsafeWindow.LAOPLUS.exploration);
 };
 
 export const explorationReward = ({
@@ -77,7 +77,7 @@ export const explorationReward = ({
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
     );
-    log("explorationReward", unsafeWindow.LAOPLUS.exploration);
+    log("Exploration", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
 };
 
 export const explorationCancel = ({
@@ -88,11 +88,16 @@ export const explorationCancel = ({
     const targetExploration = unsafeWindow.LAOPLUS.exploration.find(
         (ex) => ex.SquadIndex === SquadIndex
     );
-    if (targetExploration?.timeoutID)
+    if (targetExploration?.timeoutID) {
         window.clearTimeout(targetExploration.timeoutID);
+    }
 
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
     );
-    log("explorationCancel", unsafeWindow.LAOPLUS.exploration);
+    log(
+        "explorationCancel",
+        "Remove Exploration",
+        unsafeWindow.LAOPLUS.exploration
+    );
 };
