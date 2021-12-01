@@ -194,12 +194,41 @@ export const ConfigModal = () => {
 
                     <div className="my-2 border-t"></div>
 
+                    <div className="flex flex-col gap-2 items-center">
+                        <span className="text-gray-600 text-sm">
+                            {GM_info.script.name}
+                            は以下のサービスが提供するゲームデータを使用しています
+                        </span>
+                        <a
+                            title="滅亡前の戦術教本"
+                            href="https://lo.swaytwig.com/"
+                            target="_blank"
+                            rel="noopener"
+                            className="flex gap-1 items-center p-2 px-3 bg-white rounded shadow"
+                        >
+                            <img
+                                src={GM_getResourceURL("TacticsManualIcon")}
+                                className="w-12"
+                            />
+                            <div className="flex flex-col">
+                                <span className="text-lg font-semibold">
+                                    滅亡前の戦術教本
+                                </span>
+                                <span className="text-gray-400 text-sm">
+                                    by WolfgangKurz
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div className="my-2 border-t"></div>
+
                     <footer className="flex items-center justify-between">
                         <div className="flex gap-3 text-gray-500 text-sm">
                             <a
                                 href="https://github.com/eai04191/laoplus"
                                 target="_blank"
-                                rel="noreferrer"
+                                rel="noopener"
                                 className="flex gap-1"
                             >
                                 <i className="bi bi-github"></i>
@@ -208,7 +237,7 @@ export const ConfigModal = () => {
                             <a
                                 href="https://discord.gg/EGWqTuhjrE"
                                 target="_blank"
-                                rel="noreferrer"
+                                rel="noopener"
                                 className="flex gap-1"
                             >
                                 <i className="bi bi-discord"></i>

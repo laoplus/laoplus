@@ -9,6 +9,12 @@
         "no-console": "error",
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
-        "@typescript-eslint/ban-ts-comment": "off"
+        "@typescript-eslint/ban-ts-comment": "off",
+        "react/jsx-no-target-blank": [
+            "error",
+            {
+                "allowReferrer": true
+            }
+        ]
     }
 }

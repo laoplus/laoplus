@@ -26,6 +26,7 @@
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/duration.js
+// @resource    TacticsManualIcon https://lo.swaytwig.com/assets/icon.png
 // ==/UserScript==
 
 /**
