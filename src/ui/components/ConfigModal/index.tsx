@@ -130,7 +130,7 @@ export const ConfigModal = () => {
                                                 "features.discordNotification.enabled"
                                             ),
                                             pattern:
-                                                /^https:\/\/discord\.com\/api\/webhooks\//,
+                                                /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
                                         }
                                     )}
                                 />
