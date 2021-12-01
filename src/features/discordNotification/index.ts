@@ -11,3 +11,10 @@ export const sendToDiscordWebhook = (body: unknown) => {
         }
     );
 };
+
+/**
+ * 16進数のカラーコードを受け取って10進数のカラーコードを返す
+ */
+export const colorHexToInteger = (hex: string) => {
+    return parseInt(hex.replace("#", ""), 16);
+};
