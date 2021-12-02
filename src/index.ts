@@ -37,6 +37,9 @@ declare global {
         exploration: [],
     };
 
+    dayjs.extend(dayjs_plugin_relativeTime);
+    dayjs.extend(dayjs_plugin_isSameOrBefore);
+
     initUi();
     initInterceptor();
     initResizeObserver();

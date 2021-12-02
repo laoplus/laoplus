@@ -9,7 +9,6 @@ import { log } from "utils/log";
  */
 const toRelativeTime = (target: Dayjs) => {
     const now = dayjs();
-    dayjs.extend(dayjs_plugin_relativeTime);
 
     const hour = target.diff(now, "hour");
     const minute = target.diff(now.add(hour, "hour"), "minute");
