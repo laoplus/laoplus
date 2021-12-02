@@ -148,6 +148,47 @@ export const ConfigModal = () => {
                                         "有効なDiscordのWebhook URLではありません"}
                                 </ErrorMessage>
                             )}
+
+                            <label className="flex gap-2">
+                                <span className="flex-shrink-0">通知項目:</span>
+                                <div className="flex flex-col gap-1">
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.discordNotification.interests.pcdrop"
+                                            )}
+                                        />
+                                        <span className="flex gap-1 items-center">
+                                            キャラクタードロップ
+                                            <span className="text-gray-600 text-xs">
+                                                現在はSS,Sのみ
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.discordNotification.interests.exploration"
+                                            )}
+                                        />
+                                        <span>探索完了</span>
+                                    </label>
+                                </div>
+                            </label>
                         </div>
                     </main>
 

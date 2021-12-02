@@ -52,14 +52,17 @@ const sendNotification = (): void => {
                 inline: !isFinished,
             };
         });
-    sendToDiscordWebhook({
-        embeds: [
-            {
-                title: "探索完了",
-                fields: embedFields,
-            },
-        ],
-    });
+
+    if (unsafeWindow.LAOPLUS.config.config.features.discordNotification.interests.exploration) {
+        sendToDiscordWebhook({
+            embeds: [
+                {
+                    title: "探索完了",
+                    fields: embedFields,
+                },
+            ],
+        });
+    }
 };
 
 export const explorationInginfo = ({

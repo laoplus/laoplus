@@ -64,7 +64,11 @@ const interceptor = (xhr: XMLHttpRequest): void => {
                 };
             }).filter(Boolean);
 
-            if (embeds.length !== 0) {
+            if (
+                embeds.length !== 0 &&
+                unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                    .interests.pcdrop
+            ) {
                 sendToDiscordWebhook({ embeds: embeds });
             }
         } else if (url.pathname === "/exploration_inginfo") {
