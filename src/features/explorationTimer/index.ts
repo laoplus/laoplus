@@ -2,6 +2,7 @@ import { Dayjs } from "dayjs";
 import { ExplorationSquad } from "types";
 import { sendToDiscordWebhook } from "features/discordNotification";
 import { log } from "utils/log";
+import { humanFriendlyStageKey } from "~/utils/humanFriendlyStageKey";
 
 /**
  * 与えられた日時までの時間と分のみの相対時間に変換する
@@ -25,27 +26,6 @@ const toRelativeTime = (target: Dayjs) => {
  */
 const squadIndexToEmoji = (SquadIndex: number) => {
     return SquadIndex + "\uFE0F\u20E3";
-};
-
-// TODO: テストを書く
-/**
- * StageKeyをプレイヤーが慣れてる表記に変換する
- * @param StageKey Ch01Ev9Stage01Ex
- * @returns Ev1-1Ex
- */
-const humanFriendlyStageKey = (StageKey: string) => {
-    const regex =
-        /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
-    const exec = regex.exec(StageKey);
-    if (exec && exec.groups) {
-        const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
-        const isEvent = event !== "";
-        const chapter = Number(c);
-        const stage = Number(s);
-        return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}`;
-    }
-    // うまくパースできなかったらそのまま返す
-    return StageKey;
 };
 
 const sendNotification = (): void => {
