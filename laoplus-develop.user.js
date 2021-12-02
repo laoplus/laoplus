@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.0.1-f7221a076afec299dbd29fa407ce28033caf6bac
+// @version     0.0.1-205638794584de922944a087ad2734afc83e4f4c
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -27,7 +27,9 @@
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/duration.js
+// @resource    TacticsManualIcon https://lo.swaytwig.com/assets/icon.png
 // @grant       GM_addStyle
+// @grant       GM_getResourceURL
 // @grant       GM_getValue
 // @grant       GM_info
 // @grant       GM_setValue
@@ -329,12 +331,22 @@
                                         React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
                                         React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")))))),
                     React.createElement("div", { className: "my-2 border-t" }),
+                    React.createElement("div", { className: "flex flex-col gap-2 items-center" },
+                        React.createElement("span", { className: "text-gray-600 text-sm" },
+                            GM_info.script.name,
+                            "\u306F\u4EE5\u4E0B\u306E\u30B5\u30FC\u30D3\u30B9\u304C\u63D0\u4F9B\u3059\u308B\u30B2\u30FC\u30E0\u30C7\u30FC\u30BF\u3092\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059"),
+                        React.createElement("a", { title: "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C", href: "https://lo.swaytwig.com/", target: "_blank", rel: "noopener", className: "flex gap-1 items-center p-2 px-3 bg-white rounded shadow" },
+                            React.createElement("img", { src: GM_getResourceURL("TacticsManualIcon"), className: "w-12" }),
+                            React.createElement("div", { className: "flex flex-col" },
+                                React.createElement("span", { className: "text-lg font-semibold" }, "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C"),
+                                React.createElement("span", { className: "text-gray-400 text-sm" }, "by WolfgangKurz")))),
+                    React.createElement("div", { className: "my-2 border-t" }),
                     React.createElement("footer", { className: "flex items-center justify-between" },
                         React.createElement("div", { className: "flex gap-3 text-gray-500 text-sm" },
-                            React.createElement("a", { href: "https://github.com/eai04191/laoplus", target: "_blank", rel: "noreferrer", className: "flex gap-1" },
+                            React.createElement("a", { href: "https://github.com/eai04191/laoplus", target: "_blank", rel: "noopener", className: "flex gap-1" },
                                 React.createElement("i", { className: "bi bi-github" }),
                                 "GitHub"),
-                            React.createElement("a", { href: "https://discord.gg/EGWqTuhjrE", target: "_blank", rel: "noreferrer", className: "flex gap-1" },
+                            React.createElement("a", { href: "https://discord.gg/EGWqTuhjrE", target: "_blank", rel: "noopener", className: "flex gap-1" },
                                 React.createElement("i", { className: "bi bi-discord" }),
                                 "Discord")),
                         React.createElement("div", { className: "mx-2" }),
