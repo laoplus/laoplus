@@ -36,41 +36,36 @@ const interceptor = (xhr: XMLHttpRequest): void => {
 
         // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
         if (url.pathname === "/wave_clear") {
-            if (
-                unsafeWindow.LAOPLUS.config.config.features.discordNotification
-                    .enabled
-            ) {
-                const embeds = res.CreatePCInfos.map((c: CreatePCInfo) => {
-                    // ランクB, Aを無視
-                    if (c.Grade === 2 || c.Grade === 3) return;
+            const embeds = res.CreatePCInfos.map((c: CreatePCInfo) => {
+                // ランクB, Aを無視
+                if (c.Grade === 2 || c.Grade === 3) return;
 
-                    const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
-                    const name =
-                        unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
-                    const rank = gradeToRank(c.Grade);
+                const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
+                const name =
+                    unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+                const rank = gradeToRank(c.Grade);
 
-                    // クラゲ
-                    if (id.startsWith("Core")) return;
+                // クラゲ
+                if (id.startsWith("Core")) return;
 
-                    // 強化モジュール
-                    if (id.startsWith("Module")) return;
+                // 強化モジュール
+                if (id.startsWith("Module")) return;
 
-                    return {
-                        title: name || id,
-                        color:
-                            rank !== ""
-                                ? colorHexToInteger(rankColor[rank].hex())
-                                : undefined,
-                        url: `https://lo.swaytwig.com/units/${id}`,
-                        thumbnail: {
-                            url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
-                        },
-                    };
-                }).filter(Boolean);
+                return {
+                    title: name || id,
+                    color:
+                        rank !== ""
+                            ? colorHexToInteger(rankColor[rank].hex())
+                            : undefined,
+                    url: `https://lo.swaytwig.com/units/${id}`,
+                    thumbnail: {
+                        url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
+                    },
+                };
+            }).filter(Boolean);
 
-                if (embeds.length !== 0) {
-                    sendToDiscordWebhook({ embeds: embeds });
-                }
+            if (embeds.length !== 0) {
+                sendToDiscordWebhook({ embeds: embeds });
             }
         } else if (url.pathname === "/exploration_inginfo") {
             explorationInginfo(res);

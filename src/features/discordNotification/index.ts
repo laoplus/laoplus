@@ -1,4 +1,10 @@
 export const sendToDiscordWebhook = (body: unknown) => {
+    if (
+        !unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled
+    ) {
+        return;
+    }
+
     fetch(
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .webhookURL,
