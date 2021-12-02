@@ -40,13 +40,39 @@ PWA としてインストールするとより便利に使えます
 <details>
 <summary><b>ドロップしたキャラクター・装備の通知</b></summary>
 
-![image](https://user-images.githubusercontent.com/3516343/143925781-fc18cb07-7261-4d16-a89d-8ca65e0c3bb4.png)
+![image](https://user-images.githubusercontent.com/3516343/144223625-c5db7279-4756-49ae-ba08-5c755fa69c4d.png)
 
 キャラクタードロップを検知して Discord にメッセージを送信します
 
 ※ 現状ではキャラクター名やランクが設定できず、**SS, S ランクのキャラクタードロップ**のみ通知されます
 
 ※ キャラクター名やランクの指定は今後実装予定です
+
+---
+
+</details>
+
+<details>
+<summary><b>探索完了通知</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/144452211-876a762c-9008-4a9f-bba8-acf119f2aa57.png)
+
+探索状態の変更を検知して終了時間に Discord にメッセージを送信します
+
+※ 通知には LAOPLUS を導入したブラウザが起動している必要があります
+
+---
+
+</details>
+
+<details>
+<summary><b>設定画面</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/144452521-a30f019c-d335-4051-b7cf-4afa8c8a6235.png)
+
+導入後、画面左下の ➕ をクリックすることで設定画面を開けます
+
+画面下部には現在の探索状態が完了が早い順に表示され、設定画面を開くことでいつでも確認できます
 
 ---
 

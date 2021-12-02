@@ -15,6 +15,7 @@ export default {
     plugins: [
         pluginUserscript(__dirname + "/src/banner.js", (meta) =>
             meta
+                .replace("process.env.NAME", pkg.name.toUpperCase())
                 .replace("process.env.VERSION", pkg.version)
                 .replace("process.env.AUTHOR", pkg.author)
         ),

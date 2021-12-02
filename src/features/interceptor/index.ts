@@ -1,4 +1,15 @@
-import { sendToDiscordWebhook } from "features/discordNotification";
+import { rankColor } from "~/constants";
+import {
+    colorHexToInteger,
+    sendToDiscordWebhook,
+} from "features/discordNotification";
+import {
+    explorationInginfo,
+    explorationEnter,
+    explorationReward,
+    explorationCancel,
+} from "~/features/explorationTimer";
+import { gradeToRank } from "utils/gradeToRank";
 import { log } from "utils/log";
 
 // TODO: どっかいけ
@@ -25,35 +36,57 @@ const interceptor = (xhr: XMLHttpRequest): void => {
 
         // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
         if (url.pathname === "/wave_clear") {
+            const embeds = res.CreatePCInfos.map((c: CreatePCInfo) => {
+                // ランクB, Aを無視
+                if (c.Grade === 2 || c.Grade === 3) return;
+
+                const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
+                const name =
+                    unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+                const rank = gradeToRank(c.Grade);
+
+                // クラゲ
+                if (id.startsWith("Core")) return;
+
+                // 強化モジュール
+                if (id.startsWith("Module")) return;
+
+                return {
+                    title: name || id,
+                    color:
+                        rank !== ""
+                            ? colorHexToInteger(rankColor[rank].hex())
+                            : undefined,
+                    url: `https://lo.swaytwig.com/units/${id}`,
+                    thumbnail: {
+                        url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
+                    },
+                };
+            }).filter(Boolean);
+
+            const body = { embeds: embeds };
+
             if (
+                embeds.length !== 0 &&
                 unsafeWindow.LAOPLUS.config.config.features.discordNotification
-                    .enabled
+                    .interests.pcdrop
             ) {
-                const embeds = res.CreatePCInfos.map((c: CreatePCInfo) => {
-                    // ランクB, Aを無視
-                    if (c.Grade === 2 || c.Grade === 3) return;
-
-                    const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
-
-                    // クラゲ
-                    if (id.startsWith("Core")) return;
-
-                    // 強化モジュール
-                    if (id.startsWith("Module")) return;
-
-                    return {
-                        title: id,
-                        url: `https://lo.swaytwig.com/units/${id}`,
-                        thumbnail: {
-                            url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
-                        },
-                    };
-                }).filter(Boolean);
-
-                if (embeds.length !== 0) {
-                    sendToDiscordWebhook({ embeds: embeds });
-                }
+                sendToDiscordWebhook(body);
+            } else {
+                log(
+                    "Drop Notification",
+                    "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした",
+                    body
+                );
             }
+        } else if (url.pathname === "/exploration_inginfo") {
+            explorationInginfo(res);
+        } else if (url.pathname === "/exploration_enter") {
+            explorationEnter(res);
+        } else if (url.pathname === "/exploration_reward") {
+            explorationReward(res);
+        } else if (url.pathname === "/exploration_cancel") {
+            explorationCancel(res);
         }
     } catch (error) {
         log("Interceptor", "Error", error);

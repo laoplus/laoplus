@@ -6,6 +6,7 @@ export const initResizeObserver = () => {
     const body = document.body;
 
     const bodyResizeObserver = new ResizeObserver((entries) => {
+        if (!entries[0]) return;
         const { width, height } = entries[0].contentRect;
         game.height = height;
         game.width = width;

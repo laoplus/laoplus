@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        LAOPLUS
+// @name        process.env.NAME
 // @namespace   net.mizle
 // @version     process.env.VERSION
 // @author      process.env.AUTHOR
@@ -21,6 +21,12 @@
 // @require     https://unpkg.com/react-modal@3.14.4/dist/react-modal.js
 // @require     https://unpkg.com/@headlessui/react@1.4.2/dist/headlessui.umd.development.js
 // @require     https://unpkg.com/react-hook-form@7.20.4/dist/index.umd.js
+// @require     https://unpkg.com/chroma-js@2.1.2/chroma.js
+// @require     https://unpkg.com/dayjs@1.10.7/dayjs.min.js
+// @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
+// @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
+// @require     https://unpkg.com/dayjs@1.10.7/plugin/duration.js
+// @resource    TacticsManualIcon https://lo.swaytwig.com/assets/icon.png
 // ==/UserScript==
 
 /**
