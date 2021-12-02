@@ -57,7 +57,7 @@ const sendNotification = (): void => {
         .sort((a, b) => a.EndTime - b.EndTime)
         .map((ex) => {
             const endDate = dayjs(ex.EndTime * 1000);
-            const isFinished = endDate.isBefore(dayjs());
+            const isFinished = endDate.isSameOrBefore(dayjs());
             const value = isFinished
                 ? ":white_check_mark: **完了**"
                 : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
