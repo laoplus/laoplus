@@ -64,12 +64,20 @@ const interceptor = (xhr: XMLHttpRequest): void => {
                 };
             }).filter(Boolean);
 
+            const body = { embeds: embeds };
+
             if (
                 embeds.length !== 0 &&
                 unsafeWindow.LAOPLUS.config.config.features.discordNotification
                     .interests.pcdrop
             ) {
-                sendToDiscordWebhook({ embeds: embeds });
+                sendToDiscordWebhook(body);
+            } else {
+                log(
+                    "Drop Notification",
+                    "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした",
+                    body
+                );
             }
         } else if (url.pathname === "/exploration_inginfo") {
             explorationInginfo(res);

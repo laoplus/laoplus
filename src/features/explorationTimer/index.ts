@@ -52,16 +52,26 @@ const sendNotification = (): void => {
                 inline: !isFinished,
             };
         });
+    const body = {
+        embeds: [
+            {
+                title: "探索完了",
+                fields: embedFields,
+            },
+        ],
+    };
 
-    if (unsafeWindow.LAOPLUS.config.config.features.discordNotification.interests.exploration) {
-        sendToDiscordWebhook({
-            embeds: [
-                {
-                    title: "探索完了",
-                    fields: embedFields,
-                },
-            ],
-        });
+    if (
+        unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests.exploration
+    ) {
+        sendToDiscordWebhook(body);
+    } else {
+        log(
+            "Exploration Timer",
+            "設定が無効のため、Discord通知を送信しませんでした",
+            body
+        );
     }
 };
 
