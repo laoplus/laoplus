@@ -2,6 +2,7 @@
 import { Config } from "config";
 import { log } from "utils/log";
 import { ErrorMessage } from "./ErrorMessage";
+import { ExplorationList } from "./ExplorationList";
 import { HelpIcon } from "./HelpIcon";
 import { SubmitButton } from "./SumitButton";
 
@@ -177,6 +178,15 @@ export const ConfigModal = () => {
                         <SubmitButton>保存</SubmitButton>
                     </footer>
                 </form>
+
+                <div className="absolute bottom-0 inset-x-0 flex items-center mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg shadow-lg">
+                    <div className="px-2">
+                        <span className="text-xl uppercase">Exploration</span>
+                    </div>
+                    <div className="top-[-2.5rem] absolute flex gap-2 justify-center mx-auto w-full md:gap-6">
+                        <ExplorationList />
+                    </div>
+                </div>
             </ReactModal>
         </>
     );
