@@ -2,6 +2,7 @@
 import { Config } from "config";
 import { log } from "utils/log";
 import { ErrorMessage } from "./ErrorMessage";
+import { ExplorationList } from "./ExplorationList";
 import { HelpIcon } from "./HelpIcon";
 import { SubmitButton } from "./SumitButton";
 
@@ -147,6 +148,47 @@ export const ConfigModal = () => {
                                         "有効なDiscordのWebhook URLではありません"}
                                 </ErrorMessage>
                             )}
+
+                            <label className="flex gap-2">
+                                <span className="flex-shrink-0">通知項目:</span>
+                                <div className="flex flex-col gap-1">
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.discordNotification.interests.pcdrop"
+                                            )}
+                                        />
+                                        <span className="flex gap-1 items-center">
+                                            キャラクタードロップ
+                                            <span className="text-gray-600 text-xs">
+                                                現在はSS,Sのみ
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.discordNotification.interests.exploration"
+                                            )}
+                                        />
+                                        <span>探索完了</span>
+                                    </label>
+                                </div>
+                            </label>
                         </div>
                     </main>
 
@@ -177,6 +219,15 @@ export const ConfigModal = () => {
                         <SubmitButton>保存</SubmitButton>
                     </footer>
                 </form>
+
+                <div className="absolute bottom-0 inset-x-0 flex items-center mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg shadow-lg">
+                    <div className="px-2">
+                        <span className="text-xl uppercase">Exploration</span>
+                    </div>
+                    <div className="top-[-2.5rem] absolute flex gap-2 justify-center mx-auto w-full md:gap-6">
+                        <ExplorationList />
+                    </div>
+                </div>
             </ReactModal>
         </>
     );

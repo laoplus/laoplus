@@ -52,6 +52,32 @@ PWA としてインストールするとより便利に使えます
 
 </details>
 
+<details>
+<summary><b>探索完了通知</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/144452211-876a762c-9008-4a9f-bba8-acf119f2aa57.png)
+
+探索状態の変更を検知して終了時間に Discord にメッセージを送信します
+
+※ 通知には LAOPLUS を導入したブラウザが起動している必要があります
+
+---
+
+</details>
+
+<details>
+<summary><b>設定画面</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/144452521-a30f019c-d335-4051-b7cf-4afa8c8a6235.png)
+
+導入後、画面左下の ➕ をクリックすることで設定画面を開けます
+
+画面下部には現在の探索状態が完了が早い順に表示され、設定画面を開くことでいつでも確認できます
+
+---
+
+</details>
+
 ### 実装予定の機能
 
 -   探索・製造・修復など時間がかかる挙動の完了通知

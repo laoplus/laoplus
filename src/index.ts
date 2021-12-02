@@ -4,7 +4,8 @@ import { initUi } from "ui/index";
 import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
 import { initTacticsManual } from "tacticsManual";
-import { TacticsManualUnit } from "./types";
+import { TacticsManualUnit, ExplorationSquad } from "./types";
+import { tailwindConfig } from "./ui/tailwind";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -15,6 +16,7 @@ declare global {
                 locale: { [key: string]: string };
                 unit: TacticsManualUnit[];
             };
+            exploration: ExplorationSquad[];
         };
     }
 }
@@ -33,7 +35,15 @@ declare global {
             locale: {},
             unit: [],
         },
+        exploration: [],
     };
+
+    // @ts-ignore
+    tailwind.config = tailwindConfig;
+
+    dayjs.extend(dayjs_plugin_relativeTime);
+    dayjs.extend(dayjs_plugin_isSameOrBefore);
+    dayjs.extend(dayjs_plugin_duration);
 
     initUi();
     initInterceptor();

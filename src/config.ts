@@ -10,6 +10,10 @@ const defaultConfig = {
         discordNotification: {
             enabled: false,
             webhookURL: "",
+            interests: {
+                pcdrop: true,
+                exploration: true,
+            },
         },
     },
 };
