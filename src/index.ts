@@ -39,6 +39,7 @@ declare global {
 
     dayjs.extend(dayjs_plugin_relativeTime);
     dayjs.extend(dayjs_plugin_isSameOrBefore);
+    dayjs.extend(dayjs_plugin_duration);
 
     initUi();
     initInterceptor();

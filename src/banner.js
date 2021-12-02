@@ -25,6 +25,7 @@
 // @require     https://unpkg.com/dayjs@1.10.7/dayjs.min.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
+// @require     https://unpkg.com/dayjs@1.10.7/plugin/duration.js
 // ==/UserScript==
 
 /**
