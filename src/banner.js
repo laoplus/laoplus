@@ -24,6 +24,7 @@
 // @require     https://unpkg.com/chroma-js@2.1.2/chroma.js
 // @require     https://unpkg.com/dayjs@1.10.7/dayjs.min.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
+// @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
 // ==/UserScript==
 
 /**

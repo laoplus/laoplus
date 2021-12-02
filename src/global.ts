@@ -9,3 +9,4 @@ declare const _: typeof import("lodash");
 declare const chroma: typeof import("chroma-js");
 declare const dayjs: typeof import("dayjs");
 declare const dayjs_plugin_relativeTime: typeof import("dayjs/plugin/relativeTime");
+declare const dayjs_plugin_isSameOrBefore: typeof import("dayjs/plugin/isSameOrBefore");
