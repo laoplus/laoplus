@@ -5,6 +5,7 @@ import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
 import { initTacticsManual } from "tacticsManual";
 import { TacticsManualUnit, ExplorationSquad } from "./types";
+import { tailwindConfig } from "./ui/tailwind";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -36,6 +37,9 @@ declare global {
         },
         exploration: [],
     };
+
+    // @ts-ignore
+    tailwind.config = tailwindConfig;
 
     dayjs.extend(dayjs_plugin_relativeTime);
     dayjs.extend(dayjs_plugin_isSameOrBefore);
