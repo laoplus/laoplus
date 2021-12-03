@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.1.0-4b31af77bb6e67795722af0921cd32e6311d5275
+// @version     0.1.0-19306482845b215eacefad1a7cdae3f4440ead78
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -424,7 +424,8 @@
             .sort((a, b) => a.EndTime - b.EndTime)
             .map((ex) => {
             const endDate = dayjs(ex.EndTime * 1000);
-            const isFinished = endDate.isSameOrBefore(dayjs());
+            // たま～に早く実行されてisFinishedがfalseになってしまうので1秒猶予をもたせる
+            const isFinished = endDate.isSameOrBefore(dayjs().add(1, "second"));
             const value = isFinished
                 ? ":white_check_mark: **完了**"
                 : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
