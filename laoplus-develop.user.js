@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.1.0-12ebf9824bb0b9daa551d69ba1b8f03f460de2b4
+// @version     0.1.0-00e251fa77991b6e3f6d9f9eff041069a1a82187
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -584,7 +584,7 @@
             }
         }
         catch (error) {
-            log.log("Interceptor", "Error", error);
+            log.error("Interceptor", "Error", error);
         }
     };
     const initInterceptor = () => {
