@@ -2,7 +2,10 @@ import { log } from "utils/log";
 
 export const initResizeObserver = () => {
     const game = document.querySelector("canvas");
-    if (!game) return;
+    if (!game) {
+        log.error("ResizeObserver", "Game Canvas Not Found");
+        return;
+    }
     const body = document.body;
 
     const bodyResizeObserver = new ResizeObserver((entries) => {
@@ -10,19 +13,23 @@ export const initResizeObserver = () => {
         const { width, height } = entries[0].contentRect;
         game.height = height;
         game.width = width;
-        log("ResizeObserver", "Game resized:", `${game.width}x${game.height}`);
+        log.log(
+            "ResizeObserver",
+            "Game resized:",
+            `${game.width}x${game.height}`
+        );
     });
 
     const canvasAttributeObserver = new MutationObserver(() => {
         bodyResizeObserver.observe(body);
-        log(
+        log.log(
             "CanvasAttributeObserver",
             "Game initialized. ResizeObserver Started."
         );
         canvasAttributeObserver.disconnect();
-        log("CanvasAttributeObserver", "CanvasAttributeObserver Stopped.");
+        log.log("CanvasAttributeObserver", "CanvasAttributeObserver Stopped.");
     });
 
     canvasAttributeObserver.observe(game, { attributes: true });
-    log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
+    log.log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
 };

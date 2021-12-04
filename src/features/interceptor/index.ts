@@ -32,7 +32,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
     // JSONが不正なことがあるのでtry-catch
     try {
         const res = JSON.parse(responseText);
-        log("Interceptor", url.pathname, res);
+        log.debug("Interceptor", url.pathname, res);
 
         // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
         if (url.pathname === "/wave_clear") {
@@ -73,7 +73,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
             ) {
                 sendToDiscordWebhook(body);
             } else {
-                log(
+                log.debug(
                     "Drop Notification",
                     "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした",
                     body
@@ -89,7 +89,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
             explorationCancel(res);
         }
     } catch (error) {
-        log("Interceptor", "Error", error);
+        log.log("Interceptor", "Error", error);
     }
 };
 

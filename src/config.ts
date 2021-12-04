@@ -28,6 +28,6 @@ export class Config {
     set(value: DeepPartial<Config["config"]>) {
         _.merge(this.config, value);
         GM_setValue("config", this.config);
-        log("Config", "Config Updated", this.config);
+        log.log("Config", "Config Updated", this.config);
     }
 }

@@ -68,7 +68,7 @@ const sendNotification = (): void => {
     ) {
         sendToDiscordWebhook(body);
     } else {
-        log(
+        log.debug(
             "Exploration Timer",
             "設定が無効のため、Discord通知を送信しませんでした",
             body
@@ -97,7 +97,8 @@ export const explorationInginfo = ({
             return ex;
         }
     });
-    log(
+
+    log.log(
         "Exploration Timer",
         "Restore Exploration Timers",
         unsafeWindow.LAOPLUS.exploration
@@ -112,7 +113,8 @@ export const explorationEnter = ({
     const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
     const timeoutID = window.setTimeout(sendNotification, msToFinish);
     unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
-    log(
+
+    log.log(
         "Exploration Timer",
         "Add Exploration Timer",
         unsafeWindow.LAOPLUS.exploration
@@ -127,7 +129,8 @@ export const explorationReward = ({
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
     );
-    log(
+
+    log.log(
         "Exploration Timer",
         "Remove Exploration Timer",
         unsafeWindow.LAOPLUS.exploration
@@ -149,7 +152,8 @@ export const explorationCancel = ({
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
     );
-    log(
+
+    log.log(
         "Exploration Timer",
         "Remove Exploration",
         unsafeWindow.LAOPLUS.exploration

@@ -39,13 +39,13 @@ export const ConfigModal = () => {
     });
 
     const onSubmit = (config: Config["config"]) => {
-        log("Config Modal", "Config submitted", config);
+        log.log("Config Modal", "Config submitted", config);
         unsafeWindow.LAOPLUS.config.set(config);
         setIsOpen(false);
     };
 
     if (!_.isEmpty(errors)) {
-        log("Config Modal", "Error!", errors);
+        log.error("Config Modal", "Error", errors);
     }
 
     return (
