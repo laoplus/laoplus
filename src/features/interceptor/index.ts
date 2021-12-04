@@ -89,7 +89,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
             explorationCancel(res);
         }
     } catch (error) {
-        log.log("Interceptor", "Error", error);
+        log.error("Interceptor", "Error", error);
     }
 };
 
