@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.1.0-19306482845b215eacefad1a7cdae3f4440ead78
+// @version     0.1.0-12ebf9824bb0b9daa551d69ba1b8f03f460de2b4
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -39,9 +39,21 @@
 (function () {
     'use strict';
 
-    const log = (name, ...args) => {
-        // eslint-disable-next-line no-console
-        console.log(`%cLAOPLUS :: ${name}`, "padding-right:.6rem;padding-left:.6rem;background:gray;color:white;border-radius:.25rem", ...args);
+    /* eslint-disable no-console */
+    const style = "padding-right:.6rem;padding-left:.6rem;background:gray;color:white;border-radius:.25rem";
+    const log = {
+        debug: (moduleName, ...args) => {
+            console.debug(`%c🐞LAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
+        log: (moduleName, ...args) => {
+            console.log(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
+        warn: (moduleName, ...args) => {
+            console.warn(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
+        error: (moduleName, ...args) => {
+            console.error(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
     };
 
     const initDMMGamePage = () => {
@@ -70,7 +82,7 @@
             height: 100vh !important;
             width: 100vw !important;
     }`);
-        log("DMM Page", "Style injected.");
+        log.log("Injection", "DMM Page", "Style injected.");
     };
 
     const initDMMInnerPage = () => {
@@ -79,7 +91,7 @@
             return;
         frame.removeAttribute("height");
         frame.style.height = "100vh";
-        log("DMM Inner Page", "iframe Style injected.");
+        log.log("Injection", "DMM Inner Page", "iframe Style injected.");
     };
 
     const initGamePage = () => {
@@ -96,7 +108,7 @@
         -webkit-transform: unset;
         transform: unset;
     }`);
-        log("Game Page", "Style injected.");
+        log.log("Injection", "Game Page", "Style injected.");
     };
 
     const injection = () => {
@@ -133,7 +145,7 @@
         set(value) {
             _.merge(this.config, value);
             GM_setValue("config", this.config);
-            log("Config", "Config Updated", this.config);
+            log.log("Config", "Config Updated", this.config);
         }
     }
 
@@ -273,12 +285,12 @@
             defaultValues: unsafeWindow.LAOPLUS.config.config,
         });
         const onSubmit = (config) => {
-            log("Config Modal", "Config submitted", config);
+            log.log("Config Modal", "Config submitted", config);
             unsafeWindow.LAOPLUS.config.set(config);
             setIsOpen(false);
         };
         if (!_.isEmpty(errors)) {
-            log("Config Modal", "Error!", errors);
+            log.error("Config Modal", "Error", errors);
         }
         return (React.createElement(React.Fragment, null,
             React.createElement("button", { onClick: () => {
@@ -379,7 +391,7 @@
 
     const sendToDiscordWebhook = (body) => {
         if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
-            log("Discord Notification", "設定が無効のため送信しませんでした", body);
+            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
             return;
         }
         fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
@@ -453,7 +465,7 @@
             sendToDiscordWebhook(body);
         }
         else {
-            log("Exploration Timer", "設定が無効のため、Discord通知を送信しませんでした", body);
+            log.debug("Exploration Timer", "設定が無効のため、Discord通知を送信しませんでした", body);
         }
     };
     const explorationInginfo = ({ ExplorationList, }) => {
@@ -473,17 +485,17 @@
                 return ex;
             }
         });
-        log("Exploration Timer", "Restore Exploration Timers", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Restore Exploration Timers", unsafeWindow.LAOPLUS.exploration);
     };
     const explorationEnter = ({ EnterInfo, }) => {
         const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
         const timeoutID = window.setTimeout(sendNotification, msToFinish);
         unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
-        log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
     const explorationReward = ({ SquadIndex, }) => {
         unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter((ex) => ex.SquadIndex !== SquadIndex);
-        log("Exploration Timer", "Remove Exploration Timer", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Remove Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
     const explorationCancel = ({ SquadIndex, }) => {
         const targetExploration = unsafeWindow.LAOPLUS.exploration.find((ex) => ex.SquadIndex === SquadIndex);
@@ -491,7 +503,7 @@
             window.clearTimeout(targetExploration.timeoutID);
         }
         unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter((ex) => ex.SquadIndex !== SquadIndex);
-        log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
     };
 
     const gradeToRank = (grade) => {
@@ -521,7 +533,7 @@
         // JSONが不正なことがあるのでtry-catch
         try {
             const res = JSON.parse(responseText);
-            log("Interceptor", url.pathname, res);
+            log.debug("Interceptor", url.pathname, res);
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
             if (url.pathname === "/wave_clear") {
                 const embeds = res.CreatePCInfos.map((c) => {
@@ -555,7 +567,7 @@
                     sendToDiscordWebhook(body);
                 }
                 else {
-                    log("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
+                    log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
                 }
             }
             else if (url.pathname === "/exploration_inginfo") {
@@ -572,7 +584,7 @@
             }
         }
         catch (error) {
-            log("Interceptor", "Error", error);
+            log.log("Interceptor", "Error", error);
         }
     };
     const initInterceptor = () => {
@@ -593,8 +605,10 @@
 
     const initResizeObserver = () => {
         const game = document.querySelector("canvas");
-        if (!game)
+        if (!game) {
+            log.error("ResizeObserver", "Game Canvas Not Found");
             return;
+        }
         const body = document.body;
         const bodyResizeObserver = new ResizeObserver((entries) => {
             if (!entries[0])
@@ -602,16 +616,16 @@
             const { width, height } = entries[0].contentRect;
             game.height = height;
             game.width = width;
-            log("ResizeObserver", "Game resized:", `${game.width}x${game.height}`);
+            log.log("ResizeObserver", "Game resized:", `${game.width}x${game.height}`);
         });
         const canvasAttributeObserver = new MutationObserver(() => {
             bodyResizeObserver.observe(body);
-            log("CanvasAttributeObserver", "Game initialized. ResizeObserver Started.");
+            log.log("CanvasAttributeObserver", "Game initialized. ResizeObserver Started.");
             canvasAttributeObserver.disconnect();
-            log("CanvasAttributeObserver", "CanvasAttributeObserver Stopped.");
+            log.log("CanvasAttributeObserver", "CanvasAttributeObserver Stopped.");
         });
         canvasAttributeObserver.observe(game, { attributes: true });
-        log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
+        log.log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
     };
 
     const initTacticsManual = () => {
@@ -620,11 +634,11 @@
             onload: ({ responseText }) => {
                 try {
                     const parsedJson = JSON.parse(responseText);
-                    log("TacticsManual", "Locale", "Loaded");
+                    log.log("TacticsManual", "Locale", "Loaded");
                     unsafeWindow.LAOPLUS.tacticsManual.locale = parsedJson;
                 }
                 catch (error) {
-                    log("Tactics Manual", "Locale", "Error", error);
+                    log.error("Tactics Manual", "Locale", "Error", error);
                 }
             },
         });
@@ -633,11 +647,11 @@
             onload: ({ responseText }) => {
                 try {
                     const parsedJson = JSON.parse(responseText);
-                    log("TacticsManual", "Unit", "Loaded");
+                    log.log("TacticsManual", "Unit", "Loaded");
                     unsafeWindow.LAOPLUS.tacticsManual.unit = parsedJson;
                 }
                 catch (error) {
-                    log("Tactics Manual", "Unit", "Error", error);
+                    log.error("Tactics Manual", "Unit", "Error", error);
                 }
             },
         });
