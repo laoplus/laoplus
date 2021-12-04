@@ -45,7 +45,7 @@ export const ConfigModal = () => {
     };
 
     if (!_.isEmpty(errors)) {
-        log.log("Config Modal", "Error!", errors);
+        log.error("Config Modal", "Error", errors);
     }
 
     return (

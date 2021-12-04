@@ -4,7 +4,7 @@ export const sendToDiscordWebhook = (body: unknown) => {
     if (
         !unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled
     ) {
-        log.log(
+        log.debug(
             "Discord Notification",
             "設定が無効のため送信しませんでした",
             body

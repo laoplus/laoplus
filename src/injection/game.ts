@@ -15,5 +15,5 @@ export const initGamePage = () => {
         transform: unset;
     }`);
 
-    log.log("Game Page", "Style injected.");
+    log.log("Injection", "Game Page", "Style injected.");
 };
