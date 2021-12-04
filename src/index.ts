@@ -6,6 +6,7 @@ import { initResizeObserver } from "features/resizeObserver";
 import { initTacticsManual } from "tacticsManual";
 import { TacticsManualUnit, ExplorationSquad } from "./types";
 import { tailwindConfig } from "./ui/tailwind";
+import { initInputObserver } from "./features/inputObserver";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -48,5 +49,6 @@ declare global {
     initUi();
     initInterceptor();
     initResizeObserver();
+    initInputObserver();
     initTacticsManual();
 })();
