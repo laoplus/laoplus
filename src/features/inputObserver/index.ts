@@ -1,5 +1,3 @@
-import { log } from "utils/log";
-
 const isInputElement = (target: EventTarget | null) => {
     if (target === null) return false;
     const t = target as HTMLElement;
@@ -87,7 +85,7 @@ const keydownObserver = () => {
         if (key === "ArrowRight") {
             newCursorPosition = cursorPosition + 1;
         } else {
-            // Backspace, ArrowRightで共通
+            // Backspace, ArrowLeftで共通
             // 左端で左を押したとき、0未満にならないようにする
             newCursorPosition =
                 cursorPosition - 1 >= 0 ? cursorPosition - 1 : cursorPosition;
