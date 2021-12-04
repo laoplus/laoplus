@@ -7,5 +7,5 @@ export const initDMMInnerPage = () => {
     frame.removeAttribute("height");
     frame.style.height = "100vh";
 
-    log("DMM Inner Page", "iframe Style injected.");
+    log.log("DMM Inner Page", "iframe Style injected.");
 };
