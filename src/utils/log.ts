@@ -4,7 +4,11 @@ const style =
 
 export const log = {
     debug: (moduleName: string, ...args: unknown[]) => {
-        console.debug(`%c🐞LAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        console.debug(
+            `%c🐞LAOPLUS :: ${moduleName}`,
+            style,
+            ..._.cloneDeep(args)
+        );
     },
     log: (moduleName: string, ...args: unknown[]) => {
         console.log(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
@@ -13,6 +17,10 @@ export const log = {
         console.warn(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
     },
     error: (moduleName: string, ...args: unknown[]) => {
-        console.error(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        console.error(
+            `%cLAOPLUS :: ${moduleName}`,
+            style,
+            ..._.cloneDeep(args)
+        );
     },
 };
