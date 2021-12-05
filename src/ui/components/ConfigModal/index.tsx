@@ -224,7 +224,7 @@ export const ConfigModal = () => {
                                     disabled={
                                         !watch("features.wheelAmplify.enabled")
                                     }
-                                    className="min-w-[1rem] flex-1 px-1 border border-gray-500 rounded"
+                                    className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
                                     {...register(
                                         "features.wheelAmplify.ratio",
                                         {
