@@ -149,7 +149,7 @@ export const ConfigModal = () => {
                                 </ErrorMessage>
                             )}
 
-                            <label className="flex gap-2">
+                            <span className="flex gap-2">
                                 <span className="flex-shrink-0">通知項目:</span>
                                 <div className="flex flex-col gap-1">
                                     <label className="flex gap-2 items-center">
@@ -208,7 +208,7 @@ export const ConfigModal = () => {
                                         <span>探索完了</span>
                                     </label>
                                 </div>
-                            </label>
+                            </span>
                         </div>
 
                         <div className="flex flex-col gap-1">
