@@ -31,5 +31,5 @@ export const initDMMGamePage = () => {
             width: 100vw !important;
     }`);
 
-    log("DMM Page", "Style injected.");
+    log.log("Injection", "DMM Page", "Style injected.");
 };

@@ -5,6 +5,7 @@
         "plugin:react/recommended",
         "prettier"
     ],
+    "plugins": ["import-access"],
     "rules": {
         "no-console": "error",
         "react/react-in-jsx-scope": "off",
@@ -15,6 +16,10 @@
             {
                 "allowReferrer": true
             }
-        ]
+        ],
+        "import-access/jsdoc": ["error"]
+    },
+    "parserOptions": {
+        "project": "./tsconfig.json"
     }
 }

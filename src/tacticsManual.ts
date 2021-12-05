@@ -1,4 +1,4 @@
-import { log } from "utils/log";
+import { log } from "~/utils";
 import { TacticsManualUnit } from "./types";
 
 export const initTacticsManual = () => {
@@ -9,11 +9,11 @@ export const initTacticsManual = () => {
                 const parsedJson: {
                     [key: string]: string;
                 } = JSON.parse(responseText);
-                log("TacticsManual", "Locale", "Loaded");
+                log.log("TacticsManual", "Locale", "Loaded");
 
                 unsafeWindow.LAOPLUS.tacticsManual.locale = parsedJson;
             } catch (error) {
-                log("Tactics Manual", "Locale", "Error", error);
+                log.error("Tactics Manual", "Locale", "Error", error);
             }
         },
     });
@@ -24,11 +24,11 @@ export const initTacticsManual = () => {
             try {
                 const parsedJson: TacticsManualUnit[] =
                     JSON.parse(responseText);
-                log("TacticsManual", "Unit", "Loaded");
+                log.log("TacticsManual", "Unit", "Loaded");
 
                 unsafeWindow.LAOPLUS.tacticsManual.unit = parsedJson;
             } catch (error) {
-                log("Tactics Manual", "Unit", "Error", error);
+                log.error("Tactics Manual", "Unit", "Error", error);
             }
         },
     });

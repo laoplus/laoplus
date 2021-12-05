@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import { Config } from "config";
-import { log } from "utils/log";
+import { log } from "~/utils";
 import { ErrorMessage } from "./ErrorMessage";
 import { ExplorationList } from "./ExplorationList";
 import { HelpIcon } from "./HelpIcon";
@@ -39,13 +39,13 @@ export const ConfigModal = () => {
     });
 
     const onSubmit = (config: Config["config"]) => {
-        log("Config Modal", "Config submitted", config);
+        log.log("Config Modal", "Config submitted", config);
         unsafeWindow.LAOPLUS.config.set(config);
         setIsOpen(false);
     };
 
     if (!_.isEmpty(errors)) {
-        log("Config Modal", "Error!", errors);
+        log.error("Config Modal", "Error", errors);
     }
 
     return (
@@ -149,7 +149,7 @@ export const ConfigModal = () => {
                                 </ErrorMessage>
                             )}
 
-                            <label className="flex gap-2">
+                            <span className="flex gap-2">
                                 <span className="flex-shrink-0">通知項目:</span>
                                 <div className="flex flex-col gap-1">
                                     <label className="flex gap-2 items-center">
@@ -162,7 +162,7 @@ export const ConfigModal = () => {
                                                 )
                                             }
                                             {...register(
-                                                "features.discordNotification.interests.pcdrop"
+                                                "features.discordNotification.interests.pcDrop"
                                             )}
                                         />
                                         <span className="flex gap-1 items-center">
@@ -182,13 +182,94 @@ export const ConfigModal = () => {
                                                 )
                                             }
                                             {...register(
+                                                "features.discordNotification.interests.itemDrop"
+                                            )}
+                                        />
+                                        <span className="flex gap-1 items-center">
+                                            アイテムドロップ
+                                            <span className="text-gray-600 text-xs">
+                                                現在はSSのみ
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
                                                 "features.discordNotification.interests.exploration"
                                             )}
                                         />
                                         <span>探索完了</span>
                                     </label>
                                 </div>
+                            </span>
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                            <label className="flex gap-2 items-center">
+                                <input
+                                    type="checkbox"
+                                    className="-ml-6 w-4 h-4"
+                                    {...register(
+                                        "features.wheelAmplify.enabled"
+                                    )}
+                                />
+                                <span>ホイールスクロール増幅</span>
+                                <HelpIcon href="https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" />
                             </label>
+                            <span className="flex gap-1 text-gray-600 text-sm">
+                                <i className="bi bi-info-circle"></i>
+                                この設定の変更はページ再読み込み後に反映されます
+                            </span>
+                        </div>
+
+                        <div
+                            className={cn("flex flex-col gap-1", {
+                                "opacity-50": !watch(
+                                    "features.wheelAmplify.enabled"
+                                ),
+                            })}
+                        >
+                            <label className="flex gap-2">
+                                <span className="flex-shrink-0">増幅倍率:</span>
+                                <input
+                                    // numberだと値が二重になる
+                                    type="text"
+                                    disabled={
+                                        !watch("features.wheelAmplify.enabled")
+                                    }
+                                    className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                    {...register(
+                                        "features.wheelAmplify.ratio",
+                                        {
+                                            required: watch(
+                                                "features.wheelAmplify.enabled"
+                                            ),
+                                            validate: (value) =>
+                                                // prettier-ignore
+                                                typeof Number(value) === "number"
+                                                && !Number.isNaN(Number(value)),
+                                        }
+                                    )}
+                                />
+                            </label>
+                            {errors.features?.wheelAmplify?.ratio && (
+                                <ErrorMessage className="flex gap-1">
+                                    <i className="bi bi-exclamation-triangle"></i>
+                                    {errors.features?.wheelAmplify?.ratio
+                                        ?.type === "required" &&
+                                        "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です"}
+                                    {errors.features?.wheelAmplify?.ratio
+                                        ?.type === "validate" &&
+                                        "増幅倍率は数字で入力してください"}
+                                </ErrorMessage>
+                            )}
                         </div>
                     </main>
 

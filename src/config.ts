@@ -1,4 +1,4 @@
-import { log } from "utils/log";
+import { log } from "~/utils";
 
 // https://stackoverflow.com/questions/61132262/typescript-deep-partial
 type DeepPartial<T> = {
@@ -11,9 +11,14 @@ const defaultConfig = {
             enabled: false,
             webhookURL: "",
             interests: {
-                pcdrop: true,
+                pcDrop: true,
+                itemDrop: true,
                 exploration: true,
             },
+        },
+        wheelAmplify: {
+            enabled: true,
+            ratio: 10,
         },
     },
 };
@@ -22,12 +27,15 @@ export class Config {
     config: typeof defaultConfig;
 
     constructor() {
-        this.config = GM_getValue("config", defaultConfig);
+        this.config = _.merge(
+            defaultConfig,
+            GM_getValue("config", defaultConfig)
+        );
     }
 
     set(value: DeepPartial<Config["config"]>) {
         _.merge(this.config, value);
         GM_setValue("config", this.config);
-        log("Config", "Config Updated", this.config);
+        log.log("Config", "Config Updated", this.config);
     }
 }
