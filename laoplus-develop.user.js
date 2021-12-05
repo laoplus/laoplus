@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.1.0-9e73bbd0e417a90005a55e61e9783bc1d67ef626
+// @version     0.1.0-4175578311cc5574f97f7a9ffe40ef76b00c267c
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -194,7 +194,8 @@
                 enabled: false,
                 webhookURL: "",
                 interests: {
-                    pcdrop: true,
+                    pcDrop: true,
+                    itemDrop: true,
                     exploration: true,
                 },
             },
@@ -378,14 +379,19 @@
                                 errors.features?.discordNotification
                                     ?.webhookURL?.type === "pattern" &&
                                     "有効なDiscordのWebhook URLではありません")),
-                            React.createElement("label", { className: "flex gap-2" },
+                            React.createElement("span", { className: "flex gap-2" },
                                 React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
                                 React.createElement("div", { className: "flex flex-col gap-1" },
                                     React.createElement("label", { className: "flex gap-2 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcdrop") }),
+                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
                                         React.createElement("span", { className: "flex gap-1 items-center" },
                                             "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
                                             React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
+                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
+                                        React.createElement("span", { className: "flex gap-1 items-center" },
+                                            "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
+                                            React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
                                     React.createElement("label", { className: "flex gap-2 items-center" },
                                         React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
                                         React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86"))))),
@@ -596,11 +602,11 @@
      * @package
      */
     const PcDropNotification = (res) => {
-        const embeds = res.CreatePCInfos.reduce((embeds, pc) => {
+        const embeds = res.ClearRewardInfo.PCRewardList.reduce((embeds, pc) => {
             // ランクB, Aを無視
             if (pc.Grade === 2 || pc.Grade === 3)
                 return embeds;
-            const id = pc.Index.replace(/^Char_/, "").replace(/_N$/, "");
+            const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
             const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
             const rank = gradeToRank(pc.Grade);
             // クラゲ
@@ -624,7 +630,38 @@
         const body = { embeds };
         if (embeds.length !== 0 &&
             unsafeWindow.LAOPLUS.config.config.features.discordNotification
-                .interests.pcdrop) {
+                .interests.pcDrop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+    };
+    /**
+     * @package
+     */
+    const itemDropNotification = (res) => {
+        const embeds = res.ClearRewardInfo.ItemRewardList.reduce((embeds, item) => {
+            // SSのみ
+            if (!item.ItemKeyString.includes("T4"))
+                return embeds;
+            const localeKey = item.ItemKeyString.replace(/^Equip_/, "EQUIP_");
+            const id = item.ItemKeyString.replace(/^Equip_/, "");
+            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[localeKey];
+            embeds.push({
+                title: name || localeKey,
+                color: colorHexToInteger(rankColor["SS"].hex()),
+                url: `https://lo.swaytwig.com/equips/${id}`,
+                thumbnail: {
+                    url: `https://lo.swaytwig.com/assets/webp/item/UI_Icon_${item.ItemKeyString}.webp`,
+                },
+            });
+            return embeds;
+        }, []);
+        const body = { embeds };
+        if (embeds.length !== 0 &&
+            unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .interests.itemDrop) {
             sendToDiscordWebhook(body);
         }
         else {
@@ -637,6 +674,7 @@
         switch (url.pathname) {
             case "/wave_clear":
                 PcDropNotification(res);
+                itemDropNotification(res);
                 return;
         }
     };
