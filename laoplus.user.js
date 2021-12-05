@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS
 // @namespace   net.mizle
-// @version     0.1.0
+// @version     0.2.0
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -39,9 +39,21 @@
 (function () {
     'use strict';
 
-    const log = (name, ...args) => {
-        // eslint-disable-next-line no-console
-        console.log(`%cLAOPLUS :: ${name}`, "padding-right:.6rem;padding-left:.6rem;background:gray;color:white;border-radius:.25rem", ...args);
+    /* eslint-disable no-console */
+    const style = "padding-right:.6rem;padding-left:.6rem;background:gray;color:white;border-radius:.25rem";
+    const log = {
+        debug: (moduleName, ...args) => {
+            console.debug(`%c🐞LAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
+        log: (moduleName, ...args) => {
+            console.log(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
+        warn: (moduleName, ...args) => {
+            console.warn(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
+        error: (moduleName, ...args) => {
+            console.error(`%cLAOPLUS :: ${moduleName}`, style, ..._.cloneDeep(args));
+        },
     };
 
     const initDMMGamePage = () => {
@@ -70,7 +82,7 @@
             height: 100vh !important;
             width: 100vw !important;
     }`);
-        log("DMM Page", "Style injected.");
+        log.log("Injection", "DMM Page", "Style injected.");
     };
 
     const initDMMInnerPage = () => {
@@ -79,7 +91,7 @@
             return;
         frame.removeAttribute("height");
         frame.style.height = "100vh";
-        log("DMM Inner Page", "iframe Style injected.");
+        log.log("Injection", "DMM Inner Page", "iframe Style injected.");
     };
 
     const initGamePage = () => {
@@ -96,7 +108,7 @@
         -webkit-transform: unset;
         transform: unset;
     }`);
-        log("Game Page", "Style injected.");
+        log.log("Injection", "Game Page", "Style injected.");
     };
 
     const injection = () => {
@@ -113,37 +125,35 @@
         return true;
     };
 
-    const defaultConfig = {
-        features: {
-            discordNotification: {
-                enabled: false,
-                webhookURL: "",
-                interests: {
-                    pcdrop: true,
-                    exploration: true,
-                },
-            },
-        },
-    };
-    class Config {
-        config;
-        constructor() {
-            this.config = GM_getValue("config", defaultConfig);
+    /**
+     * 与えられた日時までを時間と分のみの相対時間に変換する
+     * @returns x時間x分
+     * @returns x分
+     */
+    const dateToRelativeTime = (target) => {
+        const now = dayjs();
+        const hour = target.diff(now, "hour");
+        const minute = target.diff(now.add(hour, "hour"), "minute");
+        if (hour === 0) {
+            return `${minute}分`;
         }
-        set(value) {
-            _.merge(this.config, value);
-            GM_setValue("config", this.config);
-            log("Config", "Config Updated", this.config);
-        }
-    }
-
-    const Icon = () => {
-        return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
+        return `${hour}時間${minute}分`;
     };
 
-    const cn$3 = classNames;
-    const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$3("text-red-600 text-xs", className) }, children));
+    const gradeToRank = (grade) => {
+        switch (grade) {
+            default:
+            case 1:
+                return "";
+            case 2:
+                return "B";
+            case 3:
+                return "A";
+            case 4:
+                return "S";
+            case 5:
+                return "SS";
+        }
     };
 
     // TODO: テストを書く
@@ -164,6 +174,56 @@
         }
         // うまくパースできなかったらそのまま返す
         return StageKey;
+    };
+
+    /**
+     * 1桁の数字を囲み絵文字に変換する
+     * @param SquadIndex 1 | 2| 3 | 4
+     * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
+     */
+    const numberToEmoji = (number) => {
+        if (String(number).length !== 1) {
+            throw new Error("1桁以外の数字を処理することはできません");
+        }
+        return number + "\uFE0F\u20E3";
+    };
+
+    const defaultConfig = {
+        features: {
+            discordNotification: {
+                enabled: false,
+                webhookURL: "",
+                interests: {
+                    pcDrop: true,
+                    itemDrop: true,
+                    exploration: true,
+                },
+            },
+            wheelAmplify: {
+                enabled: true,
+                ratio: 10,
+            },
+        },
+    };
+    class Config {
+        config;
+        constructor() {
+            this.config = _.merge(defaultConfig, GM_getValue("config", defaultConfig));
+        }
+        set(value) {
+            _.merge(this.config, value);
+            GM_setValue("config", this.config);
+            log.log("Config", "Config Updated", this.config);
+        }
+    }
+
+    const Icon = () => {
+        return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
+    };
+
+    const cn$3 = classNames;
+    const ErrorMessage = ({ children, className }) => {
+        return (React.createElement("span", { className: cn$3("text-red-600 text-xs", className) }, children));
     };
 
     const cn$2 = classNames;
@@ -273,12 +333,12 @@
             defaultValues: unsafeWindow.LAOPLUS.config.config,
         });
         const onSubmit = (config) => {
-            log("Config Modal", "Config submitted", config);
+            log.log("Config Modal", "Config submitted", config);
             unsafeWindow.LAOPLUS.config.set(config);
             setIsOpen(false);
         };
         if (!_.isEmpty(errors)) {
-            log("Config Modal", "Error!", errors);
+            log.error("Config Modal", "Error", errors);
         }
         return (React.createElement(React.Fragment, null,
             React.createElement("button", { onClick: () => {
@@ -319,17 +379,52 @@
                                 errors.features?.discordNotification
                                     ?.webhookURL?.type === "pattern" &&
                                     "有効なDiscordのWebhook URLではありません")),
-                            React.createElement("label", { className: "flex gap-2" },
+                            React.createElement("span", { className: "flex gap-2" },
                                 React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
                                 React.createElement("div", { className: "flex flex-col gap-1" },
                                     React.createElement("label", { className: "flex gap-2 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcdrop") }),
+                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
                                         React.createElement("span", { className: "flex gap-1 items-center" },
                                             "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
                                             React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
                                     React.createElement("label", { className: "flex gap-2 items-center" },
+                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
+                                        React.createElement("span", { className: "flex gap-1 items-center" },
+                                            "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
+                                            React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
+                                    React.createElement("label", { className: "flex gap-2 items-center" },
                                         React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
-                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")))))),
+                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86"))))),
+                        React.createElement("div", { className: "flex flex-col gap-1" },
+                            React.createElement("label", { className: "flex gap-2 items-center" },
+                                React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.wheelAmplify.enabled") }),
+                                React.createElement("span", null, "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45"),
+                                React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" })),
+                            React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                React.createElement("i", { className: "bi bi-info-circle" }),
+                                "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059")),
+                        React.createElement("div", { className: cn("flex flex-col gap-1", {
+                                "opacity-50": !watch("features.wheelAmplify.enabled"),
+                            }) },
+                            React.createElement("label", { className: "flex gap-2" },
+                                React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
+                                React.createElement("input", { 
+                                    // numberだと値が二重になる
+                                    type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
+                                        required: watch("features.wheelAmplify.enabled"),
+                                        validate: (value) => 
+                                        // prettier-ignore
+                                        typeof Number(value) === "number"
+                                            && !Number.isNaN(Number(value)),
+                                    }) })),
+                            errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                errors.features?.wheelAmplify?.ratio
+                                    ?.type === "required" &&
+                                    "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
+                                errors.features?.wheelAmplify?.ratio
+                                    ?.type === "validate" &&
+                                    "増幅倍率は数字で入力してください")))),
                     React.createElement("div", { className: "my-2 border-t" }),
                     React.createElement("div", { className: "flex flex-col gap-2 items-center" },
                         React.createElement("span", { className: "text-gray-600 text-sm" },
@@ -370,16 +465,9 @@
         document.body.appendChild(root);
     };
 
-    const rankColor = {
-        SS: chroma.rgb(255, 223, 33),
-        S: chroma.rgb(255, 166, 3),
-        A: chroma.rgb(5, 176, 228),
-        B: chroma.rgb(30, 160, 13),
-    };
-
     const sendToDiscordWebhook = (body) => {
         if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
-            log("Discord Notification", "設定が無効のため送信しませんでした", body);
+            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
             return;
         }
         fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
@@ -398,41 +486,21 @@
         return parseInt(hex.replace("#", ""), 16);
     };
 
-    /**
-     * 与えられた日時までの時間と分のみの相対時間に変換する
-     * @returns x時間x分
-     */
-    const toRelativeTime = (target) => {
-        const now = dayjs();
-        const hour = target.diff(now, "hour");
-        const minute = target.diff(now.add(hour, "hour"), "minute");
-        if (hour === 0) {
-            return `${minute}分`;
-        }
-        return `${hour}時間${minute}分`;
-    };
-    /**
-     * 1桁の数字を囲み絵文字に変換する
-     * @param SquadIndex 1 | 2| 3 | 4
-     * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
-     */
-    const squadIndexToEmoji = (SquadIndex) => {
-        return SquadIndex + "\uFE0F\u20E3";
-    };
     const sendNotification = () => {
         const embedFields = unsafeWindow.LAOPLUS.exploration
             .sort((a, b) => a.EndTime - b.EndTime)
             .map((ex) => {
             const endDate = dayjs(ex.EndTime * 1000);
-            const isFinished = endDate.isSameOrBefore(dayjs());
+            // たま～に早く実行されてisFinishedがfalseになってしまうので1秒猶予をもたせる
+            const isFinished = endDate.isSameOrBefore(dayjs().add(1, "second"));
             const value = isFinished
                 ? ":white_check_mark: **完了**"
-                : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
+                : `<t:${ex.EndTime}:t> ${dateToRelativeTime(endDate)}後`;
             // <t:TIMESTAMP> Discord Timestamp Format
             // https://discord.com/developers/docs/reference#message-formatting
             return {
                 name: [
-                    squadIndexToEmoji(ex.SquadIndex),
+                    numberToEmoji(ex.SquadIndex),
                     humanFriendlyStageKey(ex.StageKeyString),
                 ].join(" "),
                 value: value,
@@ -452,10 +520,13 @@
             sendToDiscordWebhook(body);
         }
         else {
-            log("Exploration Timer", "設定が無効のため、Discord通知を送信しませんでした", body);
+            log.debug("Exploration Timer", "設定が無効のため、Discord通知を送信しませんでした", body);
         }
     };
-    const explorationInginfo = ({ ExplorationList, }) => {
+    /**
+     * @package
+     */
+    const loginto = ({ ExplorationList, }) => {
         // 既存のタイマーをすべて破棄する
         unsafeWindow.LAOPLUS.exploration.forEach((ex) => {
             if (ex.timeoutID) {
@@ -472,40 +543,139 @@
                 return ex;
             }
         });
-        log("Exploration Timer", "Restore Exploration Timers", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Restore Exploration Timers", unsafeWindow.LAOPLUS.exploration);
     };
-    const explorationEnter = ({ EnterInfo, }) => {
+    /**
+     * @package
+     */
+    const enter = ({ EnterInfo }) => {
         const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
         const timeoutID = window.setTimeout(sendNotification, msToFinish);
         unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
-        log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
-    const explorationReward = ({ SquadIndex, }) => {
+    /**
+     * @package
+     */
+    const reward = ({ SquadIndex }) => {
         unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter((ex) => ex.SquadIndex !== SquadIndex);
-        log("Exploration Timer", "Remove Exploration Timer", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Remove Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
-    const explorationCancel = ({ SquadIndex, }) => {
+    /**
+     * @package
+     */
+    const cancel = ({ SquadIndex }) => {
         const targetExploration = unsafeWindow.LAOPLUS.exploration.find((ex) => ex.SquadIndex === SquadIndex);
         if (targetExploration?.timeoutID) {
             window.clearTimeout(targetExploration.timeoutID);
         }
         unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter((ex) => ex.SquadIndex !== SquadIndex);
-        log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
+        log.log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
     };
 
-    const gradeToRank = (grade) => {
-        switch (grade) {
-            default:
-            case 1:
-                return "";
-            case 2:
-                return "B";
-            case 3:
-                return "A";
-            case 4:
-                return "S";
-            case 5:
-                return "SS";
+    // TODO: 型を用意してanyをキャストする
+    const invoke$1 = ({ res, url }) => {
+        switch (url.pathname) {
+            case "/exploration_inginfo":
+                loginto(res);
+                return;
+            case "/exploration_enter":
+                enter(res);
+                return;
+            case "/exploration_reward":
+                reward(res);
+                return;
+            case "/exploration_cancel":
+                cancel(res);
+                return;
+        }
+    };
+
+    const rankColor = {
+        SS: chroma.rgb(255, 223, 33),
+        S: chroma.rgb(255, 166, 3),
+        A: chroma.rgb(5, 176, 228),
+        B: chroma.rgb(30, 160, 13),
+    };
+
+    /**
+     * @package
+     */
+    const PcDropNotification = (res) => {
+        const embeds = res.ClearRewardInfo.PCRewardList.reduce((embeds, pc) => {
+            // ランクB, Aを無視
+            if (pc.Grade === 2 || pc.Grade === 3)
+                return embeds;
+            const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
+            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+            const rank = gradeToRank(pc.Grade);
+            // クラゲ
+            if (id.startsWith("Core"))
+                return embeds;
+            // 強化モジュール
+            if (id.startsWith("Module"))
+                return embeds;
+            embeds.push({
+                title: name || id,
+                color: rank !== ""
+                    ? colorHexToInteger(rankColor[rank].hex())
+                    : undefined,
+                url: `https://lo.swaytwig.com/units/${id}`,
+                thumbnail: {
+                    url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
+                },
+            });
+            return embeds;
+        }, []);
+        const body = { embeds };
+        if (embeds.length !== 0 &&
+            unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .interests.pcDrop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+    };
+    /**
+     * @package
+     */
+    const itemDropNotification = (res) => {
+        const embeds = res.ClearRewardInfo.ItemRewardList.reduce((embeds, item) => {
+            // SSのみ
+            if (!item.ItemKeyString.includes("T4"))
+                return embeds;
+            const localeKey = item.ItemKeyString.replace(/^Equip_/, "EQUIP_");
+            const id = item.ItemKeyString.replace(/^Equip_/, "");
+            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[localeKey];
+            embeds.push({
+                title: name || localeKey,
+                color: colorHexToInteger(rankColor["SS"].hex()),
+                url: `https://lo.swaytwig.com/equips/${id}`,
+                thumbnail: {
+                    url: `https://lo.swaytwig.com/assets/webp/item/UI_Icon_${item.ItemKeyString}.webp`,
+                },
+            });
+            return embeds;
+        }, []);
+        const body = { embeds };
+        if (embeds.length !== 0 &&
+            unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .interests.itemDrop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+    };
+
+    // TODO: 渡す前にキャストする
+    const invoke = ({ res, url }) => {
+        switch (url.pathname) {
+            case "/wave_clear":
+                PcDropNotification(res);
+                itemDropNotification(res);
+                return;
         }
     };
 
@@ -520,58 +690,14 @@
         // JSONが不正なことがあるのでtry-catch
         try {
             const res = JSON.parse(responseText);
-            log("Interceptor", url.pathname, res);
+            log.debug("Interceptor", url.pathname, res);
+            const invokeProps = { xhr, res, url };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
-            if (url.pathname === "/wave_clear") {
-                const embeds = res.CreatePCInfos.map((c) => {
-                    // ランクB, Aを無視
-                    if (c.Grade === 2 || c.Grade === 3)
-                        return;
-                    const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
-                    const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
-                    const rank = gradeToRank(c.Grade);
-                    // クラゲ
-                    if (id.startsWith("Core"))
-                        return;
-                    // 強化モジュール
-                    if (id.startsWith("Module"))
-                        return;
-                    return {
-                        title: name || id,
-                        color: rank !== ""
-                            ? colorHexToInteger(rankColor[rank].hex())
-                            : undefined,
-                        url: `https://lo.swaytwig.com/units/${id}`,
-                        thumbnail: {
-                            url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
-                        },
-                    };
-                }).filter(Boolean);
-                const body = { embeds: embeds };
-                if (embeds.length !== 0 &&
-                    unsafeWindow.LAOPLUS.config.config.features.discordNotification
-                        .interests.pcdrop) {
-                    sendToDiscordWebhook(body);
-                }
-                else {
-                    log("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
-                }
-            }
-            else if (url.pathname === "/exploration_inginfo") {
-                explorationInginfo(res);
-            }
-            else if (url.pathname === "/exploration_enter") {
-                explorationEnter(res);
-            }
-            else if (url.pathname === "/exploration_reward") {
-                explorationReward(res);
-            }
-            else if (url.pathname === "/exploration_cancel") {
-                explorationCancel(res);
-            }
+            invoke$1(invokeProps);
+            invoke(invokeProps);
         }
         catch (error) {
-            log("Interceptor", "Error", error);
+            log.error("Interceptor", "Error", error);
         }
     };
     const initInterceptor = () => {
@@ -592,8 +718,10 @@
 
     const initResizeObserver = () => {
         const game = document.querySelector("canvas");
-        if (!game)
+        if (!game) {
+            log.error("ResizeObserver", "Game Canvas Not Found");
             return;
+        }
         const body = document.body;
         const bodyResizeObserver = new ResizeObserver((entries) => {
             if (!entries[0])
@@ -601,16 +729,16 @@
             const { width, height } = entries[0].contentRect;
             game.height = height;
             game.width = width;
-            log("ResizeObserver", "Game resized:", `${game.width}x${game.height}`);
+            log.log("ResizeObserver", "Game resized:", `${game.width}x${game.height}`);
         });
         const canvasAttributeObserver = new MutationObserver(() => {
             bodyResizeObserver.observe(body);
-            log("CanvasAttributeObserver", "Game initialized. ResizeObserver Started.");
+            log.log("CanvasAttributeObserver", "Game initialized. ResizeObserver Started.");
             canvasAttributeObserver.disconnect();
-            log("CanvasAttributeObserver", "CanvasAttributeObserver Stopped.");
+            log.log("CanvasAttributeObserver", "CanvasAttributeObserver Stopped.");
         });
         canvasAttributeObserver.observe(game, { attributes: true });
-        log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
+        log.log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
     };
 
     const initTacticsManual = () => {
@@ -619,11 +747,11 @@
             onload: ({ responseText }) => {
                 try {
                     const parsedJson = JSON.parse(responseText);
-                    log("TacticsManual", "Locale", "Loaded");
+                    log.log("TacticsManual", "Locale", "Loaded");
                     unsafeWindow.LAOPLUS.tacticsManual.locale = parsedJson;
                 }
                 catch (error) {
-                    log("Tactics Manual", "Locale", "Error", error);
+                    log.error("Tactics Manual", "Locale", "Error", error);
                 }
             },
         });
@@ -632,11 +760,11 @@
             onload: ({ responseText }) => {
                 try {
                     const parsedJson = JSON.parse(responseText);
-                    log("TacticsManual", "Unit", "Loaded");
+                    log.log("TacticsManual", "Unit", "Loaded");
                     unsafeWindow.LAOPLUS.tacticsManual.unit = parsedJson;
                 }
                 catch (error) {
-                    log("Tactics Manual", "Unit", "Error", error);
+                    log.error("Tactics Manual", "Unit", "Error", error);
                 }
             },
         });
@@ -655,6 +783,123 @@
         variants: {
             extend: {},
         },
+    };
+
+    const isInputElement = (target) => {
+        if (target === null)
+            return false;
+        const t = target;
+        if (t.tagName !== "INPUT")
+            return false;
+        return t;
+    };
+    const getCursorPosition = (element) => {
+        // https://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+        // なんかtextじゃないとnullになる
+        element.type = "text";
+        const cursorPosition = element.selectionStart;
+        if (cursorPosition === null) {
+            throw new Error("cursor position should not be null");
+        }
+        return cursorPosition;
+    };
+    // https://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-onchange-event-in-react-js#46012210
+    const getNativeInputValueSetter = () => {
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
+        if (!nativeInputValueSetter) {
+            throw new Error("nativeInputValueSetter is not found");
+        }
+        return nativeInputValueSetter;
+    };
+    const dispatchEvent = (input, newValue) => {
+        const nativeInputValueSetter = getNativeInputValueSetter();
+        nativeInputValueSetter.call(input, newValue);
+        const inputEvent = new Event("input", { bubbles: true });
+        input.dispatchEvent(inputEvent);
+    };
+    const keypressObserver = () => {
+        // prettier-ignore
+        // addEventListenerで改行されるとネストが深くなるため
+        unsafeWindow.addEventListener("keypress", ({ key, target: eventTraget }) => {
+            const target = isInputElement(eventTraget);
+            if (!target)
+                return;
+            // dispatchした時点でカーソルの位置が吹っ飛んでしまうのでここで抑えておく
+            const cursorPosition = getCursorPosition(target);
+            const lastValue = target.value;
+            const newValue = [
+                ...[...lastValue].slice(0, cursorPosition),
+                key,
+                ...[...lastValue].slice(cursorPosition),
+            ].join("");
+            dispatchEvent(target, newValue);
+            target.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
+        });
+    };
+    const keydownObserver = () => {
+        unsafeWindow.addEventListener("keydown", ({ key, target: eventTraget }) => {
+            const target = isInputElement(eventTraget);
+            if (!target)
+                return;
+            if (!(key === "ArrowRight" ||
+                key === "ArrowLeft" ||
+                key === "Backspace")) {
+                return;
+            }
+            const cursorPosition = getCursorPosition(target);
+            let newCursorPosition;
+            if (key === "Backspace") {
+                const lastValue = target.value;
+                const newValue = [
+                    ...[...lastValue].slice(0, cursorPosition - 1),
+                    ...[...lastValue].slice(cursorPosition),
+                ].join("");
+                dispatchEvent(target, newValue);
+            }
+            if (key === "ArrowRight") {
+                newCursorPosition = cursorPosition + 1;
+            }
+            else {
+                // Backspace, ArrowLeftで共通
+                // 左端で左を押したとき、0未満にならないようにする
+                newCursorPosition =
+                    cursorPosition - 1 >= 0 ? cursorPosition - 1 : cursorPosition;
+            }
+            target.setSelectionRange(newCursorPosition, newCursorPosition);
+        });
+    };
+    const initInputObserver = () => {
+        keypressObserver();
+        keydownObserver();
+    };
+
+    const isCanvasElement = (target) => {
+        if (target === null)
+            return false;
+        const t = target;
+        if (t.tagName !== "CANVAS")
+            return false;
+        return t;
+    };
+    const initWheelAmplfy = () => {
+        // TODO: 追加したときのイベントを取っておいていつでも消せるようにする
+        // canvasにイベントつけると無限ループするので注意
+        unsafeWindow.addEventListener("wheel", ({ deltaY, target: eventTraget }) => {
+            if (!unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
+                .enabled) {
+                return;
+            }
+            log.debug("WheelAmplify", "Swoosh!");
+            const target = isCanvasElement(eventTraget);
+            if (!target)
+                return;
+            const newWheelEvent = new WheelEvent("wheel", {
+                deltaY: deltaY *
+                    unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
+                        .ratio,
+            });
+            target.dispatchEvent(newWheelEvent);
+        });
     };
 
     // 'return' outside of functionでビルドがコケるのを防ぐ即時実行関数
@@ -680,6 +925,8 @@
         initUi();
         initInterceptor();
         initResizeObserver();
+        initInputObserver();
+        initWheelAmplfy();
         initTacticsManual();
     })();
 
