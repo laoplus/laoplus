@@ -205,7 +205,7 @@ export const ConfigModal = () => {
                             </label>
                             <span className="flex gap-1 text-gray-600 text-sm">
                                 <i className="bi bi-info-circle"></i>
-                                この設定はページ再読み込み後に反映されます
+                                この設定の変更はページ再読み込み後に反映されます
                             </span>
                         </div>
 
