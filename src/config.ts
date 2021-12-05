@@ -22,7 +22,10 @@ export class Config {
     config: typeof defaultConfig;
 
     constructor() {
-        this.config = GM_getValue("config", defaultConfig);
+        this.config = _.merge(
+            defaultConfig,
+            GM_getValue("config", defaultConfig)
+        );
     }
 
     set(value: DeepPartial<Config["config"]>) {
