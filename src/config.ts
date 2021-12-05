@@ -15,6 +15,10 @@ const defaultConfig = {
                 exploration: true,
             },
         },
+        wheelAmplify: {
+            enabled: true,
+            ratio: 10,
+        },
     },
 };
 
