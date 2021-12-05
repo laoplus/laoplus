@@ -1,9 +1,4 @@
-import {
-    cancel,
-    enter,
-    loginto,
-    reward,
-} from ".";
+import { cancel, enter, loginto, reward } from "./functions";
 import { InvokeProps } from "../types";
 
 // TODO: 型を用意してanyをキャストする

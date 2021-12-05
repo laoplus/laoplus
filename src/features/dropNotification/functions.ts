@@ -14,6 +14,9 @@ type CreatePCInfo = {
     Level: number;
 };
 
+/**
+ * @package
+ */
 export const PcDropNotification = (res: { CreatePCInfos: CreatePCInfo[] }) => {
     const embeds = res.CreatePCInfos.reduce((embeds: Embed[], pc) => {
         // ランクB, Aを無視

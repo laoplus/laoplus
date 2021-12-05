@@ -1,4 +1,4 @@
-import { PcDropNotification } from ".";
+import { PcDropNotification } from "./functions";
 import { InvokeProps } from "../types";
 
 // TODO: 渡す前にキャストする

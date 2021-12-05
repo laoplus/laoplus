@@ -55,6 +55,9 @@ const sendNotification = (): void => {
     }
 };
 
+/**
+ * @package
+ */
 export const loginto = ({
     ExplorationList,
 }: {
@@ -84,6 +87,9 @@ export const loginto = ({
     );
 };
 
+/**
+ * @package
+ */
 export const enter = ({ EnterInfo }: { EnterInfo: ExplorationSquad }): void => {
     const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
     const timeoutID = window.setTimeout(sendNotification, msToFinish);
@@ -96,6 +102,9 @@ export const enter = ({ EnterInfo }: { EnterInfo: ExplorationSquad }): void => {
     );
 };
 
+/**
+ * @package
+ */
 export const reward = ({ SquadIndex }: { SquadIndex: number }): void => {
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
@@ -108,6 +117,9 @@ export const reward = ({ SquadIndex }: { SquadIndex: number }): void => {
     );
 };
 
+/**
+ * @package
+ */
 export const cancel = ({ SquadIndex }: { SquadIndex: number }): void => {
     const targetExploration = unsafeWindow.LAOPLUS.exploration.find(
         (ex) => ex.SquadIndex === SquadIndex
