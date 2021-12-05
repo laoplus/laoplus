@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.1.0-9ebe2428c5af136dae9f58a546e2095267435fdc
+// @version     0.1.0-9e73bbd0e417a90005a55e61e9783bc1d67ef626
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -198,12 +198,16 @@
                     exploration: true,
                 },
             },
+            wheelAmplify: {
+                enabled: true,
+                ratio: 10,
+            },
         },
     };
     class Config {
         config;
         constructor() {
-            this.config = GM_getValue("config", defaultConfig);
+            this.config = _.merge(defaultConfig, GM_getValue("config", defaultConfig));
         }
         set(value) {
             _.merge(this.config, value);
@@ -384,7 +388,37 @@
                                             React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
                                     React.createElement("label", { className: "flex gap-2 items-center" },
                                         React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
-                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")))))),
+                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86"))))),
+                        React.createElement("div", { className: "flex flex-col gap-1" },
+                            React.createElement("label", { className: "flex gap-2 items-center" },
+                                React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.wheelAmplify.enabled") }),
+                                React.createElement("span", null, "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45"),
+                                React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" })),
+                            React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                React.createElement("i", { className: "bi bi-info-circle" }),
+                                "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059")),
+                        React.createElement("div", { className: cn("flex flex-col gap-1", {
+                                "opacity-50": !watch("features.wheelAmplify.enabled"),
+                            }) },
+                            React.createElement("label", { className: "flex gap-2" },
+                                React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
+                                React.createElement("input", { 
+                                    // numberだと値が二重になる
+                                    type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
+                                        required: watch("features.wheelAmplify.enabled"),
+                                        validate: (value) => 
+                                        // prettier-ignore
+                                        typeof Number(value) === "number"
+                                            && !Number.isNaN(Number(value)),
+                                    }) })),
+                            errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                errors.features?.wheelAmplify?.ratio
+                                    ?.type === "required" &&
+                                    "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
+                                errors.features?.wheelAmplify?.ratio
+                                    ?.type === "validate" &&
+                                    "増幅倍率は数字で入力してください")))),
                     React.createElement("div", { className: "my-2 border-t" }),
                     React.createElement("div", { className: "flex flex-col gap-2 items-center" },
                         React.createElement("span", { className: "text-gray-600 text-sm" },
@@ -722,6 +756,9 @@
         return t;
     };
     const getCursorPosition = (element) => {
+        // https://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+        // なんかtextじゃないとnullになる
+        element.type = "text";
         const cursorPosition = element.selectionStart;
         if (cursorPosition === null) {
             throw new Error("cursor position should not be null");
@@ -798,6 +835,35 @@
         keydownObserver();
     };
 
+    const isCanvasElement = (target) => {
+        if (target === null)
+            return false;
+        const t = target;
+        if (t.tagName !== "CANVAS")
+            return false;
+        return t;
+    };
+    const initWheelAmplfy = () => {
+        // TODO: 追加したときのイベントを取っておいていつでも消せるようにする
+        // canvasにイベントつけると無限ループするので注意
+        unsafeWindow.addEventListener("wheel", ({ deltaY, target: eventTraget }) => {
+            if (!unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
+                .enabled) {
+                return;
+            }
+            log.debug("WheelAmplify", "Swoosh!");
+            const target = isCanvasElement(eventTraget);
+            if (!target)
+                return;
+            const newWheelEvent = new WheelEvent("wheel", {
+                deltaY: deltaY *
+                    unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
+                        .ratio,
+            });
+            target.dispatchEvent(newWheelEvent);
+        });
+    };
+
     // 'return' outside of functionでビルドがコケるのを防ぐ即時実行関数
     (function () {
         const isGameWindow = injection();
@@ -822,6 +888,7 @@
         initInterceptor();
         initResizeObserver();
         initInputObserver();
+        initWheelAmplfy();
         initTacticsManual();
     })();
 
