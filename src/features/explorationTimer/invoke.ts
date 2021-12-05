@@ -7,7 +7,7 @@ import {
 import { InvokeProps } from "../types";
 
 // TODO: 型を用意してanyをキャストする
-export const invoke = ({ xhr, res, url }: InvokeProps) => {
+export const invoke = ({ res, url }: InvokeProps) => {
     switch (url.pathname) {
         case "/exploration_inginfo":
             loginto(res as any);
