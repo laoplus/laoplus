@@ -66,6 +66,21 @@ PWA としてインストールするとより便利に使えます
 </details>
 
 <details>
+<summary><b>ホイールスクロール増幅</b></summary>
+
+| デフォルト | 増幅倍率 20倍 |
+|:---------:|:------------:|
+|![2021-12-06_00-11-31](https://user-images.githubusercontent.com/3516343/144752334-e6a19fe6-766c-4b19-8439-70f366f49086.gif) | ![2021-12-06_00-12-09](https://user-images.githubusercontent.com/3516343/144752331-30587eec-c235-480d-a413-8f0fd0329149.gif) |
+
+デフォルトで1スクロールあたりのスクロール量がめちゃくちゃ小さいのをスクロール量を増幅させてなんとかします
+
+※ この設定はページ読み込み時のみ反映されるため、設定の変更後はページを再読込する必要があります
+
+---
+
+</details>
+
+<details>
 <summary><b>設定画面</b></summary>
 
 ![image](https://user-images.githubusercontent.com/3516343/144452521-a30f019c-d335-4051-b7cf-4afa8c8a6235.png)

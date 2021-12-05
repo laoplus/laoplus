@@ -7,6 +7,7 @@ import { initTacticsManual } from "tacticsManual";
 import { TacticsManualUnit, ExplorationSquad } from "./types";
 import { tailwindConfig } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
+import { initWheelAmplfy } from "./features/wheelAmplify";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -50,5 +51,6 @@ declare global {
     initInterceptor();
     initResizeObserver();
     initInputObserver();
+    initWheelAmplfy();
     initTacticsManual();
 })();

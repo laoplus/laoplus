@@ -190,6 +190,67 @@ export const ConfigModal = () => {
                                 </div>
                             </label>
                         </div>
+
+                        <div className="flex flex-col gap-1">
+                            <label className="flex gap-2 items-center">
+                                <input
+                                    type="checkbox"
+                                    className="-ml-6 w-4 h-4"
+                                    {...register(
+                                        "features.wheelAmplify.enabled"
+                                    )}
+                                />
+                                <span>ホイールスクロール増幅</span>
+                                <HelpIcon href="https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" />
+                            </label>
+                            <span className="flex gap-1 text-gray-600 text-sm">
+                                <i className="bi bi-info-circle"></i>
+                                この設定の変更はページ再読み込み後に反映されます
+                            </span>
+                        </div>
+
+                        <div
+                            className={cn("flex flex-col gap-1", {
+                                "opacity-50": !watch(
+                                    "features.wheelAmplify.enabled"
+                                ),
+                            })}
+                        >
+                            <label className="flex gap-2">
+                                <span className="flex-shrink-0">増幅倍率:</span>
+                                <input
+                                    // numberだと値が二重になる
+                                    type="text"
+                                    disabled={
+                                        !watch("features.wheelAmplify.enabled")
+                                    }
+                                    className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                    {...register(
+                                        "features.wheelAmplify.ratio",
+                                        {
+                                            required: watch(
+                                                "features.wheelAmplify.enabled"
+                                            ),
+                                            validate: (value) =>
+                                                // prettier-ignore
+                                                typeof Number(value) === "number"
+                                                && !Number.isNaN(Number(value)),
+                                        }
+                                    )}
+                                />
+                            </label>
+                            {errors.features?.wheelAmplify?.ratio && (
+                                <ErrorMessage className="flex gap-1">
+                                    <i className="bi bi-exclamation-triangle"></i>
+                                    {errors.features?.wheelAmplify?.ratio
+                                        ?.type === "required" &&
+                                        "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です"}
+                                    {errors.features?.wheelAmplify?.ratio
+                                        ?.type === "validate" &&
+                                        "増幅倍率は数字で入力してください"}
+                                </ErrorMessage>
+                            )}
+                        </div>
                     </main>
 
                     <div className="my-2 border-t"></div>
