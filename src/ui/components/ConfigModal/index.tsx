@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import { Config } from "config";
-import { log } from "utils/log";
+import { log } from "~/utils";
 import { ErrorMessage } from "./ErrorMessage";
 import { ExplorationList } from "./ExplorationList";
 import { HelpIcon } from "./HelpIcon";

@@ -1,32 +1,11 @@
-import { Dayjs } from "dayjs";
 import { ExplorationSquad } from "types";
 import { sendToDiscordWebhook } from "features/discordNotification";
-import { log } from "utils/log";
-import { humanFriendlyStageKey } from "~/utils/humanFriendlyStageKey";
-
-/**
- * 与えられた日時までの時間と分のみの相対時間に変換する
- * @returns x時間x分
- */
-const toRelativeTime = (target: Dayjs) => {
-    const now = dayjs();
-
-    const hour = target.diff(now, "hour");
-    const minute = target.diff(now.add(hour, "hour"), "minute");
-    if (hour === 0) {
-        return `${minute}分`;
-    }
-    return `${hour}時間${minute}分`;
-};
-
-/**
- * 1桁の数字を囲み絵文字に変換する
- * @param SquadIndex 1 | 2| 3 | 4
- * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
- */
-const squadIndexToEmoji = (SquadIndex: number) => {
-    return SquadIndex + "\uFE0F\u20E3";
-};
+import {
+    dateToRelativeTime,
+    humanFriendlyStageKey,
+    log,
+    numberToEmoji,
+} from "~/utils";
 
 const sendNotification = (): void => {
     const embedFields: {
@@ -41,12 +20,12 @@ const sendNotification = (): void => {
             const isFinished = endDate.isSameOrBefore(dayjs().add(1, "second"));
             const value = isFinished
                 ? ":white_check_mark: **完了**"
-                : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
+                : `<t:${ex.EndTime}:t> ${dateToRelativeTime(endDate)}後`;
             // <t:TIMESTAMP> Discord Timestamp Format
             // https://discord.com/developers/docs/reference#message-formatting
             return {
                 name: [
-                    squadIndexToEmoji(ex.SquadIndex),
+                    numberToEmoji(ex.SquadIndex),
                     humanFriendlyStageKey(ex.StageKeyString),
                 ].join(" "),
                 value: value,
@@ -76,7 +55,7 @@ const sendNotification = (): void => {
     }
 };
 
-export const explorationInginfo = ({
+export const loginto = ({
     ExplorationList,
 }: {
     ExplorationList: ExplorationSquad[];
@@ -105,11 +84,7 @@ export const explorationInginfo = ({
     );
 };
 
-export const explorationEnter = ({
-    EnterInfo,
-}: {
-    EnterInfo: ExplorationSquad;
-}): void => {
+export const enter = ({ EnterInfo }: { EnterInfo: ExplorationSquad }): void => {
     const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
     const timeoutID = window.setTimeout(sendNotification, msToFinish);
     unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
@@ -121,11 +96,7 @@ export const explorationEnter = ({
     );
 };
 
-export const explorationReward = ({
-    SquadIndex,
-}: {
-    SquadIndex: number;
-}): void => {
+export const reward = ({ SquadIndex }: { SquadIndex: number }): void => {
     unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter(
         (ex) => ex.SquadIndex !== SquadIndex
     );
@@ -137,11 +108,7 @@ export const explorationReward = ({
     );
 };
 
-export const explorationCancel = ({
-    SquadIndex,
-}: {
-    SquadIndex: number;
-}): void => {
+export const cancel = ({ SquadIndex }: { SquadIndex: number }): void => {
     const targetExploration = unsafeWindow.LAOPLUS.exploration.find(
         (ex) => ex.SquadIndex === SquadIndex
     );
