@@ -1,4 +1,4 @@
-import { log } from "utils/log";
+import { log } from "~/utils";
 
 export const initResizeObserver = () => {
     const game = document.querySelector("canvas");

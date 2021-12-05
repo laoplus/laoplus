@@ -1,6 +1,7 @@
 import { log } from "~/utils/log";
+import { Webhook } from "discord-webhook-ts";
 
-export const sendToDiscordWebhook = (body: unknown) => {
+export const sendToDiscordWebhook = (body: Webhook.input.POST) => {
     if (
         !unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled
     ) {

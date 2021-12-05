@@ -1,4 +1,4 @@
-import { log } from "utils/log";
+import { log } from "~/utils";
 
 // https://stackoverflow.com/questions/61132262/typescript-deep-partial
 type DeepPartial<T> = {
