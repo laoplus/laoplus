@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.1.0-00e251fa77991b6e3f6d9f9eff041069a1a82187
+// @version     0.1.0-8921f03cecf890743d08ec7f02b6dfd34844e554
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -125,6 +125,69 @@
         return true;
     };
 
+    /**
+     * 与えられた日時までを時間と分のみの相対時間に変換する
+     * @returns x時間x分
+     * @returns x分
+     */
+    const dateToRelativeTime = (target) => {
+        const now = dayjs();
+        const hour = target.diff(now, "hour");
+        const minute = target.diff(now.add(hour, "hour"), "minute");
+        if (hour === 0) {
+            return `${minute}分`;
+        }
+        return `${hour}時間${minute}分`;
+    };
+
+    const gradeToRank = (grade) => {
+        switch (grade) {
+            default:
+            case 1:
+                return "";
+            case 2:
+                return "B";
+            case 3:
+                return "A";
+            case 4:
+                return "S";
+            case 5:
+                return "SS";
+        }
+    };
+
+    // TODO: テストを書く
+    /**
+     * StageKeyをプレイヤーが慣れてる表記に変換する
+     * @param StageKey Ch01Ev9Stage01Ex
+     * @returns Ev1-1Ex
+     */
+    const humanFriendlyStageKey = (StageKey) => {
+        const regex = /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
+        const exec = regex.exec(StageKey);
+        if (exec && exec.groups) {
+            const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
+            const isEvent = event !== "";
+            const chapter = Number(c);
+            const stage = Number(s);
+            return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}`;
+        }
+        // うまくパースできなかったらそのまま返す
+        return StageKey;
+    };
+
+    /**
+     * 1桁の数字を囲み絵文字に変換する
+     * @param SquadIndex 1 | 2| 3 | 4
+     * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
+     */
+    const numberToEmoji = (number) => {
+        if (String(number).length !== 1) {
+            throw new Error("1桁以外の数字を処理することはできません");
+        }
+        return number + "\uFE0F\u20E3";
+    };
+
     const defaultConfig = {
         features: {
             discordNotification: {
@@ -156,26 +219,6 @@
     const cn$3 = classNames;
     const ErrorMessage = ({ children, className }) => {
         return (React.createElement("span", { className: cn$3("text-red-600 text-xs", className) }, children));
-    };
-
-    // TODO: テストを書く
-    /**
-     * StageKeyをプレイヤーが慣れてる表記に変換する
-     * @param StageKey Ch01Ev9Stage01Ex
-     * @returns Ev1-1Ex
-     */
-    const humanFriendlyStageKey = (StageKey) => {
-        const regex = /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
-        const exec = regex.exec(StageKey);
-        if (exec && exec.groups) {
-            const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
-            const isEvent = event !== "";
-            const chapter = Number(c);
-            const stage = Number(s);
-            return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}`;
-        }
-        // うまくパースできなかったらそのまま返す
-        return StageKey;
     };
 
     const cn$2 = classNames;
@@ -382,13 +425,6 @@
         document.body.appendChild(root);
     };
 
-    const rankColor = {
-        SS: chroma.rgb(255, 223, 33),
-        S: chroma.rgb(255, 166, 3),
-        A: chroma.rgb(5, 176, 228),
-        B: chroma.rgb(30, 160, 13),
-    };
-
     const sendToDiscordWebhook = (body) => {
         if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
             log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
@@ -410,27 +446,6 @@
         return parseInt(hex.replace("#", ""), 16);
     };
 
-    /**
-     * 与えられた日時までの時間と分のみの相対時間に変換する
-     * @returns x時間x分
-     */
-    const toRelativeTime = (target) => {
-        const now = dayjs();
-        const hour = target.diff(now, "hour");
-        const minute = target.diff(now.add(hour, "hour"), "minute");
-        if (hour === 0) {
-            return `${minute}分`;
-        }
-        return `${hour}時間${minute}分`;
-    };
-    /**
-     * 1桁の数字を囲み絵文字に変換する
-     * @param SquadIndex 1 | 2| 3 | 4
-     * @returns 1️⃣ | 2️⃣ | 3️⃣ | 4️⃣
-     */
-    const squadIndexToEmoji = (SquadIndex) => {
-        return SquadIndex + "\uFE0F\u20E3";
-    };
     const sendNotification = () => {
         const embedFields = unsafeWindow.LAOPLUS.exploration
             .sort((a, b) => a.EndTime - b.EndTime)
@@ -440,12 +455,12 @@
             const isFinished = endDate.isSameOrBefore(dayjs().add(1, "second"));
             const value = isFinished
                 ? ":white_check_mark: **完了**"
-                : `<t:${ex.EndTime}:t> ${toRelativeTime(endDate)}後`;
+                : `<t:${ex.EndTime}:t> ${dateToRelativeTime(endDate)}後`;
             // <t:TIMESTAMP> Discord Timestamp Format
             // https://discord.com/developers/docs/reference#message-formatting
             return {
                 name: [
-                    squadIndexToEmoji(ex.SquadIndex),
+                    numberToEmoji(ex.SquadIndex),
                     humanFriendlyStageKey(ex.StageKeyString),
                 ].join(" "),
                 value: value,
@@ -468,7 +483,10 @@
             log.debug("Exploration Timer", "設定が無効のため、Discord通知を送信しませんでした", body);
         }
     };
-    const explorationInginfo = ({ ExplorationList, }) => {
+    /**
+     * @package
+     */
+    const loginto = ({ ExplorationList, }) => {
         // 既存のタイマーをすべて破棄する
         unsafeWindow.LAOPLUS.exploration.forEach((ex) => {
             if (ex.timeoutID) {
@@ -487,17 +505,26 @@
         });
         log.log("Exploration Timer", "Restore Exploration Timers", unsafeWindow.LAOPLUS.exploration);
     };
-    const explorationEnter = ({ EnterInfo, }) => {
+    /**
+     * @package
+     */
+    const enter = ({ EnterInfo }) => {
         const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
         const timeoutID = window.setTimeout(sendNotification, msToFinish);
         unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
         log.log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
-    const explorationReward = ({ SquadIndex, }) => {
+    /**
+     * @package
+     */
+    const reward = ({ SquadIndex }) => {
         unsafeWindow.LAOPLUS.exploration = unsafeWindow.LAOPLUS.exploration.filter((ex) => ex.SquadIndex !== SquadIndex);
         log.log("Exploration Timer", "Remove Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
-    const explorationCancel = ({ SquadIndex, }) => {
+    /**
+     * @package
+     */
+    const cancel = ({ SquadIndex }) => {
         const targetExploration = unsafeWindow.LAOPLUS.exploration.find((ex) => ex.SquadIndex === SquadIndex);
         if (targetExploration?.timeoutID) {
             window.clearTimeout(targetExploration.timeoutID);
@@ -506,19 +533,77 @@
         log.log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
     };
 
-    const gradeToRank = (grade) => {
-        switch (grade) {
-            default:
-            case 1:
-                return "";
-            case 2:
-                return "B";
-            case 3:
-                return "A";
-            case 4:
-                return "S";
-            case 5:
-                return "SS";
+    // TODO: 型を用意してanyをキャストする
+    const invoke$1 = ({ res, url }) => {
+        switch (url.pathname) {
+            case "/exploration_inginfo":
+                loginto(res);
+                return;
+            case "/exploration_enter":
+                enter(res);
+                return;
+            case "/exploration_reward":
+                reward(res);
+                return;
+            case "/exploration_cancel":
+                cancel(res);
+                return;
+        }
+    };
+
+    const rankColor = {
+        SS: chroma.rgb(255, 223, 33),
+        S: chroma.rgb(255, 166, 3),
+        A: chroma.rgb(5, 176, 228),
+        B: chroma.rgb(30, 160, 13),
+    };
+
+    /**
+     * @package
+     */
+    const PcDropNotification = (res) => {
+        const embeds = res.CreatePCInfos.reduce((embeds, pc) => {
+            // ランクB, Aを無視
+            if (pc.Grade === 2 || pc.Grade === 3)
+                return embeds;
+            const id = pc.Index.replace(/^Char_/, "").replace(/_N$/, "");
+            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+            const rank = gradeToRank(pc.Grade);
+            // クラゲ
+            if (id.startsWith("Core"))
+                return embeds;
+            // 強化モジュール
+            if (id.startsWith("Module"))
+                return embeds;
+            embeds.push({
+                title: name || id,
+                color: rank !== ""
+                    ? colorHexToInteger(rankColor[rank].hex())
+                    : undefined,
+                url: `https://lo.swaytwig.com/units/${id}`,
+                thumbnail: {
+                    url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
+                },
+            });
+            return embeds;
+        }, []);
+        const body = { embeds };
+        if (embeds.length !== 0 &&
+            unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .interests.pcdrop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+    };
+
+    // TODO: 渡す前にキャストする
+    const invoke = ({ res, url }) => {
+        switch (url.pathname) {
+            case "/wave_clear":
+                PcDropNotification(res);
+                return;
         }
     };
 
@@ -534,54 +619,10 @@
         try {
             const res = JSON.parse(responseText);
             log.debug("Interceptor", url.pathname, res);
+            const invokeProps = { xhr, res, url };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
-            if (url.pathname === "/wave_clear") {
-                const embeds = res.CreatePCInfos.map((c) => {
-                    // ランクB, Aを無視
-                    if (c.Grade === 2 || c.Grade === 3)
-                        return;
-                    const id = c.Index.replace(/^Char_/, "").replace(/_N$/, "");
-                    const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
-                    const rank = gradeToRank(c.Grade);
-                    // クラゲ
-                    if (id.startsWith("Core"))
-                        return;
-                    // 強化モジュール
-                    if (id.startsWith("Module"))
-                        return;
-                    return {
-                        title: name || id,
-                        color: rank !== ""
-                            ? colorHexToInteger(rankColor[rank].hex())
-                            : undefined,
-                        url: `https://lo.swaytwig.com/units/${id}`,
-                        thumbnail: {
-                            url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
-                        },
-                    };
-                }).filter(Boolean);
-                const body = { embeds: embeds };
-                if (embeds.length !== 0 &&
-                    unsafeWindow.LAOPLUS.config.config.features.discordNotification
-                        .interests.pcdrop) {
-                    sendToDiscordWebhook(body);
-                }
-                else {
-                    log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
-                }
-            }
-            else if (url.pathname === "/exploration_inginfo") {
-                explorationInginfo(res);
-            }
-            else if (url.pathname === "/exploration_enter") {
-                explorationEnter(res);
-            }
-            else if (url.pathname === "/exploration_reward") {
-                explorationReward(res);
-            }
-            else if (url.pathname === "/exploration_cancel") {
-                explorationCancel(res);
-            }
+            invoke$1(invokeProps);
+            invoke(invokeProps);
         }
         catch (error) {
             log.error("Interceptor", "Error", error);
