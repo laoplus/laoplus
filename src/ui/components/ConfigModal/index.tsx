@@ -247,7 +247,7 @@ export const ConfigModal = () => {
                                         "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です"}
                                     {errors.features?.wheelAmplify?.ratio
                                         ?.type === "validate" &&
-                                        "ホイールスクロール増幅は数字で入力してください"}
+                                        "増幅倍率は数字で入力してください"}
                                 </ErrorMessage>
                             )}
                         </div>
