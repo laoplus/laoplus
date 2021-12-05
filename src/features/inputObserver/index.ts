@@ -6,6 +6,9 @@ const isInputElement = (target: EventTarget | null) => {
 };
 
 const getCursorPosition = (element: HTMLInputElement) => {
+    // https://stackoverflow.com/questions/21177489/selectionstart-selectionend-on-input-type-number-no-longer-allowed-in-chrome
+    // なんかtextじゃないとnullになる
+    element.type = "text";
     const cursorPosition = element.selectionStart;
     if (cursorPosition === null) {
         throw new Error("cursor position should not be null");
