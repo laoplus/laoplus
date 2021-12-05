@@ -162,7 +162,7 @@ export const ConfigModal = () => {
                                                 )
                                             }
                                             {...register(
-                                                "features.discordNotification.interests.pcdrop"
+                                                "features.discordNotification.interests.pcDrop"
                                             )}
                                         />
                                         <span className="flex gap-1 items-center">

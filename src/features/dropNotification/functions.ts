@@ -66,7 +66,7 @@ export const PcDropNotification = (res: WaveClearResponse) => {
     if (
         embeds.length !== 0 &&
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .interests.pcdrop
+            .interests.pcDrop
     ) {
         sendToDiscordWebhook(body);
     } else {
