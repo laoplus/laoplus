@@ -12,6 +12,7 @@ const defaultConfig = {
             webhookURL: "",
             interests: {
                 pcDrop: true,
+                itemDrop: true,
                 exploration: true,
             },
         },

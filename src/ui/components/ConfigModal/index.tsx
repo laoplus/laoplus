@@ -182,6 +182,26 @@ export const ConfigModal = () => {
                                                 )
                                             }
                                             {...register(
+                                                "features.discordNotification.interests.itemDrop"
+                                            )}
+                                        />
+                                        <span className="flex gap-1 items-center">
+                                            アイテムドロップ
+                                            <span className="text-gray-600 text-xs">
+                                                現在はSSのみ
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
                                                 "features.discordNotification.interests.exploration"
                                             )}
                                         />

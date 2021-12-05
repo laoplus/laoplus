@@ -77,3 +77,47 @@ export const PcDropNotification = (res: WaveClearResponse) => {
         );
     }
 };
+
+/**
+ * @package
+ */
+export const itemDropNotification = (res: WaveClearResponse) => {
+    const embeds = res.ClearRewardInfo.ItemRewardList.reduce(
+        (embeds: Embed[], item) => {
+            // SSのみ
+            if (!item.ItemKeyString.includes("T4")) return embeds;
+
+            const localeKey = item.ItemKeyString.replace(/^Equip_/, "EQUIP_");
+            const id = item.ItemKeyString.replace(/^Equip_/, "");
+            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[localeKey];
+
+            embeds.push({
+                title: name || localeKey,
+                color: colorHexToInteger(rankColor["SS"].hex()),
+                url: `https://lo.swaytwig.com/equips/${id}`,
+                thumbnail: {
+                    url: `https://lo.swaytwig.com/assets/webp/item/UI_Icon_${item.ItemKeyString}.webp`,
+                },
+            });
+
+            return embeds;
+        },
+        []
+    );
+
+    const body = { embeds };
+
+    if (
+        embeds.length !== 0 &&
+        unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests.itemDrop
+    ) {
+        sendToDiscordWebhook(body);
+    } else {
+        log.debug(
+            "Drop Notification",
+            "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした",
+            body
+        );
+    }
+};
