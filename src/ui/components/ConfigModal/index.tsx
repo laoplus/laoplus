@@ -307,6 +307,7 @@ export const ConfigModal = () => {
                                     )}
                                 />
                                 <span>自動周回停止判定</span>
+                                <HelpIcon href="https://github.com/eai04191/laoplus/wiki/features-autorunDetection" />
                             </label>
                         </div>
 
