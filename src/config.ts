@@ -18,7 +18,7 @@ const defaultConfig = {
         },
         wheelAmplify: {
             enabled: true,
-            ratio: 10,
+            ratio: "10",
         },
     },
 };
