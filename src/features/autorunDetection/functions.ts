@@ -6,13 +6,14 @@ import {
 } from "../discordNotification";
 
 const sendNotification = () => {
+    const threshold =
+        unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
     const body: Webhook.input.POST = {
         embeds: [
             {
                 color: colorHexToInteger(chroma("red").hex()),
                 title: "自動周回停止",
-                description:
-                    "戦闘開始、または終了のインターバルがしきい値を超えています",
+                description: `戦闘開始、または終了のインターバルがしきい値(${threshold}秒)を超えました`,
             },
         ],
     };
