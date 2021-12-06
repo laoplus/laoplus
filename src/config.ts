@@ -14,11 +14,16 @@ const defaultConfig = {
                 pcDrop: true,
                 itemDrop: true,
                 exploration: true,
+                autorunStop: true,
             },
         },
         wheelAmplify: {
             enabled: true,
             ratio: "10",
+        },
+        autorunDetection: {
+            enabled: false,
+            threshold: "300",
         },
     },
 };

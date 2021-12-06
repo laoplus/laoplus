@@ -19,6 +19,12 @@ declare global {
                 unit: TacticsManualUnit[];
             };
             exploration: ExplorationSquad[];
+            status: {
+                autorunDetection: {
+                    battleEnterTimerId: number | null;
+                    battleLeaveTimerId: number | null;
+                };
+            };
         };
     }
 }
@@ -38,6 +44,12 @@ declare global {
             unit: [],
         },
         exploration: [],
+        status: {
+            autorunDetection: {
+                battleEnterTimerId: null,
+                battleLeaveTimerId: null,
+            },
+        },
     };
 
     // @ts-ignore

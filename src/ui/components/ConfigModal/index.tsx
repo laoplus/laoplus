@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import { Config } from "config";
+import { clear as clearAutorunDetectionTimers } from "~/features/autorunDetection/functions";
 import { log } from "~/utils";
 import { ErrorMessage } from "./ErrorMessage";
 import { ExplorationList } from "./ExplorationList";
@@ -34,6 +35,7 @@ export const ConfigModal = () => {
         handleSubmit,
         watch,
         formState: { errors },
+        reset,
     } = ReactHookForm.useForm<Config["config"]>({
         defaultValues: unsafeWindow.LAOPLUS.config.config,
     });
@@ -68,6 +70,10 @@ export const ConfigModal = () => {
                 // .ReactModal__Overlayに指定してるduration
                 closeTimeoutMS={150}
                 isOpen={isOpen}
+                onAfterOpen={() => {
+                    // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
+                    reset();
+                }}
                 overlayClassName="fixed inset-0 backdrop-blur backdrop-saturate-[0.75] flex items-center justify-center"
                 className="min-w-[50%] max-w-[90%] max-h-[90%] p-4 bg-gray-50 rounded shadow overflow-auto"
                 id="laoplus-modal"
@@ -207,6 +213,21 @@ export const ConfigModal = () => {
                                         />
                                         <span>探索完了</span>
                                     </label>
+                                    <label className="flex gap-2 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
+                                                    "features.discordNotification.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.discordNotification.interests.autorunStop"
+                                            )}
+                                        />
+                                        <span>自動周回停止</span>
+                                    </label>
                                 </div>
                             </span>
                         </div>
@@ -268,6 +289,69 @@ export const ConfigModal = () => {
                                     {errors.features?.wheelAmplify?.ratio
                                         ?.type === "validate" &&
                                         "増幅倍率は数字で入力してください"}
+                                </ErrorMessage>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                            <label className="flex gap-2 items-center">
+                                <input
+                                    type="checkbox"
+                                    className="-ml-6 w-4 h-4"
+                                    {...register(
+                                        "features.autorunDetection.enabled",
+                                        {
+                                            onChange:
+                                                clearAutorunDetectionTimers,
+                                        }
+                                    )}
+                                />
+                                <span>自動周回停止判定</span>
+                            </label>
+                        </div>
+
+                        <div
+                            className={cn("flex flex-col gap-1", {
+                                "opacity-50": !watch(
+                                    "features.wheelAmplify.enabled"
+                                ),
+                            })}
+                        >
+                            <label className="flex gap-2">
+                                <span className="flex-shrink-0">
+                                    しきい値(秒):
+                                </span>
+                                <input
+                                    type="text"
+                                    disabled={
+                                        !watch(
+                                            "features.autorunDetection.enabled"
+                                        )
+                                    }
+                                    className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                    {...register(
+                                        "features.autorunDetection.threshold",
+                                        {
+                                            required: watch(
+                                                "features.autorunDetection.enabled"
+                                            ),
+                                            validate: (value) =>
+                                                // prettier-ignore
+                                                typeof Number(value) === "number"
+                                                && !Number.isNaN(Number(value)),
+                                        }
+                                    )}
+                                />
+                            </label>
+                            {errors.features?.autorunDetection?.threshold && (
+                                <ErrorMessage className="flex gap-1">
+                                    <i className="bi bi-exclamation-triangle"></i>
+                                    {errors.features?.autorunDetection
+                                        ?.threshold?.type === "required" &&
+                                        "自動周回停止判定を利用するにはしきい値の指定が必要です"}
+                                    {errors.features?.autorunDetection
+                                        ?.threshold?.type === "validate" &&
+                                        "しきい値は数字で入力してください"}
                                 </ErrorMessage>
                             )}
                         </div>
