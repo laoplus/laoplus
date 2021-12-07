@@ -25,7 +25,7 @@ export const AutorunStatus: React.VFC = () => {
     return (
         <div className="-translate-x-[50%] absolute inset-y-0 left-0 flex items-center text-white opacity-90 pointer-events-none select-none drop-shadow-lg">
             <Spinner
-                className="leading-zero text-[70vh] animate-spin"
+                className="text-[70vh] leading-zero animate-spin"
                 style={{ animationDuration: "12s" }}
             />
             <div className="pl-[50%] absolute inset-0 flex items-center justify-center">
