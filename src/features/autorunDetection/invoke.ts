@@ -1,4 +1,4 @@
-import { enter, leave } from "./functions";
+import { enter } from "./functions";
 import { InvokeProps } from "../types";
 
 export const invoke = ({ url }: InvokeProps) => {
@@ -9,14 +9,6 @@ export const invoke = ({ url }: InvokeProps) => {
                     .enabled
             ) {
                 enter();
-            }
-            return;
-        case "/battleserver_leave":
-            if (
-                unsafeWindow.LAOPLUS.config.config.features.autorunDetection
-                    .enabled
-            ) {
-                leave();
             }
             return;
     }

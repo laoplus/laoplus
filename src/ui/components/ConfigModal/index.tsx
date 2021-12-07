@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import { Config } from "config";
-import { clearTimers as clearAutorunDetectionTimers } from "~/features/autorunDetection/functions";
+import { clearTimer as clearAutorunDetectionTimers } from "~/features/autorunDetection/functions";
 import { log } from "~/utils";
 import { ErrorMessage } from "./ErrorMessage";
 import { ExplorationList } from "./ExplorationList";

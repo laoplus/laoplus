@@ -5,7 +5,7 @@ import {
     sendToDiscordWebhook,
 } from "../discordNotification";
 
-const sendNotification = (type: "enter" | "leave") => {
+const sendNotification = () => {
     const threshold =
         unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
     const body: Webhook.input.POST = {
@@ -13,9 +13,7 @@ const sendNotification = (type: "enter" | "leave") => {
             {
                 color: colorHexToInteger(chroma("red").hex()),
                 title: "自動周回停止",
-                description: `${
-                    type === "enter" ? "戦闘開始" : "戦闘終了"
-                }のインターバルがしきい値(${threshold}秒)を超えました`,
+                description: `戦闘開始のインターバルがしきい値(${threshold}秒)を超えました`,
             },
         ],
     };
@@ -37,7 +35,7 @@ const sendNotification = (type: "enter" | "leave") => {
         features: { autorunDetection: { enabled: false } },
     });
     log.debug("Autorun Detection", "Autorun Detection Disabled");
-    clearTimers();
+    clearTimer();
 };
 
 const getDalayMs = () => {
@@ -53,7 +51,7 @@ const getLatestDate = (delayMs: number) => {
     return new Date(now + delayMs);
 };
 
-export const clearTimers = () => {
+export const clearTimer = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const { enterTimerId } = status.status.autorunDetection;
     if (enterTimerId) {
@@ -83,7 +81,7 @@ export const enter = () => {
         log.debug("Autorun Detection", "Remove Current Enter Timer");
     }
     const delay = getDalayMs();
-    const newEnterTimerId = window.setTimeout(sendNotification, delay, "enter");
+    const newEnterTimerId = window.setTimeout(sendNotification, delay);
     status.set({
         autorunDetection: {
             enterTimerId: newEnterTimerId,
@@ -91,26 +89,4 @@ export const enter = () => {
         },
     });
     log.log("Autorun Detection", "Set Enter Timer", delay);
-};
-
-/**
- * @package
- */
-export const leave = () => {
-    const status = unsafeWindow.LAOPLUS.status;
-    const { leaveTimerId } = status.status.autorunDetection;
-
-    if (leaveTimerId !== null) {
-        window.clearTimeout(leaveTimerId);
-        log.debug("Autorun Detection", "Remove Current Leave Timer");
-    }
-    const delay = getDalayMs();
-    const timerId = window.setTimeout(sendNotification, delay, "leave");
-    status.set({
-        autorunDetection: {
-            leaveTimerId: timerId,
-            latestLeaveTime: getLatestDate(delay),
-        },
-    });
-    log.log("Autorun Detection", "Set Leave Timer", delay);
 };

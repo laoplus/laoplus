@@ -5,8 +5,6 @@ const defaultStatus = {
     autorunDetection: {
         enterTimerId: null,
         latestEnterTime: null,
-        leaveTimerId: null,
-        latestLeaveTime: null,
     },
 };
 
@@ -14,8 +12,6 @@ type statusType = {
     autorunDetection: {
         enterTimerId: number | null;
         latestEnterTime: Date | null;
-        leaveTimerId: number | null;
-        latestLeaveTime: Date | null;
     };
 };
 
