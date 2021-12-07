@@ -318,6 +318,32 @@ export const ConfigModal = () => {
                                 ),
                             })}
                         >
+                            <label className="flex gap-2 items-center">
+                                <input
+                                    type="checkbox"
+                                    className="w-4 h-4"
+                                    disabled={
+                                        !watch(
+                                            "features.autorunDetection.enabled"
+                                        )
+                                    }
+                                    {...register(
+                                        "features.autorunDetection.hideTimer"
+                                    )}
+                                />
+                                <span className="">
+                                    画面にタイマーを表示しない
+                                </span>
+                            </label>
+                        </div>
+
+                        <div
+                            className={cn("flex flex-col gap-1", {
+                                "opacity-50": !watch(
+                                    "features.autorunDetection.enabled"
+                                ),
+                            })}
+                        >
                             <label className="flex gap-2">
                                 <span className="flex-shrink-0">
                                     インターバルのしきい値(分):

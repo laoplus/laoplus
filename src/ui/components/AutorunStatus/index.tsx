@@ -6,12 +6,16 @@ export const AutorunStatus: React.VFC = () => {
     const status = unsafeWindow.LAOPLUS.status;
 
     const [shown, setShown] = React.useState(
-        config.config.features.autorunDetection.enabled
+        config.config.features.autorunDetection.enabled &&
+            !config.config.features.autorunDetection.hideTimer
     );
     const [enterDate, setEnterDate] = React.useState<Date | null>(null);
 
     config.events.on("changed", (e) => {
-        setShown(e.features.autorunDetection.enabled);
+        setShown(
+            e.features.autorunDetection.enabled &&
+                !e.features.autorunDetection.hideTimer
+        );
     });
 
     status.events.on("changed", (e) => {

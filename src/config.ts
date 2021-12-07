@@ -19,6 +19,7 @@ const defaultConfig = {
         },
         autorunDetection: {
             enabled: false,
+            hideTimer: false,
             threshold: "5",
         },
     },
