@@ -1,6 +1,7 @@
 import { log } from "~/utils";
 import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
 import { invoke as invokeDropNotification } from "../dropNotification/invoke";
+import { invoke as invokeAutorunDetection } from "../autorunDetection/invoke";
 
 const interceptor = (xhr: XMLHttpRequest): void => {
     if (!xhr.responseURL) return;
@@ -21,6 +22,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
         // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
         invokeExplorationTimer(invokeProps);
         invokeDropNotification(invokeProps);
+        invokeAutorunDetection(invokeProps);
     } catch (error) {
         log.error("Interceptor", "Error", error);
     }
