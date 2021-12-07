@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS
 // @namespace   net.mizle
-// @version     0.2.0
+// @version     0.3.0
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -27,6 +27,7 @@
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/duration.js
+// @require     https://unpkg.com/mitt@3.0.0/dist/mitt.umd.js
 // @resource    TacticsManualIcon https://lo.swaytwig.com/assets/icon.png
 // @grant       GM_addStyle
 // @grant       GM_getResourceURL
@@ -197,11 +198,17 @@
                     pcDrop: true,
                     itemDrop: true,
                     exploration: true,
+                    autorunStop: true,
                 },
             },
             wheelAmplify: {
                 enabled: true,
-                ratio: 10,
+                ratio: "10",
+            },
+            autorunDetection: {
+                enabled: false,
+                hideTimer: false,
+                threshold: "5",
             },
         },
     };
@@ -210,10 +217,31 @@
         constructor() {
             this.config = _.merge(defaultConfig, GM_getValue("config", defaultConfig));
         }
+        events = mitt();
         set(value) {
             _.merge(this.config, value);
             GM_setValue("config", this.config);
             log.log("Config", "Config Updated", this.config);
+            this.events.emit("changed", this.config);
+        }
+    }
+
+    const defaultStatus = {
+        autorunDetection: {
+            enterTimerId: null,
+            latestEnterTime: null,
+        },
+    };
+    class Status {
+        status;
+        constructor() {
+            this.status = defaultStatus;
+        }
+        events = mitt();
+        set(value) {
+            _.merge(this.status, value);
+            log.log("Status", "Status Updated", this.status);
+            this.events.emit("changed", this.status);
         }
     }
 
@@ -221,19 +249,123 @@
         return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
     };
 
-    const cn$3 = classNames;
-    const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$3("text-red-600 text-xs", className) }, children));
+    const rankColor = {
+        SS: chroma.rgb(255, 223, 33),
+        S: chroma.rgb(255, 166, 3),
+        A: chroma.rgb(5, 176, 228),
+        B: chroma.rgb(30, 160, 13),
+    };
+    const uiColor = {
+        // tailwindcss lime-500
+        success: chroma.hex("#84CC16"),
+        // tailwindcss red-500
+        error: chroma.hex("#EF4444"),
+        // tailwindcss yellow-300
+        warninig: chroma.hex("#FDE047"),
+        // tailwindcss sky-400
+        info: chroma.hex("#38BDF8"),
     };
 
-    const cn$2 = classNames;
+    const sendToDiscordWebhook = (body) => {
+        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
+            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
+            return;
+        }
+        fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .webhookURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
+    };
+    /**
+     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
+     */
+    const colorHexToInteger = (hex) => {
+        return parseInt(hex.replace("#", ""), 16);
+    };
+
+    const sendNotification$1 = () => {
+        const threshold = unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
+        const body = {
+            embeds: [
+                {
+                    color: colorHexToInteger(uiColor.error.hex()),
+                    title: "自動周回停止",
+                    description: `戦闘開始のインターバルがしきい値(${threshold}分)を超えました`,
+                },
+            ],
+        };
+        if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests.autorunStop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+        unsafeWindow.LAOPLUS.config.set({
+            features: { autorunDetection: { enabled: false } },
+        });
+        log.debug("Autorun Detection", "Autorun Detection Disabled");
+        clearTimer();
+    };
+    const getDalayMs = () => {
+        const threshold = Number(unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold);
+        const thresholdMs = threshold * 60 * 1000;
+        return thresholdMs;
+    };
+    const getLatestDate = (delayMs) => {
+        const now = new Date().getTime();
+        return new Date(now + delayMs);
+    };
+    const clearTimer = () => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const { enterTimerId } = status.status.autorunDetection;
+        if (enterTimerId) {
+            window.clearTimeout(enterTimerId);
+            status.set({
+                autorunDetection: { enterTimerId: null, latestEnterTime: null },
+            });
+            log.debug("Autorun Detection", "Reset enterTimer");
+        }
+        log.log("Autorun Detection", "Reset Timers", status.status.autorunDetection);
+    };
+    /**
+     * @package
+     */
+    const enter$1 = () => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const { enterTimerId } = status.status.autorunDetection;
+        if (enterTimerId !== null) {
+            window.clearTimeout(enterTimerId);
+            log.debug("Autorun Detection", "Remove Current Enter Timer");
+        }
+        const delay = getDalayMs();
+        const newEnterTimerId = window.setTimeout(sendNotification$1, delay);
+        status.set({
+            autorunDetection: {
+                enterTimerId: newEnterTimerId,
+                latestEnterTime: getLatestDate(delay),
+            },
+        });
+        log.log("Autorun Detection", "Set Enter Timer", delay);
+    };
+
+    const cn$5 = classNames;
+    const ErrorMessage = ({ children, className }) => {
+        return (React.createElement("span", { className: cn$5("text-red-600 text-xs", className) }, children));
+    };
+
+    const cn$4 = classNames;
     const ExplorationList = () => {
         const exploration = unsafeWindow.LAOPLUS.exploration.sort((a, b) => a.EndTime - b.EndTime);
         const list = exploration.map((exp) => {
             const endDate = dayjs(exp.EndTime * 1000);
             const duration = dayjs.duration(endDate.diff(dayjs()));
             const isFinished = endDate.isSameOrBefore(dayjs());
-            return (React.createElement("div", { key: exp.StageKeyString, className: cn$2("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
+            return (React.createElement("div", { key: exp.StageKeyString, className: cn$4("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
                 React.createElement("span", { className: "text-3xl font-bold" }, exp.SquadIndex),
                 React.createElement("div", { className: "flex flex-col" },
                     React.createElement("span", { className: "text-sm" }, humanFriendlyStageKey(exp.StageKeyString)),
@@ -258,7 +390,7 @@
                 React.createElement("i", { className: "bi bi-question-circle" }))));
     };
 
-    const cn$1 = classNames;
+    const cn$3 = classNames;
     /**
      * ラスオリのボタンっぽいボタン
      * variantのプレビュー: https://user-images.githubusercontent.com/3516343/143912908-65956c55-b60d-4028-82d2-143b08414384.png
@@ -305,10 +437,10 @@
             }
         })();
         return (React.createElement("div", { className: "drop-shadow" },
-            React.createElement("button", { type: "submit", className: cn$1("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+            React.createElement("button", { type: "submit", className: cn$3("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
     };
 
-    const cn = classNames;
+    const cn$2 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
     element.setAttribute("type", "text/tailwindcss");
@@ -329,7 +461,7 @@
     document.head.appendChild(element);
     const ConfigModal = () => {
         const [isOpen, setIsOpen] = React.useState(false);
-        const { register, handleSubmit, watch, formState: { errors }, } = ReactHookForm.useForm({
+        const { register, handleSubmit, watch, formState: { errors }, reset, } = ReactHookForm.useForm({
             defaultValues: unsafeWindow.LAOPLUS.config.config,
         });
         const onSubmit = (config) => {
@@ -348,7 +480,10 @@
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 document.querySelector("#laoplus-root"), shouldCloseOnOverlayClick: false, 
                 // .ReactModal__Overlayに指定してるduration
-                closeTimeoutMS: 150, isOpen: isOpen, overlayClassName: "fixed inset-0 backdrop-blur backdrop-saturate-[0.75] flex items-center justify-center", className: "min-w-[50%] max-w-[90%] max-h-[90%] p-4 bg-gray-50 rounded shadow overflow-auto", id: "laoplus-modal" },
+                closeTimeoutMS: 150, isOpen: isOpen, onAfterOpen: () => {
+                    // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
+                    reset();
+                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur", className: "min-w-[50%] max-w-[90%] max-h-[90%] p-4 bg-gray-50 rounded shadow overflow-auto", id: "laoplus-modal" },
                 React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "flex flex-col gap-2" },
                     React.createElement("header", { className: "flex items-center place-content-between" },
                         React.createElement("div", { className: "flex gap-2 items-end" },
@@ -361,7 +496,7 @@
                                 React.createElement("input", { type: "checkbox", id: "laoplus-discord-notification", className: "-ml-6 w-4 h-4", ...register("features.discordNotification.enabled") }),
                                 React.createElement("span", null, "Discord\u901A\u77E5"),
                                 React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-discordNotification" }))),
-                        React.createElement("div", { className: cn("flex flex-col gap-1", {
+                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
                                 "opacity-50": !watch("features.discordNotification.enabled"),
                             }) },
                             React.createElement("label", { className: "flex gap-2" },
@@ -394,7 +529,10 @@
                                             React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
                                     React.createElement("label", { className: "flex gap-2 items-center" },
                                         React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
-                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86"))))),
+                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
+                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
+                                        React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62"))))),
                         React.createElement("div", { className: "flex flex-col gap-1" },
                             React.createElement("label", { className: "flex gap-2 items-center" },
                                 React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.wheelAmplify.enabled") }),
@@ -403,7 +541,7 @@
                             React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
                                 React.createElement("i", { className: "bi bi-info-circle" }),
                                 "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059")),
-                        React.createElement("div", { className: cn("flex flex-col gap-1", {
+                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
                                 "opacity-50": !watch("features.wheelAmplify.enabled"),
                             }) },
                             React.createElement("label", { className: "flex gap-2" },
@@ -424,7 +562,40 @@
                                     "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
                                 errors.features?.wheelAmplify?.ratio
                                     ?.type === "validate" &&
-                                    "増幅倍率は数字で入力してください")))),
+                                    "増幅倍率は数字で入力してください"))),
+                        React.createElement("div", { className: "flex flex-col gap-1" },
+                            React.createElement("label", { className: "flex gap-2 items-center" },
+                                React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.autorunDetection.enabled", {
+                                        onChange: clearTimer,
+                                    }) }),
+                                React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A"),
+                                React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }))),
+                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
+                                "opacity-50": !watch("features.autorunDetection.enabled"),
+                            }) },
+                            React.createElement("label", { className: "flex gap-2 items-center" },
+                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
+                                React.createElement("span", { className: "" }, "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"))),
+                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
+                                "opacity-50": !watch("features.autorunDetection.enabled"),
+                            }) },
+                            React.createElement("label", { className: "flex gap-2" },
+                                React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
+                                React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.autorunDetection.threshold", {
+                                        required: watch("features.autorunDetection.enabled"),
+                                        validate: (value) => 
+                                        // prettier-ignore
+                                        typeof Number(value) === "number"
+                                            && !Number.isNaN(Number(value)),
+                                    }) })),
+                            errors.features?.autorunDetection?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                errors.features?.autorunDetection
+                                    ?.threshold?.type === "required" &&
+                                    "自動周回停止判定を利用するにはしきい値の指定が必要です",
+                                errors.features?.autorunDetection
+                                    ?.threshold?.type === "validate" &&
+                                    "しきい値は数字で入力してください")))),
                     React.createElement("div", { className: "my-2 border-t" }),
                     React.createElement("div", { className: "flex flex-col gap-2 items-center" },
                         React.createElement("span", { className: "text-gray-600 text-sm" },
@@ -453,37 +624,69 @@
                         React.createElement(ExplorationList, null))))));
     };
 
+    const cn$1 = classNames;
+    /**
+     * @package
+     */
+    const Spinner = ({ className, style }) => {
+        return (React.createElement("i", { className: cn$1("bi bi-arrow-repeat", className), style: style }));
+    };
+
+    const cn = classNames;
+    /**
+     * @package
+     */
+    const Timer = ({ targetDate, className }) => {
+        // コンポーネントを毎秒更新する
+        const [, setSeconds] = React.useState(0);
+        React.useEffect(() => {
+            const interval = window.setInterval(() => {
+                setSeconds((seconds) => seconds + 1);
+            }, 1000);
+            return () => {
+                clearInterval(interval);
+            };
+        }, []);
+        if (targetDate !== null) {
+            const duration = dayjs.duration(dayjs(targetDate).diff(dayjs()));
+            return (React.createElement("div", { className: cn("text-[10vh]", className) }, duration.format("mm:ss")));
+        }
+        return React.createElement("div", { className: cn("text-[6vh]", className) }, "WAITING");
+    };
+
+    const AutorunStatus = () => {
+        const config = unsafeWindow.LAOPLUS.config;
+        const status = unsafeWindow.LAOPLUS.status;
+        const [shown, setShown] = React.useState(config.config.features.autorunDetection.enabled &&
+            !config.config.features.autorunDetection.hideTimer);
+        const [enterDate, setEnterDate] = React.useState(null);
+        config.events.on("changed", (e) => {
+            setShown(e.features.autorunDetection.enabled &&
+                !e.features.autorunDetection.hideTimer);
+        });
+        status.events.on("changed", (e) => {
+            setEnterDate(e.autorunDetection.latestEnterTime);
+        });
+        if (!shown) {
+            return React.createElement(React.Fragment, null);
+        }
+        return (React.createElement("div", { className: "-translate-x-[50%] absolute inset-y-0 left-0 flex items-center text-white opacity-90 pointer-events-none select-none drop-shadow-lg" },
+            React.createElement(Spinner, { className: "text-[70vh] leading-zero animate-spin", style: { animationDuration: "12s" } }),
+            React.createElement("div", { className: "pl-[50%] absolute inset-0 flex items-center justify-center" },
+                React.createElement(Timer, { targetDate: enterDate, className: "pt-[50%] rotate-90" }))));
+    };
+
     const App = () => {
         return (React.createElement(React.Fragment, null,
             React.createElement(Icon, null),
-            React.createElement(ConfigModal, null)));
+            React.createElement(ConfigModal, null),
+            React.createElement(AutorunStatus, null)));
     };
     const initUi = () => {
         const root = document.createElement("div");
         root.id = "laoplus-root";
         ReactDOM.render(React.createElement(App, null), root);
         document.body.appendChild(root);
-    };
-
-    const sendToDiscordWebhook = (body) => {
-        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
-            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
-            return;
-        }
-        fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .webhookURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        });
-    };
-    /**
-     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
-     */
-    const colorHexToInteger = (hex) => {
-        return parseInt(hex.replace("#", ""), 16);
     };
 
     const sendNotification = () => {
@@ -574,7 +777,7 @@
     };
 
     // TODO: 型を用意してanyをキャストする
-    const invoke$1 = ({ res, url }) => {
+    const invoke$2 = ({ res, url }) => {
         switch (url.pathname) {
             case "/exploration_inginfo":
                 loginto(res);
@@ -589,13 +792,6 @@
                 cancel(res);
                 return;
         }
-    };
-
-    const rankColor = {
-        SS: chroma.rgb(255, 223, 33),
-        S: chroma.rgb(255, 166, 3),
-        A: chroma.rgb(5, 176, 228),
-        B: chroma.rgb(30, 160, 13),
     };
 
     /**
@@ -670,11 +866,22 @@
     };
 
     // TODO: 渡す前にキャストする
-    const invoke = ({ res, url }) => {
+    const invoke$1 = ({ res, url }) => {
         switch (url.pathname) {
             case "/wave_clear":
                 PcDropNotification(res);
                 itemDropNotification(res);
+                return;
+        }
+    };
+
+    const invoke = ({ url }) => {
+        switch (url.pathname) {
+            case "/battleserver_enter":
+                if (unsafeWindow.LAOPLUS.config.config.features.autorunDetection
+                    .enabled) {
+                    enter$1();
+                }
                 return;
         }
     };
@@ -693,6 +900,7 @@
             log.debug("Interceptor", url.pathname, res);
             const invokeProps = { xhr, res, url };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
+            invoke$2(invokeProps);
             invoke$1(invokeProps);
             invoke(invokeProps);
         }
@@ -777,6 +985,9 @@
             extend: {
                 transitionProperty: {
                     spacing: "margin, padding",
+                },
+                lineHeight: {
+                    zero: "0",
                 },
             },
         },
@@ -895,8 +1106,8 @@
                 return;
             const newWheelEvent = new WheelEvent("wheel", {
                 deltaY: deltaY *
-                    unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
-                        .ratio,
+                    Number(unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
+                        .ratio),
             });
             target.dispatchEvent(newWheelEvent);
         });
@@ -908,6 +1119,7 @@
         if (!isGameWindow)
             return;
         const config = new Config();
+        const status = new Status();
         // LAOPLUSオブジェクトを露出させる
         unsafeWindow.LAOPLUS = {
             config: config,
@@ -916,6 +1128,7 @@
                 unit: [],
             },
             exploration: [],
+            status: status,
         };
         // @ts-ignore
         tailwind.config = tailwindConfig;
@@ -928,6 +1141,12 @@
         initInputObserver();
         initWheelAmplfy();
         initTacticsManual();
+        unsafeWindow.LAOPLUS.config.events.on("*", (type, e) => {
+            log.debug("index", "config fired", type, e);
+        });
+        unsafeWindow.LAOPLUS.status.events.on("*", (type, e) => {
+            log.debug("index", "status fired", type, e);
+        });
     })();
 
 })();
