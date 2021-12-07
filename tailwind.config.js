@@ -13,6 +13,9 @@ module.exports = {
             transitionProperty: {
                 spacing: "margin, padding",
             },
+            lineHeight: {
+                zero: "0",
+            },
         },
     },
     variants: {
