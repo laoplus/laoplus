@@ -81,6 +81,19 @@ PWA としてインストールするとより便利に使えます
 </details>
 
 <details>
+<summary><b>自動周回停止通知（仮）</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/145052928-74a8de77-a05f-4c20-8719-d53598929247.png)
+
+戦闘開始を検知してタイマーを作動させます。タイマーが切れるまでに次の戦闘が開始しなければ、何らかの要因で自動周回が止まっているとみなし Disocrd にメッセージを送信します
+
+※ この機能は仮実装です。通信環境などの影響で周回時間が増減する場合正確な判別ができません。本実装の際には戦闘員や装備の状態を把握して正確な判別をできるようにする予定です。
+
+---
+
+</details>
+
+<details>
 <summary><b>設定画面</b></summary>
 
 ![image](https://user-images.githubusercontent.com/3516343/144452521-a30f019c-d335-4051-b7cf-4afa8c8a6235.png)
