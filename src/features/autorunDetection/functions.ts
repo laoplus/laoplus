@@ -5,7 +5,7 @@ import {
     sendToDiscordWebhook,
 } from "../discordNotification";
 
-const sendNotification = () => {
+const sendNotification = (type: "enter" | "leave") => {
     const threshold =
         unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
     const body: Webhook.input.POST = {
@@ -13,7 +13,9 @@ const sendNotification = () => {
             {
                 color: colorHexToInteger(chroma("red").hex()),
                 title: "自動周回停止",
-                description: `戦闘開始、または終了のインターバルがしきい値(${threshold}秒)を超えました`,
+                description: `${
+                    type === "enter" ? "戦闘開始" : "戦闘終了"
+                }のインターバルがしきい値(${threshold}秒)を超えました`,
             },
         ],
     };
@@ -35,6 +37,7 @@ const sendNotification = () => {
         features: { autorunDetection: { enabled: false } },
     });
     log.debug("Autorun Detection", "Autorun Detection Disabled");
+    clearTimers();
 };
 
 const getDalayMs = () => {
@@ -45,39 +48,53 @@ const getDalayMs = () => {
     return thresholdMs;
 };
 
-export const clear = () => {
-    const status = unsafeWindow.LAOPLUS.status.autorunDetection;
-    status.battleEnterTimerId = null;
-    status.battleLeaveTimerId = null;
-    log.log("Autorun Detection", "Reset Timers", status);
+export const clearTimers = () => {
+    const status = unsafeWindow.LAOPLUS.status;
+    if (status.status.autorunDetection.enterTimerId) {
+        window.clearTimeout(status.status.autorunDetection.enterTimerId);
+        status.set({ autorunDetection: { enterTimerId: null } });
+        log.debug("Autorun Detection", "Reset enterTimer");
+    }
+    if (status.status.autorunDetection.leaveTimerId) {
+        window.clearTimeout(status.status.autorunDetection.leaveTimerId);
+        status.set({ autorunDetection: { leaveTimerId: null } });
+        log.debug("Autorun Detection", "Reset leaveTimer");
+    }
+    log.log(
+        "Autorun Detection",
+        "Reset Timers",
+        status.status.autorunDetection
+    );
 };
 
 /**
  * @package
  */
 export const enter = () => {
-    const status = unsafeWindow.LAOPLUS.status.autorunDetection;
+    const status = unsafeWindow.LAOPLUS.status;
 
-    if (status.battleEnterTimerId !== null) {
-        window.clearTimeout(status.battleEnterTimerId);
+    if (status.status.autorunDetection.enterTimerId !== null) {
+        window.clearTimeout(status.status.autorunDetection.enterTimerId);
         log.debug("Autorun Detection", "Remove Current Enter Timer");
     }
-    const time = getDalayMs();
-    status.battleEnterTimerId = window.setTimeout(sendNotification, time);
-    log.log("Autorun Detection", "Set Enter Timer", time);
+    const delay = getDalayMs();
+    const timerId = window.setTimeout(sendNotification, delay, "enter");
+    status.set({ autorunDetection: { enterTimerId: timerId } });
+    log.log("Autorun Detection", "Set Enter Timer", delay);
 };
 
 /**
  * @package
  */
 export const leave = () => {
-    const status = unsafeWindow.LAOPLUS.status.autorunDetection;
+    const status = unsafeWindow.LAOPLUS.status;
 
-    if (status.battleLeaveTimerId !== null) {
-        window.clearTimeout(status.battleLeaveTimerId);
+    if (status.status.autorunDetection.leaveTimerId !== null) {
+        window.clearTimeout(status.status.autorunDetection.leaveTimerId);
         log.debug("Autorun Detection", "Remove Current Leave Timer");
     }
-    const time = getDalayMs();
-    status.battleLeaveTimerId = window.setTimeout(sendNotification, time);
-    log.log("Autorun Detection", "Set Leave Timer", time);
+    const delay = getDalayMs();
+    const timerId = window.setTimeout(sendNotification, delay, "leave");
+    status.set({ autorunDetection: { leaveTimerId: timerId } });
+    log.log("Autorun Detection", "Set Leave Timer", delay);
 };

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import { Config } from "config";
-import { clear as clearAutorunDetectionTimers } from "~/features/autorunDetection/functions";
+import { clearTimers as clearAutorunDetectionTimers } from "~/features/autorunDetection/functions";
 import { log } from "~/utils";
 import { ErrorMessage } from "./ErrorMessage";
 import { ExplorationList } from "./ExplorationList";
@@ -314,7 +314,7 @@ export const ConfigModal = () => {
                         <div
                             className={cn("flex flex-col gap-1", {
                                 "opacity-50": !watch(
-                                    "features.wheelAmplify.enabled"
+                                    "features.autorunDetection.enabled"
                                 ),
                             })}
                         >
