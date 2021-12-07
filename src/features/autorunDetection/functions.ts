@@ -48,6 +48,11 @@ const getDalayMs = () => {
     return thresholdMs;
 };
 
+const getLatestDate = (delayMs: number) => {
+    const now = new Date().getTime();
+    return new Date(now + delayMs);
+};
+
 export const clearTimers = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const { enterTimerId, leaveTimerId } = status.status.autorunDetection;
@@ -73,14 +78,20 @@ export const clearTimers = () => {
  */
 export const enter = () => {
     const status = unsafeWindow.LAOPLUS.status;
+    const { enterTimerId } = status.status.autorunDetection;
 
-    if (status.status.autorunDetection.enterTimerId !== null) {
-        window.clearTimeout(status.status.autorunDetection.enterTimerId);
+    if (enterTimerId !== null) {
+        window.clearTimeout(enterTimerId);
         log.debug("Autorun Detection", "Remove Current Enter Timer");
     }
     const delay = getDalayMs();
-    const timerId = window.setTimeout(sendNotification, delay, "enter");
-    status.set({ autorunDetection: { enterTimerId: timerId } });
+    const newEnterTimerId = window.setTimeout(sendNotification, delay, "enter");
+    status.set({
+        autorunDetection: {
+            enterTimerId: newEnterTimerId,
+            latestEnterTime: getLatestDate(delay),
+        },
+    });
     log.log("Autorun Detection", "Set Enter Timer", delay);
 };
 
@@ -89,13 +100,19 @@ export const enter = () => {
  */
 export const leave = () => {
     const status = unsafeWindow.LAOPLUS.status;
+    const { leaveTimerId } = status.status.autorunDetection;
 
-    if (status.status.autorunDetection.leaveTimerId !== null) {
-        window.clearTimeout(status.status.autorunDetection.leaveTimerId);
+    if (leaveTimerId !== null) {
+        window.clearTimeout(leaveTimerId);
         log.debug("Autorun Detection", "Remove Current Leave Timer");
     }
     const delay = getDalayMs();
     const timerId = window.setTimeout(sendNotification, delay, "leave");
-    status.set({ autorunDetection: { leaveTimerId: timerId } });
+    status.set({
+        autorunDetection: {
+            leaveTimerId: timerId,
+            latestLeaveTime: getLatestDate(delay),
+        },
+    });
     log.log("Autorun Detection", "Set Leave Timer", delay);
 };
