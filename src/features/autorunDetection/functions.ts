@@ -50,13 +50,14 @@ const getDalayMs = () => {
 
 export const clearTimers = () => {
     const status = unsafeWindow.LAOPLUS.status;
-    if (status.status.autorunDetection.enterTimerId) {
-        window.clearTimeout(status.status.autorunDetection.enterTimerId);
+    const { enterTimerId, leaveTimerId } = status.status.autorunDetection;
+    if (enterTimerId) {
+        window.clearTimeout(enterTimerId);
         status.set({ autorunDetection: { enterTimerId: null } });
         log.debug("Autorun Detection", "Reset enterTimer");
     }
-    if (status.status.autorunDetection.leaveTimerId) {
-        window.clearTimeout(status.status.autorunDetection.leaveTimerId);
+    if (leaveTimerId) {
+        window.clearTimeout(leaveTimerId);
         status.set({ autorunDetection: { leaveTimerId: null } });
         log.debug("Autorun Detection", "Reset leaveTimer");
     }
