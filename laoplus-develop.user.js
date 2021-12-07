@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     0.3.0-83af09e1cd250e7043025fc5394e77b4b280e2aa
+// @version     0.3.0-4c5d42198042a9c492b96ea6682674de1183cb9b
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
