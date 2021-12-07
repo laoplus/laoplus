@@ -55,17 +55,15 @@ const getLatestDate = (delayMs: number) => {
 
 export const clearTimers = () => {
     const status = unsafeWindow.LAOPLUS.status;
-    const { enterTimerId, leaveTimerId } = status.status.autorunDetection;
+    const { enterTimerId } = status.status.autorunDetection;
     if (enterTimerId) {
         window.clearTimeout(enterTimerId);
-        status.set({ autorunDetection: { enterTimerId: null } });
+        status.set({
+            autorunDetection: { enterTimerId: null, latestEnterTime: null },
+        });
         log.debug("Autorun Detection", "Reset enterTimer");
     }
-    if (leaveTimerId) {
-        window.clearTimeout(leaveTimerId);
-        status.set({ autorunDetection: { leaveTimerId: null } });
-        log.debug("Autorun Detection", "Reset leaveTimer");
-    }
+
     log.log(
         "Autorun Detection",
         "Reset Timers",
