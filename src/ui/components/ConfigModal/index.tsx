@@ -74,7 +74,7 @@ export const ConfigModal = () => {
                     // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
                     reset();
                 }}
-                overlayClassName="fixed inset-0 backdrop-blur backdrop-saturate-[0.75] flex items-center justify-center"
+                overlayClassName="backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur"
                 className="min-w-[50%] max-w-[90%] max-h-[90%] p-4 bg-gray-50 rounded shadow overflow-auto"
                 id="laoplus-modal"
             >
