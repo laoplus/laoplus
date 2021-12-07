@@ -320,7 +320,7 @@ export const ConfigModal = () => {
                         >
                             <label className="flex gap-2">
                                 <span className="flex-shrink-0">
-                                    しきい値(秒):
+                                    インターバルのしきい値(分):
                                 </span>
                                 <input
                                     type="text"

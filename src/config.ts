@@ -19,7 +19,7 @@ const defaultConfig = {
         },
         autorunDetection: {
             enabled: false,
-            threshold: "300",
+            threshold: "5",
         },
     },
 };

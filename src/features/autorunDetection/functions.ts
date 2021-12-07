@@ -14,7 +14,7 @@ const sendNotification = () => {
             {
                 color: colorHexToInteger(uiColor.error.hex()),
                 title: "自動周回停止",
-                description: `戦闘開始のインターバルがしきい値(${threshold}秒)を超えました`,
+                description: `戦闘開始のインターバルがしきい値(${threshold}分)を超えました`,
             },
         ],
     };
@@ -43,7 +43,7 @@ const getDalayMs = () => {
     const threshold = Number(
         unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold
     );
-    const thresholdMs = threshold * 1000;
+    const thresholdMs = threshold * 60 * 1000;
     return thresholdMs;
 };
 
