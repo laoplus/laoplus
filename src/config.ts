@@ -1,9 +1,5 @@
+import { DeepPartial } from "./types";
 import { log } from "~/utils";
-
-// https://stackoverflow.com/questions/61132262/typescript-deep-partial
-type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>;
-};
 
 const defaultConfig = {
     features: {
@@ -14,11 +10,17 @@ const defaultConfig = {
                 pcDrop: true,
                 itemDrop: true,
                 exploration: true,
+                autorunStop: true,
             },
         },
         wheelAmplify: {
             enabled: true,
-            ratio: 10,
+            ratio: "10",
+        },
+        autorunDetection: {
+            enabled: false,
+            hideTimer: false,
+            threshold: "5",
         },
     },
 };
@@ -33,9 +35,12 @@ export class Config {
         );
     }
 
+    events = mitt<{ changed: typeof defaultConfig }>();
+
     set(value: DeepPartial<Config["config"]>) {
         _.merge(this.config, value);
         GM_setValue("config", this.config);
         log.log("Config", "Config Updated", this.config);
+        this.events.emit("changed", this.config);
     }
 }

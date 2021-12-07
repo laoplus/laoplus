@@ -8,6 +8,9 @@ export const tailwindConfig: import("tailwindcss/tailwind-config").TailwindConfi
                 transitionProperty: {
                     spacing: "margin, padding",
                 },
+                lineHeight: {
+                    zero: "0",
+                },
             },
         },
         variants: {

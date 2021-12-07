@@ -11,3 +11,4 @@ declare const dayjs: typeof import("dayjs");
 declare const dayjs_plugin_relativeTime: typeof import("dayjs/plugin/relativeTime");
 declare const dayjs_plugin_isSameOrBefore: typeof import("dayjs/plugin/isSameOrBefore");
 declare const dayjs_plugin_duration: typeof import("dayjs/plugin/duration");
+declare const mitt: typeof import("mitt").default;

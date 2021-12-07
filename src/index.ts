@@ -1,5 +1,6 @@
 import { injection } from "injection";
 import { Config } from "config";
+import { Status } from "./Status";
 import { initUi } from "ui/index";
 import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
@@ -8,6 +9,7 @@ import { TacticsManualUnit, ExplorationSquad } from "./types";
 import { tailwindConfig } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
 import { initWheelAmplfy } from "./features/wheelAmplify";
+import { log } from "./utils";
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -19,6 +21,7 @@ declare global {
                 unit: TacticsManualUnit[];
             };
             exploration: ExplorationSquad[];
+            status: Status;
         };
     }
 }
@@ -29,6 +32,7 @@ declare global {
     if (!isGameWindow) return;
 
     const config = new Config();
+    const status = new Status();
 
     // LAOPLUSオブジェクトを露出させる
     unsafeWindow.LAOPLUS = {
@@ -38,6 +42,7 @@ declare global {
             unit: [],
         },
         exploration: [],
+        status: status,
     };
 
     // @ts-ignore
@@ -53,4 +58,12 @@ declare global {
     initInputObserver();
     initWheelAmplfy();
     initTacticsManual();
+
+    unsafeWindow.LAOPLUS.config.events.on("*", (type, e) => {
+        log.debug("index", "config fired", type, e);
+    });
+
+    unsafeWindow.LAOPLUS.status.events.on("*", (type, e) => {
+        log.debug("index", "status fired", type, e);
+    });
 })();

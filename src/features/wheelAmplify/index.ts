@@ -26,8 +26,10 @@ export const initWheelAmplfy = () => {
             const newWheelEvent = new WheelEvent("wheel", {
                 deltaY:
                     deltaY *
-                    unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
-                        .ratio,
+                    Number(
+                        unsafeWindow.LAOPLUS.config.config.features.wheelAmplify
+                            .ratio
+                    ),
             });
             target.dispatchEvent(newWheelEvent);
         }
