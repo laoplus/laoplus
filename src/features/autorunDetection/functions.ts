@@ -1,4 +1,5 @@
 import { Webhook } from "discord-webhook-ts";
+import { uiColor } from "~/constants";
 import { log } from "~/utils";
 import {
     colorHexToInteger,
@@ -11,7 +12,7 @@ const sendNotification = () => {
     const body: Webhook.input.POST = {
         embeds: [
             {
-                color: colorHexToInteger(chroma("red").hex()),
+                color: colorHexToInteger(uiColor.error.hex()),
                 title: "自動周回停止",
                 description: `戦闘開始のインターバルがしきい値(${threshold}秒)を超えました`,
             },
