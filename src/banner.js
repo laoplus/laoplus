@@ -7,8 +7,8 @@
 // @homepageURL https://github.com/eai04191/laoplus
 // @supportURL  https://github.com/eai04191/laoplus/issues
 // @run-at      document-idle
-// @match       https://pc-play.games.dmm.co.jp/play/lastorigin_r/*
-// @match       https://pc-play.games.dmm.com/play/lastorigin/*
+// @match       https://pc-play.games.dmm.co.jp/play/lastorigin_r*
+// @match       https://pc-play.games.dmm.com/play/lastorigin*
 // @match       https://osapi.dmm.com/gadgets/ifr?synd=dmm&container=dmm&owner=*&viewer=*&aid=616121&*
 // @match       https://osapi.dmm.com/gadgets/ifr?synd=dmm&container=dmm&owner=*&viewer=*&aid=699297&*
 // @match       https://adult-client.last-origin.com/
