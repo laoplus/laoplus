@@ -75,12 +75,12 @@ export const ConfigModal = () => {
                     reset();
                 }}
                 overlayClassName="backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur"
-                className="min-w-[50%] max-w-[90%] max-h-[90%] bg-gray-50 rounded shadow overflow-auto"
+                className="min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden"
                 id="laoplus-modal"
             >
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="relative flex flex-col divide-y"
+                    className="relative flex flex-col w-full divide-y overflow-auto"
                 >
                     <header className="flex items-center place-content-between p-4">
                         <div className="flex gap-2 items-end">
