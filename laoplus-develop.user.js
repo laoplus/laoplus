@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1639247343-41e833db4313540a985c21a158cf82ff5c53f345
+// @version     1640506978-1f76b50f1663fbd73bb18be1b17702f502c3639c
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -483,121 +483,121 @@
                 closeTimeoutMS: 150, isOpen: isOpen, onAfterOpen: () => {
                     // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
                     reset();
-                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur", className: "min-w-[50%] max-w-[90%] max-h-[90%] p-4 bg-gray-50 rounded shadow overflow-auto", id: "laoplus-modal" },
-                React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "flex flex-col gap-2" },
-                    React.createElement("header", { className: "flex items-center place-content-between" },
+                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur", className: "min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden", id: "laoplus-modal" },
+                React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "relative flex flex-col w-full divide-y overflow-auto" },
+                    React.createElement("header", { className: "flex items-center place-content-between p-4" },
                         React.createElement("div", { className: "flex gap-2 items-end" },
                             React.createElement("h2", { className: "text-xl font-semibold" }, GM_info.script.name),
                             React.createElement("span", { className: "pb-0.5 text-gray-500 text-sm" }, GM_info.script.version))),
-                    React.createElement("div", { className: "my-2 border-t" }),
-                    React.createElement("main", { className: "flex flex-col gap-1 ml-6" },
-                        React.createElement("div", { className: "flex flex-col gap-1" },
-                            React.createElement("label", { className: "flex gap-2 items-center" },
-                                React.createElement("input", { type: "checkbox", id: "laoplus-discord-notification", className: "-ml-6 w-4 h-4", ...register("features.discordNotification.enabled") }),
-                                React.createElement("span", null, "Discord\u901A\u77E5"),
-                                React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-discordNotification" }))),
-                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                "opacity-50": !watch("features.discordNotification.enabled"),
-                            }) },
-                            React.createElement("label", { className: "flex gap-2" },
-                                React.createElement("span", { className: "flex-shrink-0" }, "Discord Webhook URL:"),
-                                React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
-                                        required: watch("features.discordNotification.enabled"),
-                                        pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
-                                    }) })),
-                            errors.features?.discordNotification
-                                ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
-                                React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                    React.createElement("main", { className: "p-4" },
+                        React.createElement("div", { className: "flex flex-col gap-1 ml-6" },
+                            React.createElement("div", { className: "flex flex-col gap-1" },
+                                React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("input", { type: "checkbox", id: "laoplus-discord-notification", className: "-ml-6 w-4 h-4", ...register("features.discordNotification.enabled") }),
+                                    React.createElement("span", null, "Discord\u901A\u77E5"),
+                                    React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-discordNotification" }))),
+                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
+                                    "opacity-50": !watch("features.discordNotification.enabled"),
+                                }) },
+                                React.createElement("label", { className: "flex gap-2" },
+                                    React.createElement("span", { className: "flex-shrink-0" }, "Discord Webhook URL:"),
+                                    React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
+                                            required: watch("features.discordNotification.enabled"),
+                                            pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
+                                        }) })),
                                 errors.features?.discordNotification
-                                    ?.webhookURL?.type === "required" &&
-                                    "Discord通知を利用するにはWebhook URLが必要です",
-                                errors.features?.discordNotification
-                                    ?.webhookURL?.type === "pattern" &&
-                                    "有効なDiscordのWebhook URLではありません")),
-                            React.createElement("span", { className: "flex gap-2" },
-                                React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
-                                React.createElement("div", { className: "flex flex-col gap-1" },
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
-                                        React.createElement("span", { className: "flex gap-1 items-center" },
-                                            "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
-                                            React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
-                                        React.createElement("span", { className: "flex gap-1 items-center" },
-                                            "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
-                                            React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
-                                        React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
-                                        React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62"))))),
-                        React.createElement("div", { className: "flex flex-col gap-1" },
-                            React.createElement("label", { className: "flex gap-2 items-center" },
-                                React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.wheelAmplify.enabled") }),
-                                React.createElement("span", null, "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45"),
-                                React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" })),
-                            React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
-                                React.createElement("i", { className: "bi bi-info-circle" }),
-                                "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059")),
-                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                "opacity-50": !watch("features.wheelAmplify.enabled"),
-                            }) },
-                            React.createElement("label", { className: "flex gap-2" },
-                                React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
-                                React.createElement("input", { 
-                                    // numberだと値が二重になる
-                                    type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
-                                        required: watch("features.wheelAmplify.enabled"),
-                                        validate: (value) => 
-                                        // prettier-ignore
-                                        typeof Number(value) === "number"
-                                            && !Number.isNaN(Number(value)),
-                                    }) })),
-                            errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
-                                React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                errors.features?.wheelAmplify?.ratio
-                                    ?.type === "required" &&
-                                    "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
-                                errors.features?.wheelAmplify?.ratio
-                                    ?.type === "validate" &&
-                                    "増幅倍率は数字で入力してください"))),
-                        React.createElement("div", { className: "flex flex-col gap-1" },
-                            React.createElement("label", { className: "flex gap-2 items-center" },
-                                React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.autorunDetection.enabled", {
-                                        onChange: clearTimer,
-                                    }) }),
-                                React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A"),
-                                React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }))),
-                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                "opacity-50": !watch("features.autorunDetection.enabled"),
-                            }) },
-                            React.createElement("label", { className: "flex gap-2 items-center" },
-                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
-                                React.createElement("span", { className: "" }, "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"))),
-                        React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                "opacity-50": !watch("features.autorunDetection.enabled"),
-                            }) },
-                            React.createElement("label", { className: "flex gap-2" },
-                                React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
-                                React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.autorunDetection.threshold", {
-                                        required: watch("features.autorunDetection.enabled"),
-                                        validate: (value) => 
-                                        // prettier-ignore
-                                        typeof Number(value) === "number"
-                                            && !Number.isNaN(Number(value)),
-                                    }) })),
-                            errors.features?.autorunDetection?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
-                                React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                    ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                    errors.features?.discordNotification
+                                        ?.webhookURL?.type === "required" &&
+                                        "Discord通知を利用するにはWebhook URLが必要です",
+                                    errors.features?.discordNotification
+                                        ?.webhookURL?.type === "pattern" &&
+                                        "有効なDiscordのWebhook URLではありません")),
+                                React.createElement("span", { className: "flex gap-2" },
+                                    React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
+                                    React.createElement("div", { className: "flex flex-col gap-1" },
+                                        React.createElement("label", { className: "flex gap-2 items-center" },
+                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
+                                            React.createElement("span", { className: "flex gap-1 items-center" },
+                                                "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
+                                                React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
+                                        React.createElement("label", { className: "flex gap-2 items-center" },
+                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
+                                            React.createElement("span", { className: "flex gap-1 items-center" },
+                                                "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
+                                                React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
+                                        React.createElement("label", { className: "flex gap-2 items-center" },
+                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
+                                            React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
+                                        React.createElement("label", { className: "flex gap-2 items-center" },
+                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
+                                            React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62"))))),
+                            React.createElement("div", { className: "flex flex-col gap-1" },
+                                React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.wheelAmplify.enabled") }),
+                                    React.createElement("span", null, "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45"),
+                                    React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" })),
+                                React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                    React.createElement("i", { className: "bi bi-info-circle" }),
+                                    "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059")),
+                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
+                                    "opacity-50": !watch("features.wheelAmplify.enabled"),
+                                }) },
+                                React.createElement("label", { className: "flex gap-2" },
+                                    React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
+                                    React.createElement("input", { 
+                                        // numberだと値が二重になる
+                                        type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
+                                            required: watch("features.wheelAmplify.enabled"),
+                                            validate: (value) => 
+                                            // prettier-ignore
+                                            typeof Number(value) === "number"
+                                                && !Number.isNaN(Number(value)),
+                                        }) })),
+                                errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                    errors.features?.wheelAmplify?.ratio
+                                        ?.type === "required" &&
+                                        "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
+                                    errors.features?.wheelAmplify?.ratio
+                                        ?.type === "validate" &&
+                                        "増幅倍率は数字で入力してください"))),
+                            React.createElement("div", { className: "flex flex-col gap-1" },
+                                React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.autorunDetection.enabled", {
+                                            onChange: clearTimer,
+                                        }) }),
+                                    React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A"),
+                                    React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }))),
+                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
+                                    "opacity-50": !watch("features.autorunDetection.enabled"),
+                                }) },
+                                React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
+                                    React.createElement("span", { className: "" }, "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"))),
+                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
+                                    "opacity-50": !watch("features.autorunDetection.enabled"),
+                                }) },
+                                React.createElement("label", { className: "flex gap-2" },
+                                    React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
+                                    React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.autorunDetection.threshold", {
+                                            required: watch("features.autorunDetection.enabled"),
+                                            validate: (value) => 
+                                            // prettier-ignore
+                                            typeof Number(value) === "number"
+                                                && !Number.isNaN(Number(value)),
+                                        }) })),
                                 errors.features?.autorunDetection
-                                    ?.threshold?.type === "required" &&
-                                    "自動周回停止判定を利用するにはしきい値の指定が必要です",
-                                errors.features?.autorunDetection
-                                    ?.threshold?.type === "validate" &&
-                                    "しきい値は数字で入力してください")))),
-                    React.createElement("div", { className: "my-2 border-t" }),
-                    React.createElement("div", { className: "flex flex-col gap-2 items-center" },
+                                    ?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                    errors.features?.autorunDetection
+                                        ?.threshold?.type === "required" &&
+                                        "自動周回停止判定を利用するにはしきい値の指定が必要です",
+                                    errors.features?.autorunDetection
+                                        ?.threshold?.type === "validate" &&
+                                        "しきい値は数字で入力してください"))))),
+                    React.createElement("div", { className: "flex flex-col gap-2 items-center p-4" },
                         React.createElement("span", { className: "text-gray-600 text-sm" },
                             GM_info.script.name,
                             "\u306F\u4EE5\u4E0B\u306E\u30B5\u30FC\u30D3\u30B9\u304C\u63D0\u4F9B\u3059\u308B\u30B2\u30FC\u30E0\u30C7\u30FC\u30BF\u3092\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059"),
@@ -606,8 +606,7 @@
                             React.createElement("div", { className: "flex flex-col" },
                                 React.createElement("span", { className: "text-lg font-semibold" }, "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C"),
                                 React.createElement("span", { className: "text-gray-400 text-sm" }, "by WolfgangKurz")))),
-                    React.createElement("div", { className: "my-2 border-t" }),
-                    React.createElement("footer", { className: "flex items-center justify-between" },
+                    React.createElement("footer", { className: "sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur" },
                         React.createElement("div", { className: "flex gap-3 text-gray-500 text-sm" },
                             React.createElement("a", { href: "https://github.com/eai04191/laoplus", target: "_blank", rel: "noopener", className: "flex gap-1" },
                                 React.createElement("i", { className: "bi bi-github" }),
