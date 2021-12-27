@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1640506978-1f76b50f1663fbd73bb18be1b17702f502c3639c
+// @version     1640623667-afcf8c109d89799c375eb768f50e8b9778392b96
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -14,7 +14,7 @@
 // @match       https://osapi.dmm.com/gadgets/ifr?synd=dmm&container=dmm&owner=*&viewer=*&aid=699297&*
 // @match       https://adult-client.last-origin.com/
 // @match       https://normal-client.last-origin.com/
-// @require     https://cdn-tailwindcss.vercel.app
+// @require     https://cdn-tailwindcss.vercel.app?plugins=forms
 // @require     https://unpkg.com/lodash@4.17.21/lodash.js
 // @require     https://unpkg.com/classnames@2.3.1/index.js
 // @require     https://unpkg.com/react@17.0.2/umd/react.production.min.js
@@ -249,123 +249,19 @@
         return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
     };
 
-    const rankColor = {
-        SS: chroma.rgb(255, 223, 33),
-        S: chroma.rgb(255, 166, 3),
-        A: chroma.rgb(5, 176, 228),
-        B: chroma.rgb(30, 160, 13),
-    };
-    const uiColor = {
-        // tailwindcss lime-500
-        success: chroma.hex("#84CC16"),
-        // tailwindcss red-500
-        error: chroma.hex("#EF4444"),
-        // tailwindcss yellow-300
-        warninig: chroma.hex("#FDE047"),
-        // tailwindcss sky-400
-        info: chroma.hex("#38BDF8"),
-    };
-
-    const sendToDiscordWebhook = (body) => {
-        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
-            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
-            return;
-        }
-        fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .webhookURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        });
-    };
-    /**
-     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
-     */
-    const colorHexToInteger = (hex) => {
-        return parseInt(hex.replace("#", ""), 16);
-    };
-
-    const sendNotification$1 = () => {
-        const threshold = unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
-        const body = {
-            embeds: [
-                {
-                    color: colorHexToInteger(uiColor.error.hex()),
-                    title: "自動周回停止",
-                    description: `戦闘開始のインターバルがしきい値(${threshold}分)を超えました`,
-                },
-            ],
-        };
-        if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .interests.autorunStop) {
-            sendToDiscordWebhook(body);
-        }
-        else {
-            log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
-        }
-        unsafeWindow.LAOPLUS.config.set({
-            features: { autorunDetection: { enabled: false } },
-        });
-        log.debug("Autorun Detection", "Autorun Detection Disabled");
-        clearTimer();
-    };
-    const getDalayMs = () => {
-        const threshold = Number(unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold);
-        const thresholdMs = threshold * 60 * 1000;
-        return thresholdMs;
-    };
-    const getLatestDate = (delayMs) => {
-        const now = new Date().getTime();
-        return new Date(now + delayMs);
-    };
-    const clearTimer = () => {
-        const status = unsafeWindow.LAOPLUS.status;
-        const { enterTimerId } = status.status.autorunDetection;
-        if (enterTimerId) {
-            window.clearTimeout(enterTimerId);
-            status.set({
-                autorunDetection: { enterTimerId: null, latestEnterTime: null },
-            });
-            log.debug("Autorun Detection", "Reset enterTimer");
-        }
-        log.log("Autorun Detection", "Reset Timers", status.status.autorunDetection);
-    };
-    /**
-     * @package
-     */
-    const enter$1 = () => {
-        const status = unsafeWindow.LAOPLUS.status;
-        const { enterTimerId } = status.status.autorunDetection;
-        if (enterTimerId !== null) {
-            window.clearTimeout(enterTimerId);
-            log.debug("Autorun Detection", "Remove Current Enter Timer");
-        }
-        const delay = getDalayMs();
-        const newEnterTimerId = window.setTimeout(sendNotification$1, delay);
-        status.set({
-            autorunDetection: {
-                enterTimerId: newEnterTimerId,
-                latestEnterTime: getLatestDate(delay),
-            },
-        });
-        log.log("Autorun Detection", "Set Enter Timer", delay);
+    const cn$6 = classNames;
+    const ErrorMessage = ({ children, className }) => {
+        return (React.createElement("span", { className: cn$6("text-red-600 text-sm", className) }, children));
     };
 
     const cn$5 = classNames;
-    const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$5("text-red-600 text-xs", className) }, children));
-    };
-
-    const cn$4 = classNames;
     const ExplorationList = () => {
         const exploration = unsafeWindow.LAOPLUS.exploration.sort((a, b) => a.EndTime - b.EndTime);
         const list = exploration.map((exp) => {
             const endDate = dayjs(exp.EndTime * 1000);
             const duration = dayjs.duration(endDate.diff(dayjs()));
             const isFinished = endDate.isSameOrBefore(dayjs());
-            return (React.createElement("div", { key: exp.StageKeyString, className: cn$4("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
+            return (React.createElement("div", { key: exp.StageKeyString, className: cn$5("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
                 React.createElement("span", { className: "text-3xl font-bold" }, exp.SquadIndex),
                 React.createElement("div", { className: "flex flex-col" },
                     React.createElement("span", { className: "text-sm" }, humanFriendlyStageKey(exp.StageKeyString)),
@@ -384,13 +280,7 @@
         return React.createElement(React.Fragment, null, list);
     };
 
-    const HelpIcon = ({ href }) => {
-        return (React.createElement("span", null,
-            React.createElement("a", { href: href, target: "_blank", rel: "noreferrer", title: "\u30D8\u30EB\u30D7" },
-                React.createElement("i", { className: "bi bi-question-circle" }))));
-    };
-
-    const cn$3 = classNames;
+    const cn$4 = classNames;
     /**
      * ラスオリのボタンっぽいボタン
      * variantのプレビュー: https://user-images.githubusercontent.com/3516343/143912908-65956c55-b60d-4028-82d2-143b08414384.png
@@ -437,17 +327,77 @@
             }
         })();
         return (React.createElement("div", { className: "drop-shadow" },
-            React.createElement("button", { type: "submit", className: cn$3("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+            React.createElement("button", { type: "submit", className: cn$4("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+    };
+
+    const cn$3 = classNames;
+    const FeatureSection = ({ children, hasError }) => {
+        return (React.createElement("details", { className: cn$3("pl-10 rounded shadow border", hasError
+                ? "border-red-600 shadow-red-300/50"
+                : "border-b-transparent") }, children));
+    };
+
+    const HelpIcon = ({ href }) => {
+        return (React.createElement("a", { href: href, target: "_blank", rel: "noopener", title: "\u30D8\u30EB\u30D7" },
+            React.createElement("i", { className: "bi bi-question-circle" })));
+    };
+
+    const FeatureSectionSummary = ({ register, title, helpLink }) => {
+        return (React.createElement("summary", { className: "relative flex justify-between pr-4 py-4 cursor-pointer select-none" },
+            React.createElement("h2", { className: "inline-flex gap-2 items-center" },
+                title,
+                helpLink && React.createElement(HelpIcon, { href: helpLink })),
+            React.createElement("div", { className: "details-chevron flex items-center" },
+                React.createElement("i", { className: "bi bi-chevron-down" })),
+            React.createElement("label", { className: "absolute left-0 top-0 flex items-center justify-center -ml-10 w-10 h-full cursor-pointer" },
+                React.createElement("input", { type: "checkbox", className: "w-4 h-4 before:cursor-pointer", ...register }))));
     };
 
     const cn$2 = classNames;
+    const FeatureSectionContent = ({ children, enable }) => {
+        return (React.createElement("div", { className: cn$2("flex flex-col gap-2 p-4 pl-0 border-t", {
+                "opacity-50": !enable,
+            }) }, children));
+    };
+
+    const FooterLink = ({ href, children }) => {
+        return (React.createElement("a", { href: href, className: "flex gap-1 items-center", target: "_blank", rel: "noopener" }, children));
+    };
+
+    function styleInject(css, ref) {
+      if ( ref === void 0 ) ref = {};
+      var insertAt = ref.insertAt;
+
+      if (!css || typeof document === 'undefined') { return; }
+
+      var head = document.head || document.getElementsByTagName('head')[0];
+      var style = document.createElement('style');
+      style.type = 'text/css';
+
+      if (insertAt === 'top') {
+        if (head.firstChild) {
+          head.insertBefore(style, head.firstChild);
+        } else {
+          head.appendChild(style);
+        }
+      } else {
+        head.appendChild(style);
+      }
+
+      if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+    }
+
+    var css_248z = "details[open] .details-chevron {\n    transform: rotate(180deg);\n}\n";
+    styleInject(css_248z);
+
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
     element.setAttribute("type", "text/tailwindcss");
     element.innerText = `
-#laoplus-modal button {
-    @apply hover:brightness-105;
-}
 .ReactModal__Overlay {
     @apply opacity-0 transition-opacity duration-150;
 }
@@ -456,6 +406,9 @@
 }
 .ReactModal__Overlay--before-close {
     @apply opacity-0;
+}
+i.bi {
+    @apply flex items-center;
 }
 `;
     document.head.appendChild(element);
@@ -487,116 +440,102 @@
                 React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "relative flex flex-col w-full divide-y overflow-auto" },
                     React.createElement("header", { className: "flex items-center place-content-between p-4" },
                         React.createElement("div", { className: "flex gap-2 items-end" },
-                            React.createElement("h2", { className: "text-xl font-semibold" }, GM_info.script.name),
+                            React.createElement("h1", { className: "text-xl font-semibold" }, GM_info.script.name),
                             React.createElement("span", { className: "pb-0.5 text-gray-500 text-sm" }, GM_info.script.version))),
                     React.createElement("main", { className: "p-4" },
-                        React.createElement("div", { className: "flex flex-col gap-1 ml-6" },
-                            React.createElement("div", { className: "flex flex-col gap-1" },
-                                React.createElement("label", { className: "flex gap-2 items-center" },
-                                    React.createElement("input", { type: "checkbox", id: "laoplus-discord-notification", className: "-ml-6 w-4 h-4", ...register("features.discordNotification.enabled") }),
-                                    React.createElement("span", null, "Discord\u901A\u77E5"),
-                                    React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-discordNotification" }))),
-                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                    "opacity-50": !watch("features.discordNotification.enabled"),
-                                }) },
-                                React.createElement("label", { className: "flex gap-2" },
-                                    React.createElement("span", { className: "flex-shrink-0" }, "Discord Webhook URL:"),
-                                    React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
-                                            required: watch("features.discordNotification.enabled"),
-                                            pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
-                                        }) })),
-                                errors.features?.discordNotification
-                                    ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
-                                    React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                        React.createElement("div", { className: "flex flex-col gap-4" },
+                            React.createElement(FeatureSection, { hasError: !!errors.features?.discordNotification },
+                                React.createElement(FeatureSectionSummary, { register: register("features.discordNotification.enabled"), title: "Discord\u901A\u77E5", helpLink: "https://github.com/eai04191/laoplus/wiki/features-discordNotification" }),
+                                React.createElement(FeatureSectionContent, { enable: watch("features.discordNotification.enabled") },
+                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                        React.createElement("span", { className: "flex-shrink-0" }, "Discord Webhook URL:"),
+                                        React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
+                                                required: watch("features.discordNotification.enabled"),
+                                                pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
+                                            }) })),
                                     errors.features?.discordNotification
-                                        ?.webhookURL?.type === "required" &&
-                                        "Discord通知を利用するにはWebhook URLが必要です",
-                                    errors.features?.discordNotification
-                                        ?.webhookURL?.type === "pattern" &&
-                                        "有効なDiscordのWebhook URLではありません")),
-                                React.createElement("span", { className: "flex gap-2" },
-                                    React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
-                                    React.createElement("div", { className: "flex flex-col gap-1" },
-                                        React.createElement("label", { className: "flex gap-2 items-center" },
-                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
-                                            React.createElement("span", { className: "flex gap-1 items-center" },
-                                                "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
-                                                React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
-                                        React.createElement("label", { className: "flex gap-2 items-center" },
-                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
-                                            React.createElement("span", { className: "flex gap-1 items-center" },
-                                                "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
-                                                React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
-                                        React.createElement("label", { className: "flex gap-2 items-center" },
-                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
-                                            React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
-                                        React.createElement("label", { className: "flex gap-2 items-center" },
-                                            React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
-                                            React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62"))))),
-                            React.createElement("div", { className: "flex flex-col gap-1" },
-                                React.createElement("label", { className: "flex gap-2 items-center" },
-                                    React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.wheelAmplify.enabled") }),
-                                    React.createElement("span", null, "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45"),
-                                    React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" })),
-                                React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
-                                    React.createElement("i", { className: "bi bi-info-circle" }),
-                                    "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059")),
-                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                    "opacity-50": !watch("features.wheelAmplify.enabled"),
-                                }) },
-                                React.createElement("label", { className: "flex gap-2" },
-                                    React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
-                                    React.createElement("input", { 
-                                        // numberだと値が二重になる
-                                        type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
-                                            required: watch("features.wheelAmplify.enabled"),
-                                            validate: (value) => 
-                                            // prettier-ignore
-                                            typeof Number(value) === "number"
-                                                && !Number.isNaN(Number(value)),
-                                        }) })),
-                                errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
-                                    React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                    errors.features?.wheelAmplify?.ratio
-                                        ?.type === "required" &&
-                                        "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
-                                    errors.features?.wheelAmplify?.ratio
-                                        ?.type === "validate" &&
-                                        "増幅倍率は数字で入力してください"))),
-                            React.createElement("div", { className: "flex flex-col gap-1" },
-                                React.createElement("label", { className: "flex gap-2 items-center" },
-                                    React.createElement("input", { type: "checkbox", className: "-ml-6 w-4 h-4", ...register("features.autorunDetection.enabled", {
-                                            onChange: clearTimer,
-                                        }) }),
-                                    React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A"),
-                                    React.createElement(HelpIcon, { href: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }))),
-                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                    "opacity-50": !watch("features.autorunDetection.enabled"),
-                                }) },
-                                React.createElement("label", { className: "flex gap-2 items-center" },
-                                    React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
-                                    React.createElement("span", { className: "" }, "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"))),
-                            React.createElement("div", { className: cn$2("flex flex-col gap-1", {
-                                    "opacity-50": !watch("features.autorunDetection.enabled"),
-                                }) },
-                                React.createElement("label", { className: "flex gap-2" },
-                                    React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
-                                    React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.autorunDetection.threshold", {
-                                            required: watch("features.autorunDetection.enabled"),
-                                            validate: (value) => 
-                                            // prettier-ignore
-                                            typeof Number(value) === "number"
-                                                && !Number.isNaN(Number(value)),
-                                        }) })),
-                                errors.features?.autorunDetection
-                                    ?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
-                                    React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                        ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                        React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                        errors.features
+                                            ?.discordNotification
+                                            ?.webhookURL?.type ===
+                                            "required" &&
+                                            "Discord通知を利用するにはWebhook URLが必要です",
+                                        errors.features
+                                            ?.discordNotification
+                                            ?.webhookURL?.type ===
+                                            "pattern" &&
+                                            "有効なDiscordのWebhook URLではありません")),
+                                    React.createElement("span", { className: "flex gap-2" },
+                                        React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
+                                        React.createElement("div", { className: "flex flex-col gap-1" },
+                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
+                                                React.createElement("span", { className: "flex gap-1 items-center" },
+                                                    "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
+                                                    React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
+                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
+                                                React.createElement("span", { className: "flex gap-1 items-center" },
+                                                    "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
+                                                    React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
+                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
+                                                React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
+                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
+                                                React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62")))))),
+                            React.createElement(FeatureSection, { hasError: !!errors.features?.wheelAmplify },
+                                React.createElement(FeatureSectionSummary, { register: register("features.wheelAmplify.enabled"), title: "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45", helpLink: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" }),
+                                React.createElement(FeatureSectionContent, { enable: watch("features.wheelAmplify.enabled") },
+                                    React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                        React.createElement("i", { className: "bi bi-info-circle" }),
+                                        "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059"),
+                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                        React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
+                                        React.createElement("input", { 
+                                            // numberだと値が二重になる
+                                            type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
+                                                required: watch("features.wheelAmplify.enabled"),
+                                                validate: (value) => 
+                                                // prettier-ignore
+                                                typeof Number(value) === "number"
+                                                    && !Number.isNaN(Number(value)),
+                                            }) })),
+                                    errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                        React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                        errors.features?.wheelAmplify
+                                            ?.ratio?.type === "required" &&
+                                            "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
+                                        errors.features?.wheelAmplify
+                                            ?.ratio?.type === "validate" &&
+                                            "増幅倍率は数字で入力してください")))),
+                            React.createElement(FeatureSection, { hasError: !!errors.features?.autorunDetection },
+                                React.createElement(FeatureSectionSummary, { register: register("features.autorunDetection.enabled"), title: "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A", helpLink: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }),
+                                React.createElement(FeatureSectionContent, { enable: watch("features.autorunDetection.enabled") },
+                                    React.createElement("label", { className: "flex gap-1 items-center" },
+                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
+                                        "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"),
+                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                        React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
+                                        React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.autorunDetection.threshold", {
+                                                required: watch("features.autorunDetection.enabled"),
+                                                validate: (value) => 
+                                                // prettier-ignore
+                                                typeof Number(value) === "number"
+                                                    && !Number.isNaN(Number(value)),
+                                            }) })),
                                     errors.features?.autorunDetection
-                                        ?.threshold?.type === "required" &&
-                                        "自動周回停止判定を利用するにはしきい値の指定が必要です",
-                                    errors.features?.autorunDetection
-                                        ?.threshold?.type === "validate" &&
-                                        "しきい値は数字で入力してください"))))),
+                                        ?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                        React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                        errors.features?.autorunDetection
+                                            ?.threshold?.type ===
+                                            "required" &&
+                                            "自動周回停止判定を利用するにはしきい値の指定が必要です",
+                                        errors.features?.autorunDetection
+                                            ?.threshold?.type ===
+                                            "validate" &&
+                                            "しきい値は数字で入力してください")))))),
                     React.createElement("div", { className: "flex flex-col gap-2 items-center p-4" },
                         React.createElement("span", { className: "text-gray-600 text-sm" },
                             GM_info.script.name,
@@ -606,15 +545,14 @@
                             React.createElement("div", { className: "flex flex-col" },
                                 React.createElement("span", { className: "text-lg font-semibold" }, "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C"),
                                 React.createElement("span", { className: "text-gray-400 text-sm" }, "by WolfgangKurz")))),
-                    React.createElement("footer", { className: "sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur" },
-                        React.createElement("div", { className: "flex gap-3 text-gray-500 text-sm" },
-                            React.createElement("a", { href: "https://github.com/eai04191/laoplus", target: "_blank", rel: "noopener", className: "flex gap-1" },
+                    React.createElement("footer", { className: "sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md" },
+                        React.createElement("div", { className: "flex gap-3 h-full text-gray-500 text-sm" },
+                            React.createElement(FooterLink, { href: "https://github.com/eai04191/laoplus" },
                                 React.createElement("i", { className: "bi bi-github" }),
                                 "GitHub"),
-                            React.createElement("a", { href: "https://discord.gg/EGWqTuhjrE", target: "_blank", rel: "noopener", className: "flex gap-1" },
+                            React.createElement(FooterLink, { href: "https://discord.gg/EGWqTuhjrE" },
                                 React.createElement("i", { className: "bi bi-discord" }),
                                 "Discord")),
-                        React.createElement("div", { className: "mx-2" }),
                         React.createElement(SubmitButton, null, "\u4FDD\u5B58"))),
                 React.createElement("div", { className: "absolute bottom-0 inset-x-0 flex items-center mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg shadow-lg" },
                     React.createElement("div", { className: "px-2" },
@@ -688,7 +626,28 @@
         document.body.appendChild(root);
     };
 
-    const sendNotification = () => {
+    const sendToDiscordWebhook = (body) => {
+        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
+            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
+            return;
+        }
+        fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .webhookURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
+    };
+    /**
+     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
+     */
+    const colorHexToInteger = (hex) => {
+        return parseInt(hex.replace("#", ""), 16);
+    };
+
+    const sendNotification$1 = () => {
         const embedFields = unsafeWindow.LAOPLUS.exploration
             .sort((a, b) => a.EndTime - b.EndTime)
             .map((ex) => {
@@ -738,7 +697,7 @@
         unsafeWindow.LAOPLUS.exploration = ExplorationList.map((ex) => {
             const msToFinish = ex.EndTime * 1000 - Date.now();
             if (msToFinish > 0) {
-                const timeoutID = window.setTimeout(sendNotification, msToFinish);
+                const timeoutID = window.setTimeout(sendNotification$1, msToFinish);
                 return { ...ex, timeoutID };
             }
             else {
@@ -750,9 +709,9 @@
     /**
      * @package
      */
-    const enter = ({ EnterInfo }) => {
+    const enter$1 = ({ EnterInfo }) => {
         const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
-        const timeoutID = window.setTimeout(sendNotification, msToFinish);
+        const timeoutID = window.setTimeout(sendNotification$1, msToFinish);
         unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
         log.log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
@@ -782,7 +741,7 @@
                 loginto(res);
                 return;
             case "/exploration_enter":
-                enter(res);
+                enter$1(res);
                 return;
             case "/exploration_reward":
                 reward(res);
@@ -791,6 +750,23 @@
                 cancel(res);
                 return;
         }
+    };
+
+    const rankColor = {
+        SS: chroma.rgb(255, 223, 33),
+        S: chroma.rgb(255, 166, 3),
+        A: chroma.rgb(5, 176, 228),
+        B: chroma.rgb(30, 160, 13),
+    };
+    const uiColor = {
+        // tailwindcss lime-500
+        success: chroma.hex("#84CC16"),
+        // tailwindcss red-500
+        error: chroma.hex("#EF4444"),
+        // tailwindcss yellow-300
+        warninig: chroma.hex("#FDE047"),
+        // tailwindcss sky-400
+        info: chroma.hex("#38BDF8"),
     };
 
     /**
@@ -874,12 +850,78 @@
         }
     };
 
+    const sendNotification = () => {
+        const threshold = unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
+        const body = {
+            embeds: [
+                {
+                    color: colorHexToInteger(uiColor.error.hex()),
+                    title: "自動周回停止",
+                    description: `戦闘開始のインターバルがしきい値(${threshold}分)を超えました`,
+                },
+            ],
+        };
+        if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests.autorunStop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+        unsafeWindow.LAOPLUS.config.set({
+            features: { autorunDetection: { enabled: false } },
+        });
+        log.debug("Autorun Detection", "Autorun Detection Disabled");
+        clearTimer();
+    };
+    const getDalayMs = () => {
+        const threshold = Number(unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold);
+        const thresholdMs = threshold * 60 * 1000;
+        return thresholdMs;
+    };
+    const getLatestDate = (delayMs) => {
+        const now = new Date().getTime();
+        return new Date(now + delayMs);
+    };
+    const clearTimer = () => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const { enterTimerId } = status.status.autorunDetection;
+        if (enterTimerId) {
+            window.clearTimeout(enterTimerId);
+            status.set({
+                autorunDetection: { enterTimerId: null, latestEnterTime: null },
+            });
+            log.debug("Autorun Detection", "Reset enterTimer");
+        }
+        log.log("Autorun Detection", "Reset Timers", status.status.autorunDetection);
+    };
+    /**
+     * @package
+     */
+    const enter = () => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const { enterTimerId } = status.status.autorunDetection;
+        if (enterTimerId !== null) {
+            window.clearTimeout(enterTimerId);
+            log.debug("Autorun Detection", "Remove Current Enter Timer");
+        }
+        const delay = getDalayMs();
+        const newEnterTimerId = window.setTimeout(sendNotification, delay);
+        status.set({
+            autorunDetection: {
+                enterTimerId: newEnterTimerId,
+                latestEnterTime: getLatestDate(delay),
+            },
+        });
+        log.log("Autorun Detection", "Set Enter Timer", delay);
+    };
+
     const invoke = ({ url }) => {
         switch (url.pathname) {
             case "/battleserver_enter":
                 if (unsafeWindow.LAOPLUS.config.config.features.autorunDetection
                     .enabled) {
-                    enter$1();
+                    enter();
                 }
                 return;
         }
@@ -993,6 +1035,33 @@
         variants: {
             extend: {},
         },
+    };
+    /**
+     * アプリ全体で使いたい大きめのセレクタに関しての設定
+     */
+    const initTailwindCustomStyle = () => {
+        const style = document.createElement("style");
+        style.setAttribute("type", "text/tailwindcss");
+        style.innerText = `
+    button[type='submit'], [type='checkbox'] {
+        @apply hover:brightness-105;
+    }
+    /* フォーカス */
+    [type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, [type='checkbox']:focus, textarea:focus, select:focus {
+        @apply ring ring-offset-0 ring-amber-400/50
+    }
+    [type='text'] {
+        @apply rounded leading-zero p-1 border-gray-400;
+    }
+    [type='checkbox'] {
+        @apply rounded shadow-sm border-gray-400 text-amber-400;
+    }
+    /* checkedのsvgのfillをblackにする */
+    [type='checkbox']:checked {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='black' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    }
+    `;
+        document.head.appendChild(style);
     };
 
     const isInputElement = (target) => {
@@ -1131,6 +1200,7 @@
         };
         // @ts-ignore
         tailwind.config = tailwindConfig;
+        initTailwindCustomStyle();
         dayjs.extend(dayjs_plugin_relativeTime);
         dayjs.extend(dayjs_plugin_isSameOrBefore);
         dayjs.extend(dayjs_plugin_duration);
