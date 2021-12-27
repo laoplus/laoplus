@@ -13,7 +13,7 @@
 // @match       https://osapi.dmm.com/gadgets/ifr?synd=dmm&container=dmm&owner=*&viewer=*&aid=699297&*
 // @match       https://adult-client.last-origin.com/
 // @match       https://normal-client.last-origin.com/
-// @require     https://cdn-tailwindcss.vercel.app
+// @require     https://cdn-tailwindcss.vercel.app?plugins=forms
 // @require     https://unpkg.com/lodash@4.17.21/lodash.js
 // @require     https://unpkg.com/classnames@2.3.1/index.js
 // @require     https://unpkg.com/react@17.0.2/umd/react.production.min.js

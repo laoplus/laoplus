@@ -1,21 +1,20 @@
 /* eslint-disable react/jsx-no-undef */
 import { Config } from "config";
-import { clearTimer as clearAutorunDetectionTimers } from "~/features/autorunDetection/functions";
 import { log } from "~/utils";
 import { ErrorMessage } from "./ErrorMessage";
 import { ExplorationList } from "./ExplorationList";
-import { HelpIcon } from "./HelpIcon";
 import { SubmitButton } from "./SumitButton";
+import { FeatureSection } from "./FeatureSection";
+import { FeatureSectionSummary } from "./FeatureSectionSummary";
+import { FeatureSectionContent } from "./FeatureSectionContent";
+import { FooterLink } from "./FooterLink";
+import "./index.css";
 
-const cn = classNames;
 ReactModal.defaultStyles = {};
 
 const element = document.createElement("style");
 element.setAttribute("type", "text/tailwindcss");
 element.innerText = `
-#laoplus-modal button {
-    @apply hover:brightness-105;
-}
 .ReactModal__Overlay {
     @apply opacity-0 transition-opacity duration-150;
 }
@@ -24,6 +23,9 @@ element.innerText = `
 }
 .ReactModal__Overlay--before-close {
     @apply opacity-0;
+}
+i.bi {
+    @apply flex items-center;
 }
 `;
 document.head.appendChild(element);
@@ -84,9 +86,9 @@ export const ConfigModal = () => {
                 >
                     <header className="flex items-center place-content-between p-4">
                         <div className="flex gap-2 items-end">
-                            <h2 className="text-xl font-semibold">
+                            <h1 className="text-xl font-semibold">
                                 {GM_info.script.name}
-                            </h2>
+                            </h1>
                             <span className="pb-0.5 text-gray-500 text-sm">
                                 {GM_info.script.version}
                             </span>
@@ -94,300 +96,278 @@ export const ConfigModal = () => {
                     </header>
 
                     <main className="p-4">
-                        <div className="flex flex-col gap-1 ml-6">
-                            <div className="flex flex-col gap-1">
-                                <label className="flex gap-2 items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="laoplus-discord-notification"
-                                        className="-ml-6 w-4 h-4"
-                                        {...register(
-                                            "features.discordNotification.enabled"
-                                        )}
-                                    />
-                                    <span>Discord通知</span>
-                                    <HelpIcon href="https://github.com/eai04191/laoplus/wiki/features-discordNotification" />
-                                </label>
-                            </div>
-
-                            <div
-                                className={cn("flex flex-col gap-1", {
-                                    "opacity-50": !watch(
+                        <div className="flex flex-col gap-4">
+                            <FeatureSection
+                                hasError={
+                                    !!errors.features?.discordNotification
+                                }
+                            >
+                                <FeatureSectionSummary
+                                    register={register(
                                         "features.discordNotification.enabled"
-                                    ),
-                                })}
-                            >
-                                <label className="flex gap-2">
-                                    <span className="flex-shrink-0">
-                                        Discord Webhook URL:
-                                    </span>
-                                    <input
-                                        type="text"
-                                        disabled={
-                                            !watch(
-                                                "features.discordNotification.enabled"
-                                            )
-                                        }
-                                        className="min-w-[1rem] flex-1 px-1 border border-gray-500 rounded"
-                                        {...register(
-                                            "features.discordNotification.webhookURL",
-                                            {
-                                                required: watch(
+                                    )}
+                                    title="Discord通知"
+                                    helpLink="https://github.com/eai04191/laoplus/wiki/features-discordNotification"
+                                />
+                                <FeatureSectionContent
+                                    enable={watch(
+                                        "features.discordNotification.enabled"
+                                    )}
+                                >
+                                    <label className="flex gap-2 items-center">
+                                        <span className="flex-shrink-0">
+                                            Discord Webhook URL:
+                                        </span>
+                                        <input
+                                            type="text"
+                                            disabled={
+                                                !watch(
                                                     "features.discordNotification.enabled"
-                                                ),
-                                                pattern:
-                                                    /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
+                                                )
                                             }
-                                        )}
-                                    />
-                                </label>
-                                {errors.features?.discordNotification
-                                    ?.webhookURL && (
-                                    <ErrorMessage className="flex gap-1">
-                                        <i className="bi bi-exclamation-triangle"></i>
-                                        {errors.features?.discordNotification
-                                            ?.webhookURL?.type === "required" &&
-                                            "Discord通知を利用するにはWebhook URLが必要です"}
-                                        {errors.features?.discordNotification
-                                            ?.webhookURL?.type === "pattern" &&
-                                            "有効なDiscordのWebhook URLではありません"}
-                                    </ErrorMessage>
-                                )}
+                                            className="min-w-[1rem] flex-1 px-1 border border-gray-500 rounded"
+                                            {...register(
+                                                "features.discordNotification.webhookURL",
+                                                {
+                                                    required: watch(
+                                                        "features.discordNotification.enabled"
+                                                    ),
+                                                    pattern:
+                                                        /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.discordNotification
+                                        ?.webhookURL && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features
+                                                ?.discordNotification
+                                                ?.webhookURL?.type ===
+                                                "required" &&
+                                                "Discord通知を利用するにはWebhook URLが必要です"}
+                                            {errors.features
+                                                ?.discordNotification
+                                                ?.webhookURL?.type ===
+                                                "pattern" &&
+                                                "有効なDiscordのWebhook URLではありません"}
+                                        </ErrorMessage>
+                                    )}
 
-                                <span className="flex gap-2">
-                                    <span className="flex-shrink-0">
-                                        通知項目:
+                                    <span className="flex gap-2">
+                                        <span className="flex-shrink-0">
+                                            通知項目:
+                                        </span>
+                                        <div className="flex flex-col gap-1">
+                                            <label className="flex gap-1 items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4"
+                                                    disabled={
+                                                        !watch(
+                                                            "features.discordNotification.enabled"
+                                                        )
+                                                    }
+                                                    {...register(
+                                                        "features.discordNotification.interests.pcDrop"
+                                                    )}
+                                                />
+                                                <span className="flex gap-1 items-center">
+                                                    キャラクタードロップ
+                                                    <span className="text-gray-600 text-xs">
+                                                        現在はSS,Sのみ
+                                                    </span>
+                                                </span>
+                                            </label>
+                                            <label className="flex gap-1 items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4"
+                                                    disabled={
+                                                        !watch(
+                                                            "features.discordNotification.enabled"
+                                                        )
+                                                    }
+                                                    {...register(
+                                                        "features.discordNotification.interests.itemDrop"
+                                                    )}
+                                                />
+                                                <span className="flex gap-1 items-center">
+                                                    アイテムドロップ
+                                                    <span className="text-gray-600 text-xs">
+                                                        現在はSSのみ
+                                                    </span>
+                                                </span>
+                                            </label>
+                                            <label className="flex gap-1 items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4"
+                                                    disabled={
+                                                        !watch(
+                                                            "features.discordNotification.enabled"
+                                                        )
+                                                    }
+                                                    {...register(
+                                                        "features.discordNotification.interests.exploration"
+                                                    )}
+                                                />
+                                                <span>探索完了</span>
+                                            </label>
+                                            <label className="flex gap-1 items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="w-4 h-4"
+                                                    disabled={
+                                                        !watch(
+                                                            "features.discordNotification.enabled"
+                                                        )
+                                                    }
+                                                    {...register(
+                                                        "features.discordNotification.interests.autorunStop"
+                                                    )}
+                                                />
+                                                <span>自動周回停止</span>
+                                            </label>
+                                        </div>
                                     </span>
-                                    <div className="flex flex-col gap-1">
-                                        <label className="flex gap-2 items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="w-4 h-4"
-                                                disabled={
-                                                    !watch(
-                                                        "features.discordNotification.enabled"
-                                                    )
-                                                }
-                                                {...register(
-                                                    "features.discordNotification.interests.pcDrop"
-                                                )}
-                                            />
-                                            <span className="flex gap-1 items-center">
-                                                キャラクタードロップ
-                                                <span className="text-gray-600 text-xs">
-                                                    現在はSS,Sのみ
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label className="flex gap-2 items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="w-4 h-4"
-                                                disabled={
-                                                    !watch(
-                                                        "features.discordNotification.enabled"
-                                                    )
-                                                }
-                                                {...register(
-                                                    "features.discordNotification.interests.itemDrop"
-                                                )}
-                                            />
-                                            <span className="flex gap-1 items-center">
-                                                アイテムドロップ
-                                                <span className="text-gray-600 text-xs">
-                                                    現在はSSのみ
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label className="flex gap-2 items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="w-4 h-4"
-                                                disabled={
-                                                    !watch(
-                                                        "features.discordNotification.enabled"
-                                                    )
-                                                }
-                                                {...register(
-                                                    "features.discordNotification.interests.exploration"
-                                                )}
-                                            />
-                                            <span>探索完了</span>
-                                        </label>
-                                        <label className="flex gap-2 items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="w-4 h-4"
-                                                disabled={
-                                                    !watch(
-                                                        "features.discordNotification.enabled"
-                                                    )
-                                                }
-                                                {...register(
-                                                    "features.discordNotification.interests.autorunStop"
-                                                )}
-                                            />
-                                            <span>自動周回停止</span>
-                                        </label>
-                                    </div>
-                                </span>
-                            </div>
+                                </FeatureSectionContent>
+                            </FeatureSection>
 
-                            <div className="flex flex-col gap-1">
-                                <label className="flex gap-2 items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="-ml-6 w-4 h-4"
-                                        {...register(
-                                            "features.wheelAmplify.enabled"
-                                        )}
-                                    />
-                                    <span>ホイールスクロール増幅</span>
-                                    <HelpIcon href="https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" />
-                                </label>
-                                <span className="flex gap-1 text-gray-600 text-sm">
-                                    <i className="bi bi-info-circle"></i>
-                                    この設定の変更はページ再読み込み後に反映されます
-                                </span>
-                            </div>
-
-                            <div
-                                className={cn("flex flex-col gap-1", {
-                                    "opacity-50": !watch(
+                            <FeatureSection
+                                hasError={!!errors.features?.wheelAmplify}
+                            >
+                                <FeatureSectionSummary
+                                    register={register(
                                         "features.wheelAmplify.enabled"
-                                    ),
-                                })}
-                            >
-                                <label className="flex gap-2">
-                                    <span className="flex-shrink-0">
-                                        増幅倍率:
+                                    )}
+                                    title="ホイールスクロール増幅"
+                                    helpLink="https://github.com/eai04191/laoplus/wiki/features-wheelAmplify"
+                                />
+                                <FeatureSectionContent
+                                    enable={watch(
+                                        "features.wheelAmplify.enabled"
+                                    )}
+                                >
+                                    <span className="flex gap-1 text-gray-600 text-sm">
+                                        <i className="bi bi-info-circle"></i>
+                                        この設定の変更はページ再読み込み後に反映されます
                                     </span>
-                                    <input
-                                        // numberだと値が二重になる
-                                        type="text"
-                                        disabled={
-                                            !watch(
-                                                "features.wheelAmplify.enabled"
-                                            )
-                                        }
-                                        className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
-                                        {...register(
-                                            "features.wheelAmplify.ratio",
-                                            {
-                                                required: watch(
+                                    <label className="flex gap-2 items-center">
+                                        <span className="flex-shrink-0">
+                                            増幅倍率:
+                                        </span>
+                                        <input
+                                            // numberだと値が二重になる
+                                            type="text"
+                                            disabled={
+                                                !watch(
                                                     "features.wheelAmplify.enabled"
-                                                ),
-                                                validate: (value) =>
-                                                    // prettier-ignore
-                                                    typeof Number(value) === "number"
-                                                && !Number.isNaN(Number(value)),
+                                                )
                                             }
-                                        )}
-                                    />
-                                </label>
-                                {errors.features?.wheelAmplify?.ratio && (
-                                    <ErrorMessage className="flex gap-1">
-                                        <i className="bi bi-exclamation-triangle"></i>
-                                        {errors.features?.wheelAmplify?.ratio
-                                            ?.type === "required" &&
-                                            "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です"}
-                                        {errors.features?.wheelAmplify?.ratio
-                                            ?.type === "validate" &&
-                                            "増幅倍率は数字で入力してください"}
-                                    </ErrorMessage>
-                                )}
-                            </div>
+                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            {...register(
+                                                "features.wheelAmplify.ratio",
+                                                {
+                                                    required: watch(
+                                                        "features.wheelAmplify.enabled"
+                                                    ),
+                                                    validate: (value) =>
+                                                        // prettier-ignore
+                                                        typeof Number(value) === "number"
+                                                        && !Number.isNaN(Number(value)),
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.wheelAmplify?.ratio && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features?.wheelAmplify
+                                                ?.ratio?.type === "required" &&
+                                                "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です"}
+                                            {errors.features?.wheelAmplify
+                                                ?.ratio?.type === "validate" &&
+                                                "増幅倍率は数字で入力してください"}
+                                        </ErrorMessage>
+                                    )}
+                                </FeatureSectionContent>
+                            </FeatureSection>
 
-                            <div className="flex flex-col gap-1">
-                                <label className="flex gap-2 items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="-ml-6 w-4 h-4"
-                                        {...register(
-                                            "features.autorunDetection.enabled",
-                                            {
-                                                onChange:
-                                                    clearAutorunDetectionTimers,
-                                            }
-                                        )}
-                                    />
-                                    <span>自動周回停止判定</span>
-                                    <HelpIcon href="https://github.com/eai04191/laoplus/wiki/features-autorunDetection" />
-                                </label>
-                            </div>
-
-                            <div
-                                className={cn("flex flex-col gap-1", {
-                                    "opacity-50": !watch(
-                                        "features.autorunDetection.enabled"
-                                    ),
-                                })}
+                            <FeatureSection
+                                hasError={!!errors.features?.autorunDetection}
                             >
-                                <label className="flex gap-2 items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="w-4 h-4"
-                                        disabled={
-                                            !watch(
-                                                "features.autorunDetection.enabled"
-                                            )
-                                        }
-                                        {...register(
-                                            "features.autorunDetection.hideTimer"
-                                        )}
-                                    />
-                                    <span className="">
-                                        画面にタイマーを表示しない
-                                    </span>
-                                </label>
-                            </div>
-
-                            <div
-                                className={cn("flex flex-col gap-1", {
-                                    "opacity-50": !watch(
+                                <FeatureSectionSummary
+                                    register={register(
                                         "features.autorunDetection.enabled"
-                                    ),
-                                })}
-                            >
-                                <label className="flex gap-2">
-                                    <span className="flex-shrink-0">
-                                        インターバルのしきい値(分):
-                                    </span>
-                                    <input
-                                        type="text"
-                                        disabled={
-                                            !watch(
-                                                "features.autorunDetection.enabled"
-                                            )
-                                        }
-                                        className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
-                                        {...register(
-                                            "features.autorunDetection.threshold",
-                                            {
-                                                required: watch(
+                                    )}
+                                    title="自動周回停止判定"
+                                    helpLink="https://github.com/eai04191/laoplus/wiki/features-autorunDetection"
+                                />
+                                <FeatureSectionContent
+                                    enable={watch(
+                                        "features.autorunDetection.enabled"
+                                    )}
+                                >
+                                    <label className="flex gap-1 items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4"
+                                            disabled={
+                                                !watch(
                                                     "features.autorunDetection.enabled"
-                                                ),
-                                                validate: (value) =>
-                                                    // prettier-ignore
-                                                    typeof Number(value) === "number"
-                                                && !Number.isNaN(Number(value)),
+                                                )
                                             }
-                                        )}
-                                    />
-                                </label>
-                                {errors.features?.autorunDetection
-                                    ?.threshold && (
-                                    <ErrorMessage className="flex gap-1">
-                                        <i className="bi bi-exclamation-triangle"></i>
-                                        {errors.features?.autorunDetection
-                                            ?.threshold?.type === "required" &&
-                                            "自動周回停止判定を利用するにはしきい値の指定が必要です"}
-                                        {errors.features?.autorunDetection
-                                            ?.threshold?.type === "validate" &&
-                                            "しきい値は数字で入力してください"}
-                                    </ErrorMessage>
-                                )}
-                            </div>
+                                            {...register(
+                                                "features.autorunDetection.hideTimer"
+                                            )}
+                                        />
+                                        画面にタイマーを表示しない
+                                    </label>
+
+                                    <label className="flex gap-2 items-center">
+                                        <span className="flex-shrink-0">
+                                            インターバルのしきい値(分):
+                                        </span>
+                                        <input
+                                            type="text"
+                                            disabled={
+                                                !watch(
+                                                    "features.autorunDetection.enabled"
+                                                )
+                                            }
+                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            {...register(
+                                                "features.autorunDetection.threshold",
+                                                {
+                                                    required: watch(
+                                                        "features.autorunDetection.enabled"
+                                                    ),
+                                                    validate: (value) =>
+                                                        // prettier-ignore
+                                                        typeof Number(value) === "number"
+                                                && !Number.isNaN(Number(value)),
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.autorunDetection
+                                        ?.threshold && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features?.autorunDetection
+                                                ?.threshold?.type ===
+                                                "required" &&
+                                                "自動周回停止判定を利用するにはしきい値の指定が必要です"}
+                                            {errors.features?.autorunDetection
+                                                ?.threshold?.type ===
+                                                "validate" &&
+                                                "しきい値は数字で入力してください"}
+                                        </ErrorMessage>
+                                    )}
+                                </FeatureSectionContent>
+                            </FeatureSection>
                         </div>
                     </main>
 
@@ -418,28 +398,17 @@ export const ConfigModal = () => {
                         </a>
                     </div>
 
-                    <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur">
-                        <div className="flex gap-3 text-gray-500 text-sm">
-                            <a
-                                href="https://github.com/eai04191/laoplus"
-                                target="_blank"
-                                rel="noopener"
-                                className="flex gap-1"
-                            >
+                    <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md">
+                        <div className="flex gap-3 h-full text-gray-500 text-sm">
+                            <FooterLink href="https://github.com/eai04191/laoplus">
                                 <i className="bi bi-github"></i>
                                 GitHub
-                            </a>
-                            <a
-                                href="https://discord.gg/EGWqTuhjrE"
-                                target="_blank"
-                                rel="noopener"
-                                className="flex gap-1"
-                            >
+                            </FooterLink>
+                            <FooterLink href="https://discord.gg/EGWqTuhjrE">
                                 <i className="bi bi-discord"></i>
                                 Discord
-                            </a>
+                            </FooterLink>
                         </div>
-                        <div className="mx-2" />
                         <SubmitButton>保存</SubmitButton>
                     </footer>
                 </form>
