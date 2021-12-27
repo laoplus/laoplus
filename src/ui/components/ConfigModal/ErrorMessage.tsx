@@ -5,7 +5,7 @@ export const ErrorMessage: React.VFC<{
     className?: string;
 }> = ({ children, className }) => {
     return (
-        <span className={cn("text-red-600 text-xs", className)}>
+        <span className={cn("text-red-600 text-sm", className)}>
             {children}
         </span>
     );
