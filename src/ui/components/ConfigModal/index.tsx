@@ -114,7 +114,7 @@ export const ConfigModal = () => {
                                         "features.discordNotification.enabled"
                                     )}
                                 >
-                                    <label className="flex gap-2">
+                                    <label className="flex gap-2 items-center">
                                         <span className="flex-shrink-0">
                                             Discord Webhook URL:
                                         </span>
@@ -254,7 +254,7 @@ export const ConfigModal = () => {
                                         <i className="bi bi-info-circle"></i>
                                         この設定の変更はページ再読み込み後に反映されます
                                     </span>
-                                    <label className="flex gap-2">
+                                    <label className="flex gap-2 items-center">
                                         <span className="flex-shrink-0">
                                             増幅倍率:
                                         </span>
@@ -328,7 +328,7 @@ export const ConfigModal = () => {
                                         </span>
                                     </label>
 
-                                    <label className="flex gap-2">
+                                    <label className="flex gap-2 items-center">
                                         <span className="flex-shrink-0">
                                             インターバルのしきい値(分):
                                         </span>
