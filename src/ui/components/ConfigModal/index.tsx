@@ -160,7 +160,7 @@ export const ConfigModal = () => {
                                             通知項目:
                                         </span>
                                         <div className="flex flex-col gap-1">
-                                            <label className="flex gap-2 items-center">
+                                            <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
                                                     className="w-4 h-4"
@@ -180,7 +180,7 @@ export const ConfigModal = () => {
                                                     </span>
                                                 </span>
                                             </label>
-                                            <label className="flex gap-2 items-center">
+                                            <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
                                                     className="w-4 h-4"
@@ -200,7 +200,7 @@ export const ConfigModal = () => {
                                                     </span>
                                                 </span>
                                             </label>
-                                            <label className="flex gap-2 items-center">
+                                            <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
                                                     className="w-4 h-4"
@@ -215,7 +215,7 @@ export const ConfigModal = () => {
                                                 />
                                                 <span>探索完了</span>
                                             </label>
-                                            <label className="flex gap-2 items-center">
+                                            <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
                                                     className="w-4 h-4"
@@ -310,7 +310,7 @@ export const ConfigModal = () => {
                                         "features.autorunDetection.enabled"
                                     )}
                                 >
-                                    <label className="flex gap-2 items-center">
+                                    <label className="flex gap-1 items-center">
                                         <input
                                             type="checkbox"
                                             className="w-4 h-4"
@@ -323,9 +323,7 @@ export const ConfigModal = () => {
                                                 "features.autorunDetection.hideTimer"
                                             )}
                                         />
-                                        <span className="">
-                                            画面にタイマーを表示しない
-                                        </span>
+                                        画面にタイマーを表示しない
                                     </label>
 
                                     <label className="flex gap-2 items-center">
