@@ -10,7 +10,7 @@ export const FeatureSection: React.VFC<{
                 "pl-10 rounded shadow border",
                 hasError
                     ? "border-red-600 shadow-red-300/50"
-                    : " border-b-0 border-opacity-25"
+                    : "border-b-transparent"
             )}
         >
             {children}
