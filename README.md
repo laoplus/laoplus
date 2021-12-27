@@ -96,11 +96,11 @@ PWA としてインストールするとより便利に使えます
 <details>
 <summary><b>設定画面</b></summary>
 
-![image](https://user-images.githubusercontent.com/3516343/144452521-a30f019c-d335-4051-b7cf-4afa8c8a6235.png)
+![image](https://user-images.githubusercontent.com/3516343/147496588-24763bf6-329a-4633-8f68-d2a9faef7399.png)
 
 導入後、画面左下の ➕ をクリックすることで設定画面を開けます
 
-画面下部には現在の探索状態が完了が早い順に表示され、設定画面を開くことでいつでも確認できます
+下部には現在の探索状態が完了が早い順に表示され、この画面でいつでも（周回中でも！）確認できます
 
 ---
 
