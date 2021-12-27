@@ -7,6 +7,7 @@ import { SubmitButton } from "./SumitButton";
 import { FeatureSection } from "./FeatureSection";
 import { FeatureSectionSummary } from "./FeatureSectionSummary";
 import { FeatureSectionContent } from "./FeatureSectionContent";
+import { FooterLink } from "./FooterLink";
 import "./index.css";
 
 ReactModal.defaultStyles = {};
@@ -22,6 +23,9 @@ element.innerText = `
 }
 .ReactModal__Overlay--before-close {
     @apply opacity-0;
+}
+i.bi {
+    @apply flex items-center;
 }
 `;
 document.head.appendChild(element);
@@ -397,27 +401,16 @@ export const ConfigModal = () => {
                     </div>
 
                     <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md">
-                        <div className="flex gap-3 text-gray-500 text-sm">
-                            <a
-                                href="https://github.com/eai04191/laoplus"
-                                target="_blank"
-                                rel="noopener"
-                                className="flex gap-1"
-                            >
+                        <div className="flex gap-3 h-full text-gray-500 text-sm">
+                            <FooterLink href="https://github.com/eai04191/laoplus">
                                 <i className="bi bi-github"></i>
                                 GitHub
-                            </a>
-                            <a
-                                href="https://discord.gg/EGWqTuhjrE"
-                                target="_blank"
-                                rel="noopener"
-                                className="flex gap-1"
-                            >
+                            </FooterLink>
+                            <FooterLink href="https://discord.gg/EGWqTuhjrE">
                                 <i className="bi bi-discord"></i>
                                 Discord
-                            </a>
+                            </FooterLink>
                         </div>
-                        <div className="mx-2" />
                         <SubmitButton>保存</SubmitButton>
                     </footer>
                 </form>
