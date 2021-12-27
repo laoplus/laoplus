@@ -396,7 +396,7 @@ export const ConfigModal = () => {
                         </a>
                     </div>
 
-                    <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur">
+                    <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md">
                         <div className="flex gap-3 text-gray-500 text-sm">
                             <a
                                 href="https://github.com/eai04191/laoplus"
