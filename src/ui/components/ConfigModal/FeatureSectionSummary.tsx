@@ -16,13 +16,13 @@ export const FeatureSectionSummary: React.VFC<{
             <div className="details-chevron flex items-center transition-transform">
                 <i className="bi bi-chevron-left"></i>
             </div>
-            <div className="absolute left-0 top-0 flex items-center justify-center -ml-10 w-10 h-full">
+            <label className="absolute left-0 top-0 flex items-center justify-center -ml-10 w-10 h-full cursor-pointer">
                 <input
                     type="checkbox"
-                    className="after:content-[''] after:absolute after:inset-0 w-4 h-4 after:cursor-pointer"
+                    className="w-4 h-4 before:cursor-pointer"
                     {...register}
                 />
-            </div>
+            </label>
         </summary>
     );
 };
