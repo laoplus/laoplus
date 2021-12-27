@@ -38,10 +38,10 @@ export const PcDropNotification = (res: WaveClearResponse) => {
             } = unsafeWindow.LAOPLUS.config.config.features.discordNotification
                 .interests.pcRank;
 
-            if (pc.Grade === 5 && notifyRankSS === false) return embeds;
-            if (pc.Grade === 4 && notifyRankS === false) return embeds;
-            if (pc.Grade === 3 && notifyRankA === false) return embeds;
             if (pc.Grade === 2 && notifyRankB === false) return embeds;
+            if (pc.Grade === 3 && notifyRankA === false) return embeds;
+            if (pc.Grade === 4 && notifyRankS === false) return embeds;
+            if (pc.Grade === 5 && notifyRankSS === false) return embeds;
 
             const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
             const name =
