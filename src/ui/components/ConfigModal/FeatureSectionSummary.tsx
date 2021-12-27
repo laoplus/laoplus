@@ -8,7 +8,7 @@ export const FeatureSectionSummary: React.VFC<{
 }> = ({ register, title, helpLink }) => {
     return (
         <summary className="relative flex justify-between pr-4 py-4 cursor-pointer select-none">
-            <h2 className="inline-flex gap-2">
+            <h2 className="inline-flex gap-2 items-center">
                 {title}
                 {helpLink && <HelpIcon href={helpLink} />}
             </h2>
