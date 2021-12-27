@@ -10,6 +10,7 @@ import { FeatureSectionContent } from "./FeatureSectionContent";
 import { FooterLink } from "./FooterLink";
 import "./index.css";
 
+const cn = classNames;
 ReactModal.defaultStyles = {};
 
 const element = document.createElement("style");
@@ -163,7 +164,6 @@ export const ConfigModal = () => {
                                             <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
-                                                    className="w-4 h-4"
                                                     disabled={
                                                         !watch(
                                                             "features.discordNotification.enabled"
@@ -173,17 +173,78 @@ export const ConfigModal = () => {
                                                         "features.discordNotification.interests.pcDrop"
                                                     )}
                                                 />
-                                                <span className="flex gap-1 items-center">
-                                                    キャラクタードロップ
-                                                    <span className="text-gray-600 text-xs">
-                                                        現在はSS,Sのみ
-                                                    </span>
-                                                </span>
+                                                キャラクタードロップ
                                             </label>
+                                            <div
+                                                className={cn(
+                                                    "flex gap-3 pl-4 ml-1",
+                                                    {
+                                                        "opacity-50": !watch(
+                                                            "features.discordNotification.interests.pcDrop"
+                                                        ),
+                                                    }
+                                                )}
+                                            >
+                                                <label className="flex gap-1 items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={
+                                                            !watch(
+                                                                "features.discordNotification.interests.pcDrop"
+                                                            )
+                                                        }
+                                                        {...register(
+                                                            "features.discordNotification.interests.pcRank.B"
+                                                        )}
+                                                    />
+                                                    B
+                                                </label>
+                                                <label className="flex gap-1 items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={
+                                                            !watch(
+                                                                "features.discordNotification.interests.pcDrop"
+                                                            )
+                                                        }
+                                                        {...register(
+                                                            "features.discordNotification.interests.pcRank.A"
+                                                        )}
+                                                    />
+                                                    A
+                                                </label>
+                                                <label className="flex gap-1 items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={
+                                                            !watch(
+                                                                "features.discordNotification.interests.pcDrop"
+                                                            )
+                                                        }
+                                                        {...register(
+                                                            "features.discordNotification.interests.pcRank.S"
+                                                        )}
+                                                    />
+                                                    S
+                                                </label>
+                                                <label className="flex gap-1 items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        disabled={
+                                                            !watch(
+                                                                "features.discordNotification.interests.pcDrop"
+                                                            )
+                                                        }
+                                                        {...register(
+                                                            "features.discordNotification.interests.pcRank.SS"
+                                                        )}
+                                                    />
+                                                    SS
+                                                </label>
+                                            </div>
                                             <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
-                                                    className="w-4 h-4"
                                                     disabled={
                                                         !watch(
                                                             "features.discordNotification.enabled"
@@ -203,7 +264,6 @@ export const ConfigModal = () => {
                                             <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
-                                                    className="w-4 h-4"
                                                     disabled={
                                                         !watch(
                                                             "features.discordNotification.enabled"
@@ -218,7 +278,6 @@ export const ConfigModal = () => {
                                             <label className="flex gap-1 items-center">
                                                 <input
                                                     type="checkbox"
-                                                    className="w-4 h-4"
                                                     disabled={
                                                         !watch(
                                                             "features.discordNotification.enabled"
@@ -313,7 +372,6 @@ export const ConfigModal = () => {
                                     <label className="flex gap-1 items-center">
                                         <input
                                             type="checkbox"
-                                            className="w-4 h-4"
                                             disabled={
                                                 !watch(
                                                     "features.autorunDetection.enabled"
