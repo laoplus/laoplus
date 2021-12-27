@@ -14,9 +14,6 @@ ReactModal.defaultStyles = {};
 const element = document.createElement("style");
 element.setAttribute("type", "text/tailwindcss");
 element.innerText = `
-#laoplus-modal button {
-    @apply hover:brightness-105;
-}
 .ReactModal__Overlay {
     @apply opacity-0 transition-opacity duration-150;
 }
