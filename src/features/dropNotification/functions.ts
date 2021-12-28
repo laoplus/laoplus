@@ -30,8 +30,18 @@ type RewardItem = {
 export const PcDropNotification = (res: WaveClearResponse) => {
     const embeds = res.ClearRewardInfo.PCRewardList.reduce(
         (embeds: Embed[], pc) => {
-            // ランクB, Aを無視
-            if (pc.Grade === 2 || pc.Grade === 3) return embeds;
+            const {
+                B: notifyRankB,
+                A: notifyRankA,
+                S: notifyRankS,
+                SS: notifyRankSS,
+            } = unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .interests.pcRank;
+
+            if (pc.Grade === 2 && notifyRankB === false) return embeds;
+            if (pc.Grade === 3 && notifyRankA === false) return embeds;
+            if (pc.Grade === 4 && notifyRankS === false) return embeds;
+            if (pc.Grade === 5 && notifyRankSS === false) return embeds;
 
             const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
             const name =

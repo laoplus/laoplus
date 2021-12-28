@@ -8,6 +8,12 @@ const defaultConfig = {
             webhookURL: "",
             interests: {
                 pcDrop: true,
+                pcRank: {
+                    B: false,
+                    A: false,
+                    S: false,
+                    SS: true,
+                },
                 itemDrop: true,
                 exploration: true,
                 autorunStop: true,
