@@ -1,6 +1,7 @@
 import { Icon } from "ui/Icon";
 import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
+import { AutorunStatus } from "./components/AutorunStatus";
 
 const App: React.VFC = () => {
     return (

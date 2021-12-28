@@ -6,12 +6,40 @@ const defaultStatus = {
         enterTimerId: null,
         latestEnterTime: null,
     },
+    resourceFarmRecoder: {
+        startTime: null,
+        endTime: null,
+        endTime: null,
+        totalWaitTime: null,
+        totalRoundTime: null,
+        rounds: null,
+        Metal: null,
+        Nutrient: null,
+        Power: null,
+        Normal_Module: null,
+        Advanced_Module: null,
+        Special_Module: null,
+    },
 };
 
 type statusType = {
     autorunDetection: {
         enterTimerId: number | null;
         latestEnterTime: Date | null;
+    };
+    resourceFarmRecoder: {
+        startTime?: number,
+        endTime?: number,
+        endTime?: number,
+        totalWaitTime?: number,
+        totalRoundTime?: number,
+        rounds?: number,
+        Metal?: number,
+        Nutrient?: number,
+        Power?: number,
+        Normal_Module?: number,
+        Advanced_Module?: number,
+        Special_Module?: number,
     };
 };
 
