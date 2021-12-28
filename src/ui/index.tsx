@@ -1,7 +1,7 @@
 import { Icon } from "ui/Icon";
 import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
-import { AutorunStatus } from "./components/AutorunStatus";
+import { ResourceFarmer } from "./components/ResourceFarmer";
 
 const App: React.VFC = () => {
     return (
@@ -9,6 +9,7 @@ const App: React.VFC = () => {
             <Icon />
             <ConfigModal />
             <AutorunStatus />
+            <ResourceFarmer />
         </>
     );
 };
