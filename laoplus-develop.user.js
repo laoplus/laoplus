@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1640628538-33ddfda9bec371f7d443c9c5e87ebe2d308951a2
+// @version     1640699609-e099490c2ab94c9d5ba157a3867ddc7d68830c4a
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -196,6 +196,12 @@
                 webhookURL: "",
                 interests: {
                     pcDrop: true,
+                    pcRank: {
+                        B: false,
+                        A: false,
+                        S: false,
+                        SS: true,
+                    },
                     itemDrop: true,
                     exploration: true,
                     autorunStop: true,
@@ -249,19 +255,19 @@
         return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
     };
 
-    const cn$6 = classNames;
+    const cn$7 = classNames;
     const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$6("text-red-600 text-sm", className) }, children));
+        return (React.createElement("span", { className: cn$7("text-red-600 text-sm", className) }, children));
     };
 
-    const cn$5 = classNames;
+    const cn$6 = classNames;
     const ExplorationList = () => {
         const exploration = unsafeWindow.LAOPLUS.exploration.sort((a, b) => a.EndTime - b.EndTime);
         const list = exploration.map((exp) => {
             const endDate = dayjs(exp.EndTime * 1000);
             const duration = dayjs.duration(endDate.diff(dayjs()));
             const isFinished = endDate.isSameOrBefore(dayjs());
-            return (React.createElement("div", { key: exp.StageKeyString, className: cn$5("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
+            return (React.createElement("div", { key: exp.StageKeyString, className: cn$6("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
                 React.createElement("span", { className: "text-3xl font-bold" }, exp.SquadIndex),
                 React.createElement("div", { className: "flex flex-col" },
                     React.createElement("span", { className: "text-sm" }, humanFriendlyStageKey(exp.StageKeyString)),
@@ -280,7 +286,7 @@
         return React.createElement(React.Fragment, null, list);
     };
 
-    const cn$4 = classNames;
+    const cn$5 = classNames;
     /**
      * ラスオリのボタンっぽいボタン
      * variantのプレビュー: https://user-images.githubusercontent.com/3516343/143912908-65956c55-b60d-4028-82d2-143b08414384.png
@@ -327,12 +333,12 @@
             }
         })();
         return (React.createElement("div", { className: "drop-shadow" },
-            React.createElement("button", { type: "submit", className: cn$4("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+            React.createElement("button", { type: "submit", className: cn$5("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
     };
 
-    const cn$3 = classNames;
+    const cn$4 = classNames;
     const FeatureSection = ({ children, hasError }) => {
-        return (React.createElement("details", { className: cn$3("pl-10 rounded shadow border", hasError
+        return (React.createElement("details", { className: cn$4("pl-10 rounded shadow border", hasError
                 ? "border-red-600 shadow-red-300/50"
                 : "border-b-transparent") }, children));
     };
@@ -353,9 +359,9 @@
                 React.createElement("input", { type: "checkbox", className: "w-4 h-4 before:cursor-pointer", ...register }))));
     };
 
-    const cn$2 = classNames;
+    const cn$3 = classNames;
     const FeatureSectionContent = ({ children, enable }) => {
-        return (React.createElement("div", { className: cn$2("flex flex-col gap-2 p-4 pl-0 border-t", {
+        return (React.createElement("div", { className: cn$3("flex flex-col gap-2 p-4 pl-0 border-t", {
                 "opacity-50": !enable,
             }) }, children));
     };
@@ -394,6 +400,7 @@
     var css_248z = "details[open] .details-chevron {\n    transform: rotate(180deg);\n}\n";
     styleInject(css_248z);
 
+    const cn$2 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
     element.setAttribute("type", "text/tailwindcss");
@@ -470,20 +477,33 @@ i.bi {
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
                                         React.createElement("div", { className: "flex flex-col gap-1" },
                                             React.createElement("label", { className: "flex gap-1 items-center" },
-                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
-                                                React.createElement("span", { className: "flex gap-1 items-center" },
-                                                    "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7",
-                                                    React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS,S\u306E\u307F"))),
+                                                React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
+                                                "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7"),
+                                            React.createElement("div", { className: cn$2("flex gap-3 pl-4 ml-1", {
+                                                    "opacity-50": !watch("features.discordNotification.interests.pcDrop"),
+                                                }) },
+                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                    React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.B") }),
+                                                    "B"),
+                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                    React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.A") }),
+                                                    "A"),
+                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                    React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.S") }),
+                                                    "S"),
+                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                    React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.SS") }),
+                                                    "SS")),
                                             React.createElement("label", { className: "flex gap-1 items-center" },
-                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
+                                                React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
                                                 React.createElement("span", { className: "flex gap-1 items-center" },
                                                     "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
                                                     React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
                                             React.createElement("label", { className: "flex gap-1 items-center" },
-                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
+                                                React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
                                                 React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
                                             React.createElement("label", { className: "flex gap-1 items-center" },
-                                                React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
+                                                React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
                                                 React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62")))))),
                             React.createElement(FeatureSection, { hasError: !!errors.features?.wheelAmplify },
                                 React.createElement(FeatureSectionSummary, { register: register("features.wheelAmplify.enabled"), title: "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45", helpLink: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" }),
@@ -514,7 +534,7 @@ i.bi {
                                 React.createElement(FeatureSectionSummary, { register: register("features.autorunDetection.enabled"), title: "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A", helpLink: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.autorunDetection.enabled") },
                                     React.createElement("label", { className: "flex gap-1 items-center" },
-                                        React.createElement("input", { type: "checkbox", className: "w-4 h-4", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
+                                        React.createElement("input", { type: "checkbox", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
                                         "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"),
                                     React.createElement("label", { className: "flex gap-2 items-center" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
@@ -774,8 +794,15 @@ i.bi {
      */
     const PcDropNotification = (res) => {
         const embeds = res.ClearRewardInfo.PCRewardList.reduce((embeds, pc) => {
-            // ランクB, Aを無視
-            if (pc.Grade === 2 || pc.Grade === 3)
+            const { B: notifyRankB, A: notifyRankA, S: notifyRankS, SS: notifyRankSS, } = unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .interests.pcRank;
+            if (pc.Grade === 2 && notifyRankB === false)
+                return embeds;
+            if (pc.Grade === 3 && notifyRankA === false)
+                return embeds;
+            if (pc.Grade === 4 && notifyRankS === false)
+                return embeds;
+            if (pc.Grade === 5 && notifyRankSS === false)
                 return embeds;
             const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
             const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
