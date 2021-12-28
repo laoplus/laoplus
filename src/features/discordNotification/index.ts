@@ -1,9 +1,17 @@
 import { log } from "~/utils/log";
 import { Webhook } from "discord-webhook-ts";
 
-export const sendToDiscordWebhook = (body: Webhook.input.POST) => {
+export const sendToDiscordWebhook = (
+    body: Webhook.input.POST,
+    option?: {
+        forceSend?: boolean;
+        webhookURL?: string;
+    }
+) => {
     if (
-        !unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled
+        !unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .enabled &&
+        !option?.forceSend
     ) {
         log.debug(
             "Discord Notification",
@@ -13,9 +21,10 @@ export const sendToDiscordWebhook = (body: Webhook.input.POST) => {
         return;
     }
 
-    fetch(
-        unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .webhookURL,
+    return fetch(
+        option?.webhookURL ||
+            unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .webhookURL,
         {
             method: "POST",
             headers: {
