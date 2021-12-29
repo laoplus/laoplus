@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1640699609-e099490c2ab94c9d5ba157a3867ddc7d68830c4a
+// @version     1640756793-f50663aeb039768e9c25acb1a72e41ed8adabd8d
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -400,6 +400,56 @@
     var css_248z = "details[open] .details-chevron {\n    transform: rotate(180deg);\n}\n";
     styleInject(css_248z);
 
+    const sendToDiscordWebhook = (body, option) => {
+        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .enabled &&
+            !option?.forceSend) {
+            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
+            return;
+        }
+        return fetch(option?.webhookURL ||
+            unsafeWindow.LAOPLUS.config.config.features.discordNotification
+                .webhookURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
+    };
+    /**
+     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
+     */
+    const colorHexToInteger = (hex) => {
+        return parseInt(hex.replace("#", ""), 16);
+    };
+
+    const WebhookTestButton = ({ webhookURL, }) => {
+        return (React.createElement("button", { className: "bg-amber-300 px-2 py-1 border rounded", onClick: async (e) => {
+                e.preventDefault();
+                const response = await sendToDiscordWebhook({
+                    content: ":ok: このメッセージを確認できているので、Discord通知は正しく設定されています！",
+                }, {
+                    forceSend: true,
+                    webhookURL: webhookURL,
+                })?.catch(() => {
+                    alert("テストメッセージの送信中にエラーが発生しました。");
+                    return { ok: false };
+                });
+                // forceSendがtrueなのに何も帰ってこないことはないはず
+                if (!response) {
+                    alert("テストメッセージが送信されませんでした。\n（おそらくバグです）");
+                    return;
+                }
+                if (response.ok) {
+                    alert("テストメッセージが送信されました。\nメッセージが届かない場合はWebhook URLを確認・再設定してください。");
+                }
+                else {
+                    alert("テストメッセージの送信に失敗しました。\nWebhook URLを確認・再設定してください。");
+                }
+            } }, "\u901A\u77E5\u30C6\u30B9\u30C8"));
+    };
+
     const cn$2 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
@@ -459,7 +509,8 @@ i.bi {
                                         React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
                                                 required: watch("features.discordNotification.enabled"),
                                                 pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
-                                            }) })),
+                                            }) }),
+                                        React.createElement(WebhookTestButton, { webhookURL: watch("features.discordNotification.webhookURL") })),
                                     errors.features?.discordNotification
                                         ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
@@ -644,27 +695,6 @@ i.bi {
         root.id = "laoplus-root";
         ReactDOM.render(React.createElement(App, null), root);
         document.body.appendChild(root);
-    };
-
-    const sendToDiscordWebhook = (body) => {
-        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification.enabled) {
-            log.debug("Discord Notification", "設定が無効のため送信しませんでした", body);
-            return;
-        }
-        fetch(unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .webhookURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        });
-    };
-    /**
-     * 16進数のカラーコードを受け取って10進数のカラーコードを返す
-     */
-    const colorHexToInteger = (hex) => {
-        return parseInt(hex.replace("#", ""), 16);
     };
 
     const sendNotification$1 = () => {
