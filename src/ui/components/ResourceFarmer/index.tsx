@@ -45,7 +45,8 @@ function AdvanceWindow(props: any) {
         return (
             <div>
                 Research:{" "}
-                <select className="text-black"
+                <select
+                    className="text-black"
                     value={Research}
                     onChange={(e) => setResearch((old) => e.target.value)}
                 >
@@ -56,16 +57,42 @@ function AdvanceWindow(props: any) {
                     <option value="2.2">120%</option>
                     <option value="2.5">150%</option>
                 </select>
-                <button className="bg-amber-300 font-bold text-black p-1 ml-1" onClick={resetRecoder}>Reset</button>
-                <p>TotalRoundTime: {recoder.totalRoundTime}</p>
-                <p>TotalWaitTime: {recoder.totalWaitTime}</p>
-                <p>TotalTime: {totalTime}</p>
+                <button
+                    className="bg-amber-300 ml-1 p-1 text-black font-bold"
+                    onClick={resetRecoder}
+                >
+                    Reset
+                </button>
+                <p>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Average</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <th>Round Time</th>
+                            <td>{(recoder.totalRoundTime / recoder.rounds).toFixed(2)}</td>
+                            <td>{recoder.totalRoundTime.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <th>Wait Time</th>
+                            <td>{(recoder.totalWaitTime / recoder.rounds).toFixed(2)}</td>
+                            <td>{recoder.totalWaitTime.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Time</th>
+                            <td>{(totalTime / recoder.rounds).toFixed(2)}</td>
+                            <td>{totalTime.toFixed(2)}</td>
+                        </tr>
+                    </table>
+                </p>
                 <p>
                     <img
                         className="icon"
                         src="https://static.wikia.nocookie.net/lastorigin/images/a/ab/Part_Icon.png"
                     ></img>
-                    per hour: {(recoder.Metal * numResearch * 3600) / totalTime}
+                    per hour: {((recoder.Metal * numResearch * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
@@ -73,14 +100,14 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/f/f4/Nutrient_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {(recoder.Nutrient * numResearch * 3600) / totalTime}
+                    {((recoder.Nutrient * numResearch * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
                         className="icon"
                         src="https://static.wikia.nocookie.net/lastorigin/images/d/d0/Power_Icon.png"
                     ></img>
-                    per hour: {(recoder.Power * numResearch * 3600) / totalTime}
+                    per hour: {((recoder.Power * numResearch * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
@@ -88,7 +115,7 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/2/2e/Basic_Module_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {(recoder.Normal_Module * numResearch * 3600) / totalTime}
+                    {((recoder.Normal_Module * numResearch * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
@@ -96,7 +123,7 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/d/d3/Advanced_Module_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {(recoder.Advanced_Module * numResearch * 3600) / totalTime}
+                    {((recoder.Advanced_Module * numResearch * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
@@ -104,7 +131,7 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/9/9c/Special_Module_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {(recoder.Special_Module * numResearch * 3600) / totalTime}
+                    {((recoder.Special_Module * numResearch * 3600) / totalTime).toFixed(2)}
                 </p>
             </div>
         );
