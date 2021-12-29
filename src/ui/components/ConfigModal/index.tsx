@@ -61,7 +61,7 @@ export const ConfigModal = () => {
                 onClick={() => {
                     setIsOpen(true);
                 }}
-                className="absolute bottom-0 left-0"
+                title={`${GM_info.script.name}の設定画面を開く`}
             >
                 ➕
             </button>
@@ -79,7 +79,7 @@ export const ConfigModal = () => {
                     // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
                     reset();
                 }}
-                overlayClassName="backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur"
+                overlayClassName="backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10"
                 className="min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden"
                 id="laoplus-modal"
             >
