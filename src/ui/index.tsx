@@ -1,11 +1,11 @@
-import { Icon } from "ui/Icon";
+import { BootstrapIcon } from "~/ui/BootstrapIcon";
 import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
 
 const App: React.VFC = () => {
     return (
         <>
-            <Icon />
+            <BootstrapIcon />
             <ConfigModal />
             <AutorunStatus />
         </>
