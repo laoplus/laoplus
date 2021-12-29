@@ -32,10 +32,6 @@ const sendNotification = () => {
         );
     }
 
-    unsafeWindow.LAOPLUS.config.set({
-        features: { autorunDetection: { enabled: false } },
-    });
-    log.debug("Autorun Detection", "Autorun Detection Disabled");
     clearTimer();
 };
 

@@ -1,6 +1,6 @@
 {
     "name": "laoplus",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "author": "Eai <eai@mizle.net>",
     "license": "MIT",
     "scripts": {
@@ -16,6 +16,7 @@
         "@headlessui/react": "^1.4.2",
         "@rollup/plugin-node-resolve": "^13.0.6",
         "@rollup/plugin-typescript": "^8.3.0",
+        "@tailwindcss/forms": "^0.4.0",
         "@types/chroma-js": "^2.1.3",
         "@types/lodash": "^4.14.177",
         "@types/react": "^17.0.37",
@@ -34,10 +35,12 @@
         "eslint-plugin-react": "^7.27.1",
         "mitt": "^3.0.0",
         "npm-run-all": "^4.1.5",
+        "postcss": "^8.4.5",
         "prettier": "^2.5.0",
         "prettier-plugin-tailwind": "^2.2.12",
         "react-hook-form": "^7.20.4",
         "rollup": "^2.60.1",
+        "rollup-plugin-postcss": "^4.0.2",
         "rollup-plugin-userscript": "^0.1.1",
         "stylelint": "^14.1.0",
         "tailwindcss": "^2.2.19",
