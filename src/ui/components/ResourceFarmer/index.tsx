@@ -45,7 +45,7 @@ function AdvanceWindow(props: any) {
         return (
             <div>
                 Research:{" "}
-                <select
+                <select className="text-black"
                     value={Research}
                     onChange={(e) => setResearch((old) => e.target.value)}
                 >
