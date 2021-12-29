@@ -1,4 +1,4 @@
-export const Icon: React.VFC = () => {
+export const BootstrapIcon: React.VFC = () => {
     return (
         <link
             rel="stylesheet"

@@ -1,12 +1,24 @@
-import { Icon } from "ui/Icon";
+import { BootstrapIcon } from "~/ui/BootstrapIcon";
 import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
+import { ToggleAutorun } from "./components/ToggleAutorun";
+
+const IconWrapper: React.VFC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
+    return (
+        <div className="absolute bottom-0 left-0 flex gap-1">{children}</div>
+    );
+};
 
 const App: React.VFC = () => {
     return (
         <>
-            <Icon />
-            <ConfigModal />
+            <BootstrapIcon />
+            <IconWrapper>
+                <ConfigModal />
+                <ToggleAutorun />
+            </IconWrapper>
             <AutorunStatus />
         </>
     );

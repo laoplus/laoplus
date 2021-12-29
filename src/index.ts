@@ -6,7 +6,7 @@ import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
 import { initTacticsManual } from "tacticsManual";
 import { TacticsManualUnit, ExplorationSquad } from "./types";
-import { tailwindConfig } from "./ui/tailwind";
+import { tailwindConfig, initTailwindCustomStyle } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
 import { initWheelAmplfy } from "./features/wheelAmplify";
 import { log } from "./utils";
@@ -47,6 +47,7 @@ declare global {
 
     // @ts-ignore
     tailwind.config = tailwindConfig;
+    initTailwindCustomStyle();
 
     dayjs.extend(dayjs_plugin_relativeTime);
     dayjs.extend(dayjs_plugin_isSameOrBefore);
