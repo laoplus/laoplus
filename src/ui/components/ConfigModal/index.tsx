@@ -9,6 +9,8 @@ import { FeatureSectionSummary } from "./FeatureSectionSummary";
 import { FeatureSectionContent } from "./FeatureSectionContent";
 import { FooterLink } from "./FooterLink";
 import "./index.css";
+import { sendToDiscordWebhook } from "~/features/discordNotification";
+import { WebhookTestButton } from "./WebhookTestButton";
 
 const cn = classNames;
 ReactModal.defaultStyles = {};
@@ -136,6 +138,11 @@ export const ConfigModal = () => {
                                                     pattern:
                                                         /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
                                                 }
+                                            )}
+                                        />
+                                        <WebhookTestButton
+                                            webhookURL={watch(
+                                                "features.discordNotification.webhookURL"
                                             )}
                                         />
                                     </label>
