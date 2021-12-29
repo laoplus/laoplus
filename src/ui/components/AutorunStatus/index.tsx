@@ -33,7 +33,7 @@ export const AutorunStatus: React.VFC = () => {
                 style={{ animationDuration: "12s" }}
             />
             <div className="pl-[50%] absolute inset-0 flex items-center justify-center">
-                <Timer targetDate={enterDate} className="pt-[50%] rotate-90" />
+                <Timer targetDate={enterDate} className="pt-[60%] rotate-90" />
             </div>
         </div>
     );
