@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1640756793-f50663aeb039768e9c25acb1a72e41ed8adabd8d
+// @version     1640764480-265ca16e8169b278aa109ab3e815811816e57ba7
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -251,23 +251,23 @@
         }
     }
 
-    const Icon = () => {
+    const BootstrapIcon = () => {
         return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
     };
 
-    const cn$7 = classNames;
+    const cn$9 = classNames;
     const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$7("text-red-600 text-sm", className) }, children));
+        return (React.createElement("span", { className: cn$9("text-red-600 text-sm", className) }, children));
     };
 
-    const cn$6 = classNames;
+    const cn$8 = classNames;
     const ExplorationList = () => {
         const exploration = unsafeWindow.LAOPLUS.exploration.sort((a, b) => a.EndTime - b.EndTime);
         const list = exploration.map((exp) => {
             const endDate = dayjs(exp.EndTime * 1000);
             const duration = dayjs.duration(endDate.diff(dayjs()));
             const isFinished = endDate.isSameOrBefore(dayjs());
-            return (React.createElement("div", { key: exp.StageKeyString, className: cn$6("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
+            return (React.createElement("div", { key: exp.StageKeyString, className: cn$8("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
                 React.createElement("span", { className: "text-3xl font-bold" }, exp.SquadIndex),
                 React.createElement("div", { className: "flex flex-col" },
                     React.createElement("span", { className: "text-sm" }, humanFriendlyStageKey(exp.StageKeyString)),
@@ -286,7 +286,7 @@
         return React.createElement(React.Fragment, null, list);
     };
 
-    const cn$5 = classNames;
+    const cn$7 = classNames;
     /**
      * ラスオリのボタンっぽいボタン
      * variantのプレビュー: https://user-images.githubusercontent.com/3516343/143912908-65956c55-b60d-4028-82d2-143b08414384.png
@@ -333,12 +333,12 @@
             }
         })();
         return (React.createElement("div", { className: "drop-shadow" },
-            React.createElement("button", { type: "submit", className: cn$5("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+            React.createElement("button", { type: "submit", className: cn$7("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
     };
 
-    const cn$4 = classNames;
+    const cn$6 = classNames;
     const FeatureSection = ({ children, hasError }) => {
-        return (React.createElement("details", { className: cn$4("pl-10 rounded shadow border", hasError
+        return (React.createElement("details", { className: cn$6("pl-10 rounded shadow border", hasError
                 ? "border-red-600 shadow-red-300/50"
                 : "border-b-transparent") }, children));
     };
@@ -359,9 +359,9 @@
                 React.createElement("input", { type: "checkbox", className: "w-4 h-4 before:cursor-pointer", ...register }))));
     };
 
-    const cn$3 = classNames;
+    const cn$5 = classNames;
     const FeatureSectionContent = ({ children, enable }) => {
-        return (React.createElement("div", { className: cn$3("flex flex-col gap-2 p-4 pl-0 border-t", {
+        return (React.createElement("div", { className: cn$5("flex flex-col gap-2 p-4 pl-0 border-t", {
                 "opacity-50": !enable,
             }) }, children));
     };
@@ -450,7 +450,7 @@
             } }, "\u901A\u77E5\u30C6\u30B9\u30C8"));
     };
 
-    const cn$2 = classNames;
+    const cn$4 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
     element.setAttribute("type", "text/tailwindcss");
@@ -485,7 +485,7 @@ i.bi {
         return (React.createElement(React.Fragment, null,
             React.createElement("button", { onClick: () => {
                     setIsOpen(true);
-                }, className: "absolute bottom-0 left-0" }, "\u2795"),
+                }, title: `${GM_info.script.name}の設定画面を開く` }, "\u2795"),
             React.createElement(ReactModal, { appElement: 
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 document.querySelector("#laoplus-root"), shouldCloseOnOverlayClick: false, 
@@ -493,7 +493,7 @@ i.bi {
                 closeTimeoutMS: 150, isOpen: isOpen, onAfterOpen: () => {
                     // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
                     reset();
-                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur", className: "min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden", id: "laoplus-modal" },
+                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10", className: "min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden", id: "laoplus-modal" },
                 React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "relative flex flex-col w-full divide-y overflow-auto" },
                     React.createElement("header", { className: "flex items-center place-content-between p-4" },
                         React.createElement("div", { className: "flex gap-2 items-end" },
@@ -530,7 +530,7 @@ i.bi {
                                             React.createElement("label", { className: "flex gap-1 items-center" },
                                                 React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
                                                 "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7"),
-                                            React.createElement("div", { className: cn$2("flex gap-3 pl-4 ml-1", {
+                                            React.createElement("div", { className: cn$4("flex gap-3 pl-4 ml-1", {
                                                     "opacity-50": !watch("features.discordNotification.interests.pcDrop"),
                                                 }) },
                                                 React.createElement("label", { className: "flex gap-1 items-center" },
@@ -632,15 +632,15 @@ i.bi {
                         React.createElement(ExplorationList, null))))));
     };
 
-    const cn$1 = classNames;
+    const cn$3 = classNames;
     /**
      * @package
      */
     const Spinner = ({ className, style }) => {
-        return (React.createElement("i", { className: cn$1("bi bi-arrow-repeat", className), style: style }));
+        return (React.createElement("i", { className: cn$3("bi bi-arrow-repeat", className), style: style }));
     };
 
-    const cn = classNames;
+    const cn$2 = classNames;
     /**
      * @package
      */
@@ -657,11 +657,12 @@ i.bi {
         }, []);
         if (targetDate !== null) {
             const duration = dayjs.duration(dayjs(targetDate).diff(dayjs()));
-            return (React.createElement("div", { className: cn("text-[10vh]", className) }, duration.format("mm:ss")));
+            return (React.createElement("div", { className: cn$2("text-[10vh]", className) }, duration.format("mm:ss")));
         }
-        return React.createElement("div", { className: cn("text-[6vh]", className) }, "WAITING");
+        return React.createElement("div", { className: cn$2("text-[6vh]", className) }, "WAITING");
     };
 
+    const cn$1 = classNames;
     const AutorunStatus = () => {
         const config = unsafeWindow.LAOPLUS.config;
         const status = unsafeWindow.LAOPLUS.status;
@@ -678,16 +679,39 @@ i.bi {
         if (!shown) {
             return React.createElement(React.Fragment, null);
         }
-        return (React.createElement("div", { className: "-translate-x-[50%] absolute inset-y-0 left-0 flex items-center text-white opacity-90 pointer-events-none select-none drop-shadow-lg" },
+        return (React.createElement("div", { className: cn$1("-translate-x-[50%] absolute inset-y-0 left-0 flex items-center text-white pointer-events-none select-none drop-shadow-lg", enterDate === null ? "opacity-50" : "opacity-90") },
             React.createElement(Spinner, { className: "text-[70vh] leading-zero animate-spin", style: { animationDuration: "12s" } }),
             React.createElement("div", { className: "pl-[50%] absolute inset-0 flex items-center justify-center" },
-                React.createElement(Timer, { targetDate: enterDate, className: "pt-[50%] rotate-90" }))));
+                React.createElement(Timer, { targetDate: enterDate, className: "pt-[60%] rotate-90" }))));
     };
 
+    const cn = classNames;
+    const ToggleAutorun = () => {
+        const config = unsafeWindow.LAOPLUS.config;
+        const [enabled, setEnabled] = React.useState(config.config.features.autorunDetection.enabled);
+        config.events.on("changed", (e) => {
+            setEnabled(e.features.autorunDetection.enabled);
+        });
+        const handleClick = () => {
+            config.set({ features: { autorunDetection: { enabled: !enabled } } });
+        };
+        return (React.createElement("button", { onClick: handleClick, title: `自動周回停止判定を${enabled ? "オフ" : "オン"}にする`, className: cn("text-white drop-shadow", enabled && "animate-spin"), style: {
+                animationDuration: "2s",
+                animationTimingFunction: "ease-in-out",
+                filter: "drop-shadow(0 0 0.1em black)",
+            } },
+            React.createElement("i", { className: "bi bi-arrow-repeat" })));
+    };
+
+    const IconWrapper = ({ children, }) => {
+        return (React.createElement("div", { className: "absolute bottom-0 left-0 flex gap-1" }, children));
+    };
     const App = () => {
         return (React.createElement(React.Fragment, null,
-            React.createElement(Icon, null),
-            React.createElement(ConfigModal, null),
+            React.createElement(BootstrapIcon, null),
+            React.createElement(IconWrapper, null,
+                React.createElement(ConfigModal, null),
+                React.createElement(ToggleAutorun, null)),
             React.createElement(AutorunStatus, null)));
     };
     const initUi = () => {
@@ -925,10 +949,6 @@ i.bi {
         else {
             log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
         }
-        unsafeWindow.LAOPLUS.config.set({
-            features: { autorunDetection: { enabled: false } },
-        });
-        log.debug("Autorun Detection", "Autorun Detection Disabled");
         clearTimer();
     };
     const getDalayMs = () => {
