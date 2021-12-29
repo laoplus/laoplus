@@ -87,11 +87,11 @@ const ItemDisassemblingTable = {
 export const stageStart = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { startTime, endTime, totalWaitTime } = status.status
+    const { endTime, totalWaitTime } = status.status
         .resourceFarmRecoder as ResourceFarmRecoder;
     
-    if (startTime && endTime) {
-        const waitTime = curtime - endTime;
+    if (endTime) {
+        const waitTime = (curtime - endTime)/1000;
         status.set({
             resourceFarmRecoder: {
                 startTime: curtime,
@@ -110,11 +110,11 @@ export const stageStart = () => {
 export const stageStop = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { startTime, endTime, totalRoundTime, rounds } = status.status
+    const { startTime, totalRoundTime, rounds } = status.status
         .resourceFarmRecoder as ResourceFarmRecoder;
 
-    if (startTime && endTime) {
-        const waitTime = curtime - startTime;
+    if (startTime) {
+        const waitTime = (curtime - startTime)/1000;
         status.set({
             resourceFarmRecoder: {
                 endTime: curtime,
