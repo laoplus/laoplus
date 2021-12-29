@@ -80,16 +80,16 @@ export const ConfigModal = () => {
                     reset();
                 }}
                 overlayClassName="backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10"
-                className="min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden"
+                className="min-w-[50%] max-w-[90%] max-h-[90%] bg-gray-50 rounded flex shadow overflow-hidden"
                 id="laoplus-modal"
             >
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="relative flex flex-col w-full divide-y overflow-auto"
+                    className="w-full relative flex flex-col divide-y overflow-auto"
                 >
-                    <header className="flex items-center place-content-between p-4">
-                        <div className="flex gap-2 items-end">
-                            <h1 className="text-xl font-semibold">
+                    <header className="p-4 flex items-center place-content-between">
+                        <div className="gap-2 flex items-end">
+                            <h1 className="font-semibold text-xl">
                                 {GM_info.script.name}
                             </h1>
                             <span className="pb-0.5 text-gray-500 text-sm">
@@ -99,7 +99,7 @@ export const ConfigModal = () => {
                     </header>
 
                     <main className="p-4">
-                        <div className="flex flex-col gap-4">
+                        <div className="gap-4 flex flex-col">
                             <FeatureSection
                                 hasError={
                                     !!errors.features?.discordNotification
@@ -117,7 +117,7 @@ export const ConfigModal = () => {
                                         "features.discordNotification.enabled"
                                     )}
                                 >
-                                    <label className="flex gap-2 items-center">
+                                    <label className="gap-2 flex items-center">
                                         <span className="flex-shrink-0">
                                             Discord Webhook URL:
                                         </span>
@@ -148,7 +148,7 @@ export const ConfigModal = () => {
                                     </label>
                                     {errors.features?.discordNotification
                                         ?.webhookURL && (
-                                        <ErrorMessage className="flex gap-1">
+                                        <ErrorMessage className="gap-1 flex">
                                             <i className="bi bi-exclamation-triangle"></i>
                                             {errors.features
                                                 ?.discordNotification
@@ -163,12 +163,12 @@ export const ConfigModal = () => {
                                         </ErrorMessage>
                                     )}
 
-                                    <span className="flex gap-2">
+                                    <span className="gap-2 flex">
                                         <span className="flex-shrink-0">
                                             通知項目:
                                         </span>
-                                        <div className="flex flex-col gap-1">
-                                            <label className="flex gap-1 items-center">
+                                        <div className="gap-1 flex flex-col">
+                                            <label className="gap-1 flex items-center">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -192,7 +192,7 @@ export const ConfigModal = () => {
                                                     }
                                                 )}
                                             >
-                                                <label className="flex gap-1 items-center">
+                                                <label className="gap-1 flex items-center">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -206,7 +206,7 @@ export const ConfigModal = () => {
                                                     />
                                                     B
                                                 </label>
-                                                <label className="flex gap-1 items-center">
+                                                <label className="gap-1 flex items-center">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -220,7 +220,7 @@ export const ConfigModal = () => {
                                                     />
                                                     A
                                                 </label>
-                                                <label className="flex gap-1 items-center">
+                                                <label className="gap-1 flex items-center">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -234,7 +234,7 @@ export const ConfigModal = () => {
                                                     />
                                                     S
                                                 </label>
-                                                <label className="flex gap-1 items-center">
+                                                <label className="gap-1 flex items-center">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -249,7 +249,7 @@ export const ConfigModal = () => {
                                                     SS
                                                 </label>
                                             </div>
-                                            <label className="flex gap-1 items-center">
+                                            <label className="gap-1 flex items-center">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -261,14 +261,14 @@ export const ConfigModal = () => {
                                                         "features.discordNotification.interests.itemDrop"
                                                     )}
                                                 />
-                                                <span className="flex gap-1 items-center">
+                                                <span className="gap-1 flex items-center">
                                                     アイテムドロップ
                                                     <span className="text-gray-600 text-xs">
                                                         現在はSSのみ
                                                     </span>
                                                 </span>
                                             </label>
-                                            <label className="flex gap-1 items-center">
+                                            <label className="gap-1 flex items-center">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -282,7 +282,7 @@ export const ConfigModal = () => {
                                                 />
                                                 <span>探索完了</span>
                                             </label>
-                                            <label className="flex gap-1 items-center">
+                                            <label className="gap-1 flex items-center">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -316,11 +316,11 @@ export const ConfigModal = () => {
                                         "features.wheelAmplify.enabled"
                                     )}
                                 >
-                                    <span className="flex gap-1 text-gray-600 text-sm">
+                                    <span className="gap-1 text-gray-600 flex text-sm">
                                         <i className="bi bi-info-circle"></i>
                                         この設定の変更はページ再読み込み後に反映されます
                                     </span>
-                                    <label className="flex gap-2 items-center">
+                                    <label className="gap-2 flex items-center">
                                         <span className="flex-shrink-0">
                                             増幅倍率:
                                         </span>
@@ -348,7 +348,7 @@ export const ConfigModal = () => {
                                         />
                                     </label>
                                     {errors.features?.wheelAmplify?.ratio && (
-                                        <ErrorMessage className="flex gap-1">
+                                        <ErrorMessage className="gap-1 flex">
                                             <i className="bi bi-exclamation-triangle"></i>
                                             {errors.features?.wheelAmplify
                                                 ?.ratio?.type === "required" &&
@@ -376,7 +376,7 @@ export const ConfigModal = () => {
                                         "features.autorunDetection.enabled"
                                     )}
                                 >
-                                    <label className="flex gap-1 items-center">
+                                    <label className="gap-1 flex items-center">
                                         <input
                                             type="checkbox"
                                             disabled={
@@ -391,7 +391,7 @@ export const ConfigModal = () => {
                                         画面にタイマーを表示しない
                                     </label>
 
-                                    <label className="flex gap-2 items-center">
+                                    <label className="gap-2 flex items-center">
                                         <span className="flex-shrink-0">
                                             インターバルのしきい値(分):
                                         </span>
@@ -419,7 +419,7 @@ export const ConfigModal = () => {
                                     </label>
                                     {errors.features?.autorunDetection
                                         ?.threshold && (
-                                        <ErrorMessage className="flex gap-1">
+                                        <ErrorMessage className="gap-1 flex">
                                             <i className="bi bi-exclamation-triangle"></i>
                                             {errors.features?.autorunDetection
                                                 ?.threshold?.type ===
@@ -436,7 +436,7 @@ export const ConfigModal = () => {
                         </div>
                     </main>
 
-                    <div className="flex flex-col gap-2 items-center p-4">
+                    <div className="gap-2 p-4 flex flex-col items-center">
                         <span className="text-gray-600 text-sm">
                             {GM_info.script.name}
                             は以下のサービスが提供するゲームデータを使用しています
@@ -446,14 +446,14 @@ export const ConfigModal = () => {
                             href="https://lo.swaytwig.com/"
                             target="_blank"
                             rel="noopener"
-                            className="flex gap-1 items-center p-2 px-3 bg-white rounded shadow"
+                            className="gap-1 p-2 px-3 bg-white rounded flex items-center shadow"
                         >
                             <img
                                 src={GM_getResourceURL("TacticsManualIcon")}
                                 className="w-12"
                             />
                             <div className="flex flex-col">
-                                <span className="text-lg font-semibold">
+                                <span className="font-semibold text-lg">
                                     滅亡前の戦術教本
                                 </span>
                                 <span className="text-gray-400 text-sm">
@@ -463,8 +463,8 @@ export const ConfigModal = () => {
                         </a>
                     </div>
 
-                    <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md">
-                        <div className="flex gap-3 h-full text-gray-500 text-sm">
+                    <footer className="p-4 border-t sticky bottom-0 flex items-center justify-between backdrop-blur-md">
+                        <div className="gap-3 h-full text-gray-500 flex text-sm">
                             <FooterLink href="https://github.com/eai04191/laoplus">
                                 <i className="bi bi-github"></i>
                                 GitHub
@@ -478,11 +478,11 @@ export const ConfigModal = () => {
                     </footer>
                 </form>
 
-                <div className="absolute bottom-0 inset-x-0 flex items-center mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg shadow-lg">
+                <div className="mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg absolute bottom-0 inset-x-0 flex items-center shadow-lg">
                     <div className="px-2">
                         <span className="text-xl uppercase">Exploration</span>
                     </div>
-                    <div className="top-[-2.5rem] absolute flex gap-2 justify-center mx-auto w-full md:gap-6">
+                    <div className="top-[-2.5rem] gap-2 mx-auto w-full md:gap-6 absolute flex justify-center">
                         <ExplorationList />
                     </div>
                 </div>

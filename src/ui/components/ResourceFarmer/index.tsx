@@ -61,12 +61,20 @@ function AdvanceWindow(props: any) {
                         </tr>
                         <tr>
                             <th>Round Time</th>
-                            <td>{(recoder.totalRoundTime / recoder.rounds).toFixed(2)}</td>
+                            <td>
+                                {(
+                                    recoder.totalRoundTime / recoder.rounds
+                                ).toFixed(2)}
+                            </td>
                             <td>{recoder.totalRoundTime.toFixed(2)}</td>
                         </tr>
                         <tr>
                             <th>Wait Time</th>
-                            <td>{(recoder.totalWaitTime / recoder.rounds).toFixed(2)}</td>
+                            <td>
+                                {(
+                                    recoder.totalWaitTime / recoder.rounds
+                                ).toFixed(2)}
+                            </td>
                             <td>{recoder.totalWaitTime.toFixed(2)}</td>
                         </tr>
                         <tr>
@@ -81,7 +89,10 @@ function AdvanceWindow(props: any) {
                         className="icon"
                         src="https://static.wikia.nocookie.net/lastorigin/images/a/ab/Part_Icon.png"
                     ></img>
-                    per hour: {((recoder.Metal * numResearch * 3600) / totalTime).toFixed(2)}
+                    per hour:{" "}
+                    {((recoder.Metal * numResearch * 3600) / totalTime).toFixed(
+                        2
+                    )}
                 </p>
                 <p>
                     <img
@@ -89,14 +100,20 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/f/f4/Nutrient_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {((recoder.Nutrient * numResearch * 3600) / totalTime).toFixed(2)}
+                    {(
+                        (recoder.Nutrient * numResearch * 3600) /
+                        totalTime
+                    ).toFixed(2)}
                 </p>
                 <p>
                     <img
                         className="icon"
                         src="https://static.wikia.nocookie.net/lastorigin/images/d/d0/Power_Icon.png"
                     ></img>
-                    per hour: {((recoder.Power * numResearch * 3600) / totalTime).toFixed(2)}
+                    per hour:{" "}
+                    {((recoder.Power * numResearch * 3600) / totalTime).toFixed(
+                        2
+                    )}
                 </p>
                 <p>
                     <img
@@ -147,7 +164,7 @@ export const ResourceFarmer: React.VFC = () => {
 
     return (
         <div
-            className="ml-[5%] text-slate-200 absolute left-0 top-0 px-3 w-1/2 whitespace-nowrap text-sm font-semibold"
+            className="ml-[5%] text-slate-200 px-3 w-1/2 font-semibold absolute left-0 top-0 whitespace-nowrap text-sm"
             style={style}
         >
             <div>

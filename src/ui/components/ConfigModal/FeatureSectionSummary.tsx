@@ -7,8 +7,8 @@ export const FeatureSectionSummary: React.VFC<{
     helpLink?: string;
 }> = ({ register, title, helpLink }) => {
     return (
-        <summary className="relative flex justify-between pr-4 py-4 cursor-pointer select-none">
-            <h2 className="inline-flex gap-2 items-center">
+        <summary className="pr-4 py-4 cursor-pointer relative flex justify-between select-none">
+            <h2 className="gap-2 inline-flex items-center">
                 {title}
                 {helpLink && <HelpIcon href={helpLink} />}
             </h2>
@@ -16,7 +16,7 @@ export const FeatureSectionSummary: React.VFC<{
             <div className="details-chevron flex items-center">
                 <i className="bi bi-chevron-down"></i>
             </div>
-            <label className="absolute left-0 top-0 flex items-center justify-center -ml-10 w-10 h-full cursor-pointer">
+            <label className="-ml-10 w-10 h-full cursor-pointer absolute left-0 top-0 flex items-center justify-center">
                 <input
                     type="checkbox"
                     className="w-4 h-4 before:cursor-pointer"

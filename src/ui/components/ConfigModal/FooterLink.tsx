@@ -5,7 +5,7 @@ export const FooterLink: React.VFC<{
     return (
         <a
             href={href}
-            className="flex gap-1 items-center"
+            className="gap-1 flex items-center"
             target="_blank"
             rel="noopener"
         >

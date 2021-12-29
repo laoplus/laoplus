@@ -7,7 +7,7 @@ const IconWrapper: React.VFC<{ children: React.ReactNode }> = ({
     children,
 }) => {
     return (
-        <div className="absolute bottom-0 left-0 flex gap-1">{children}</div>
+        <div className="gap-1 absolute bottom-0 left-0 flex">{children}</div>
     );
 };
 
