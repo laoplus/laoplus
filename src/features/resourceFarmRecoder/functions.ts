@@ -89,7 +89,7 @@ export const stageStart = () => {
     const curtime = new Date().getTime();
     const { startTime, endTime, totalWaitTime } = status.status
         .resourceFarmRecoder as ResourceFarmRecoder;
-
+    
     if (startTime && endTime) {
         const waitTime = curtime - endTime;
         status.set({
@@ -126,6 +126,7 @@ export const stageStop = () => {
         status.set({
             resourceFarmRecoder: {
                 endTime: curtime,
+                rounds: rounds + 1,
             },
         });
     }
