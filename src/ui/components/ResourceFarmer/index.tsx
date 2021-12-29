@@ -164,7 +164,7 @@ export const ResourceFarmer: React.VFC = () => {
 
     return (
         <div
-            className="ml-[5%] text-slate-200 px-3 w-1/2 font-semibold absolute left-0 top-0 whitespace-nowrap text-sm"
+            className="ml-[5%] text-slate-200 absolute left-0 top-0 px-3 w-1/2 whitespace-nowrap text-sm font-semibold"
             style={style}
         >
             <div>

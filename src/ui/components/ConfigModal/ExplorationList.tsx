@@ -20,7 +20,7 @@ export const ExplorationList: React.VFC = () => {
                     { "animate-bounce": isFinished }
                 )}
             >
-                <span className="font-bold text-3xl">{exp.SquadIndex}</span>
+                <span className="text-3xl font-bold">{exp.SquadIndex}</span>
                 <div className="flex flex-col">
                     <span className="text-sm">
                         {humanFriendlyStageKey(exp.StageKeyString)}
