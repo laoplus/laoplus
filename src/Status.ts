@@ -1,4 +1,5 @@
 import { DeepPartial } from "./types";
+import { ResourceFarmRecoder } from "./features/types";
 import { log } from "~/utils";
 
 const defaultStatus = {
@@ -8,6 +9,7 @@ const defaultStatus = {
     },
     resourceFarmRecoder: {
         startTime: undefined,
+        waveTime: undefined,
         endTime: undefined,
         totalWaitTime: 0,
         totalRoundTime: 0,
@@ -26,19 +28,7 @@ type statusType = {
         enterTimerId: number | null;
         latestEnterTime: Date | null;
     };
-    resourceFarmRecoder: {
-        startTime?: number,
-        endTime?: number,
-        totalWaitTime: number,
-        totalRoundTime: number,
-        rounds: number,
-        Metal: number,
-        Nutrient: number,
-        Power: number,
-        Normal_Module: number,
-        Advanced_Module: number,
-        Special_Module: number,
-    };
+    resourceFarmRecoder: ResourceFarmRecoder;
 };
 
 export class Status {

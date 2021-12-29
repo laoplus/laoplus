@@ -20,3 +20,17 @@ export type RewardPC = {
 export type RewardItem = {
     ItemKeyString: string;
 };
+export interface ResourceFarmRecoder {
+    startTime?: number;
+    waveTime?: number;
+    endTime?: number;
+    totalWaitTime: number;
+    totalRoundTime: number;
+    rounds: number;
+    Metal: number;
+    Nutrient: number;
+    Power: number;
+    Normal_Module: number;
+    Advanced_Module: number;
+    Special_Module: number;
+}

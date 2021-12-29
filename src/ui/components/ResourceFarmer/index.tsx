@@ -1,16 +1,4 @@
-interface ResourceFarmRecoder {
-    startTime?: number;
-    endTime?: number;
-    totalWaitTime: number;
-    totalRoundTime: number;
-    rounds: number;
-    Metal: number;
-    Nutrient: number;
-    Power: number;
-    Normal_Module: number;
-    Advanced_Module: number;
-    Special_Module: number;
-}
+import { ResourceFarmRecoder } from "~/features/types";
 import "./Style.ts";
 function jsonEqual(a: any, b: any) {
     return JSON.stringify(a) === JSON.stringify(b);
@@ -21,6 +9,7 @@ function resetRecoder() {
     status.set({
         resourceFarmRecoder: {
             startTime: undefined,
+            waveTime: undefined,
             endTime: undefined,
             totalWaitTime: 0,
             totalRoundTime: 0,
@@ -115,7 +104,7 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/2/2e/Basic_Module_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {((recoder.Normal_Module * numResearch * 3600) / totalTime).toFixed(2)}
+                    {((recoder.Normal_Module * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
@@ -123,7 +112,7 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/d/d3/Advanced_Module_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {((recoder.Advanced_Module * numResearch * 3600) / totalTime).toFixed(2)}
+                    {((recoder.Advanced_Module * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <img
@@ -131,7 +120,7 @@ function AdvanceWindow(props: any) {
                         src="https://static.wikia.nocookie.net/lastorigin/images/9/9c/Special_Module_Icon.png"
                     ></img>
                     per hour:{" "}
-                    {((recoder.Special_Module * numResearch * 3600) / totalTime).toFixed(2)}
+                    {((recoder.Special_Module * 3600) / totalTime).toFixed(2)}
                 </p>
             </div>
         );

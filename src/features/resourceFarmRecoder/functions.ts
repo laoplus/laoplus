@@ -1,18 +1,5 @@
 import { log } from "~/utils";
-
-interface ResourceFarmRecoder {
-    startTime?: number;
-    endTime?: number;
-    totalWaitTime: number;
-    totalRoundTime: number;
-    rounds: number;
-    Metal: number;
-    Nutrient: number;
-    Power: number;
-    Normal_Module: number;
-    Advanced_Module: number;
-    Special_Module: number;
-}
+import { ResourceFarmRecoder } from "../types";
 
 const PCDisassemblingTable = {
     B: {
@@ -89,9 +76,9 @@ export const stageStart = () => {
     const curtime = new Date().getTime();
     const { endTime, totalWaitTime } = status.status
         .resourceFarmRecoder as ResourceFarmRecoder;
-    
+
     if (endTime) {
-        const waitTime = (curtime - endTime)/1000;
+        const waitTime = (curtime - endTime) / 1000;
         status.set({
             resourceFarmRecoder: {
                 startTime: curtime,
@@ -110,11 +97,11 @@ export const stageStart = () => {
 export const stageStop = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { startTime, totalRoundTime, rounds } = status.status
+    const { waveTime, totalRoundTime, rounds } = status.status
         .resourceFarmRecoder as ResourceFarmRecoder;
 
-    if (startTime) {
-        const waitTime = (curtime - startTime)/1000;
+    if (waveTime) {
+        const waitTime = (curtime - waveTime) / 1000;
         status.set({
             resourceFarmRecoder: {
                 endTime: curtime,
@@ -136,7 +123,30 @@ import { WaveClearResponse } from "../types";
 
 export const calcResource = (res: WaveClearResponse) => {
     const status = unsafeWindow.LAOPLUS.status;
-    const {rounds} = status.status.resourceFarmRecoder as ResourceFarmRecoder;
+    // Get timer
+    const curtime = new Date().getTime();
+    const { startTime, waveTime, totalRoundTime } = status.status
+        .resourceFarmRecoder as ResourceFarmRecoder;
+
+    const newRoundTime = waveTime ?? startTime ?? undefined;
+    if (newRoundTime) {
+        const waitTime = (curtime - newRoundTime) / 1000;
+        status.set({
+            resourceFarmRecoder: {
+                waveTime: curtime,
+                totalRoundTime: totalRoundTime + waitTime,
+            } as ResourceFarmRecoder,
+        });
+    } else {
+        status.set({
+            resourceFarmRecoder: {
+                waveTime: curtime,
+            },
+        });
+    }
+
+    // Get reward
+    const { rounds } = status.status.resourceFarmRecoder as ResourceFarmRecoder;
     let {
         Metal,
         Nutrient,
@@ -249,7 +259,9 @@ export const calcResource = (res: WaveClearResponse) => {
                 Special_Module + ItemDisassemblingTable["SS"]["Special_Module"];
         }
     });
-    log.debug(`[${rounds}] ${Metal}/${Nutrient}/${Power} - ${Normal_Module}/${Advanced_Module}/${Special_Module}`)
+    log.debug(
+        `[${rounds}] ${Metal}/${Nutrient}/${Power} - ${Normal_Module}/${Advanced_Module}/${Special_Module}`
+    );
     status.set({
         resourceFarmRecoder: {
             Metal: Metal,
