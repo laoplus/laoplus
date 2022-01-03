@@ -1,5 +1,6 @@
 import { ResourceFarmRecoder } from "~/features/types";
 import "./Style.ts";
+import { Icon } from "./Icon";
 function jsonEqual(a: any, b: any) {
     return JSON.stringify(a) === JSON.stringify(b);
 }
@@ -85,20 +86,14 @@ function AdvanceWindow(props: any) {
                     </table>
                 </p>
                 <p>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/a/ab/Part_Icon.png"
-                    ></img>
+                    <Icon type="metal" />
                     per hour:{" "}
                     {((recoder.Metal * numResearch * 3600) / totalTime).toFixed(
                         2
                     )}
                 </p>
                 <p>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/f/f4/Nutrient_Icon.png"
-                    ></img>
+                    <Icon type="nutrient" />
                     per hour:{" "}
                     {(
                         (recoder.Nutrient * numResearch * 3600) /
@@ -106,36 +101,24 @@ function AdvanceWindow(props: any) {
                     ).toFixed(2)}
                 </p>
                 <p>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/d/d0/Power_Icon.png"
-                    ></img>
+                    <Icon type="power" />
                     per hour:{" "}
                     {((recoder.Power * numResearch * 3600) / totalTime).toFixed(
                         2
                     )}
                 </p>
                 <p>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/2/2e/Basic_Module_Icon.png"
-                    ></img>
+                    <Icon type="basic_module" />
                     per hour:{" "}
                     {((recoder.Normal_Module * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/d/d3/Advanced_Module_Icon.png"
-                    ></img>
+                    <Icon type="advanced_module" />
                     per hour:{" "}
                     {((recoder.Advanced_Module * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/9/9c/Special_Module_Icon.png"
-                    ></img>
+                    <Icon type="special_module" />
                     per hour:{" "}
                     {((recoder.Special_Module * 3600) / totalTime).toFixed(2)}
                 </p>
@@ -173,41 +156,20 @@ export const ResourceFarmer: React.VFC = () => {
                     {stat.rounds}
                 </div>
                 ]
-                <img
-                    className="icon"
-                    src="https://static.wikia.nocookie.net/lastorigin/images/a/ab/Part_Icon.png"
-                ></img>
+                <Icon type="metal" />
                 {stat.Metal}
-                <img
-                    className="icon"
-                    src="https://static.wikia.nocookie.net/lastorigin/images/f/f4/Nutrient_Icon.png"
-                ></img>
+                <Icon type="nutrient" />
                 {stat.Nutrient}
-                <img
-                    className="icon"
-                    src="https://static.wikia.nocookie.net/lastorigin/images/d/d0/Power_Icon.png"
-                ></img>
+                <Icon type="power" />
                 {stat.Power}
-                <img
-                    className="icon"
-                    src="https://static.wikia.nocookie.net/lastorigin/images/2/2e/Basic_Module_Icon.png"
-                ></img>
+                <Icon type="basic_module" />
                 {stat.Normal_Module}
-                <img
-                    className="icon"
-                    src="https://static.wikia.nocookie.net/lastorigin/images/d/d3/Advanced_Module_Icon.png"
-                ></img>
+                <Icon type="advanced_module" />
                 {stat.Advanced_Module}
-                <img
-                    className="icon"
-                    src="https://static.wikia.nocookie.net/lastorigin/images/9/9c/Special_Module_Icon.png"
-                ></img>
+                <Icon type="special_module" />
                 {stat.Special_Module}
                 <button onClick={() => setAdvShow((e) => !e)}>
-                    <img
-                        className="icon"
-                        src="https://static.wikia.nocookie.net/lastorigin/images/d/de/Menu_Workshop.png"
-                    ></img>
+                    Open
                 </button>
             </div>
             <AdvanceWindow isShow={adv_show} recoder={stat}></AdvanceWindow>
