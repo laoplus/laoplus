@@ -41,12 +41,12 @@ export const ResourceFarmer: React.VFC = () => {
     };
 
     const totalTime = recorder.totalRoundTime + recorder.totalWaitTime;
-    const [Research, setResearch] = React.useState<string>("2.5");
+    const [Research] = React.useState<string>("2.5");
     const numResearch = parseFloat(Research);
 
     return (
         <div
-            className="ml-[5%] text-slate-200 absolute left-0 top-0 px-3 w-1/2 whitespace-nowrap text-sm font-semibold"
+            className="ml-[5%] text-slate-200 absolute left-0 top-0 px-3 w-1/2 whitespace-nowrap text-sm font-semibold pointer-events-none"
             style={style}
         >
             <div>
@@ -69,19 +69,6 @@ export const ResourceFarmer: React.VFC = () => {
                 {recorder.Special_Module}
             </div>
             <div>
-                Research:{" "}
-                <select
-                    className="text-black"
-                    value={Research}
-                    onChange={(e) => setResearch((old) => e.target.value)}
-                >
-                    <option value="1">0%</option>
-                    <option value="1.3">30%</option>
-                    <option value="1.6">60%</option>
-                    <option value="1.9">90%</option>
-                    <option value="2.2">120%</option>
-                    <option value="2.5">150%</option>
-                </select>
                 <button
                     className="bg-amber-300 ml-1 p-1 text-black font-bold"
                     onClick={resetRecoder}
