@@ -18,9 +18,9 @@ const App: React.VFC = () => {
             <IconWrapper>
                 <ConfigModal />
                 <ToggleAutorun />
+                <ResourceFarmer />
             </IconWrapper>
             <AutorunStatus />
-            <ResourceFarmer />
         </>
     );
 };
