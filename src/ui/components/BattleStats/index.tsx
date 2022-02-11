@@ -16,7 +16,7 @@ function resetRecoder() {
             endTime: undefined,
             totalWaitTime: 0,
             totalRoundTime: 0,
-            rounds: 0,
+            lapCount: 0,
             Metal: 0,
             Nutrient: 0,
             Power: 0,
@@ -78,7 +78,7 @@ export const BattleStats: React.VFC = () => {
         setShowPanel((v) => !v);
     };
 
-    const lapAverage = (totalTime / recorder.rounds).toFixed(1) || "0.0";
+    const lapAverage = (totalTime / recorder.lapCount).toFixed(1) || "0.0";
 
     return (
         <div className="relative">
@@ -124,7 +124,7 @@ export const BattleStats: React.VFC = () => {
                                 <dt className="mr-auto">完了した周回数</dt>
                                 <dd>
                                     <p className="text-gray-900 font-bold">
-                                        {recorder.rounds.toLocaleString()}
+                                        {recorder.lapCount.toLocaleString()}
                                     </p>
                                 </dd>
                             </dl>

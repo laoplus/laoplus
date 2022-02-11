@@ -95,7 +95,7 @@ export const stageStart = () => {
 export const stageStop = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { waveTime, totalRoundTime, rounds } = status.status.battleStats;
+    const { waveTime, totalRoundTime, lapCount } = status.status.battleStats;
 
     if (waveTime) {
         const waitTime = (curtime - waveTime) / 1000;
@@ -103,14 +103,14 @@ export const stageStop = () => {
             battleStats: {
                 endTime: curtime,
                 totalRoundTime: totalRoundTime + waitTime,
-                rounds: rounds + 1,
+                lapCount: lapCount + 1,
             },
         });
     } else {
         status.set({
             battleStats: {
                 endTime: curtime,
-                rounds: rounds + 1,
+                lapCount: lapCount + 1,
             },
         });
     }
@@ -142,7 +142,7 @@ export const calcResource = (res: WaveClearResponse) => {
     }
 
     // Get reward
-    const { rounds } = status.status.battleStats;
+    const { lapCount } = status.status.battleStats;
     let {
         Metal,
         Nutrient,
@@ -256,7 +256,7 @@ export const calcResource = (res: WaveClearResponse) => {
         }
     });
     log.debug(
-        `[${rounds}] ${Metal}/${Nutrient}/${Power} - ${Normal_Module}/${Advanced_Module}/${Special_Module}`
+        `[${lapCount}] ${Metal}/${Nutrient}/${Power} - ${Normal_Module}/${Advanced_Module}/${Special_Module}`
     );
     status.set({
         battleStats: {

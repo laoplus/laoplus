@@ -21,7 +21,7 @@ const defaultStatus = {
         endTime: undefined,
         totalWaitTime: 0,
         totalRoundTime: 0,
-        rounds: 0,
+        lapCount: 0,
         Metal: 0,
         Nutrient: 0,
         Power: 0,

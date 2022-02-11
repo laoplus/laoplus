@@ -26,7 +26,7 @@ export interface BattleStats {
     endTime?: number;
     totalWaitTime: number;
     totalRoundTime: number;
-    rounds: number;
+    lapCount: number;
     Metal: number;
     Nutrient: number;
     Power: number;
