@@ -1,7 +1,6 @@
-type resource = "metal" | "nutrient" | "power" | "tuna";
-type module = "basic_module" | "advanced_module" | "special_module";
+import { Resource, Module } from "./type";
 
-export const Icon: React.VFC<{ type: resource | module }> = ({ type }) => {
+export const Icon: React.VFC<{ type: Resource | Module }> = ({ type }) => {
     const url = (() => {
         const base = `https://cdn.laoplus.net/ui/`;
         switch (type) {
@@ -21,5 +20,5 @@ export const Icon: React.VFC<{ type: resource | module }> = ({ type }) => {
         }
     })();
 
-    return <img className="inline w-4 h-4 object-contain" src={url} />;
+    return <img className="w-full h-full object-contain" src={url} />;
 };
