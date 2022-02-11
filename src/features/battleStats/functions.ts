@@ -1,5 +1,4 @@
 import { log } from "~/utils";
-import { ResourceFarmRecoder } from "../types";
 
 const PCDisassemblingTable = {
     B: {
@@ -74,20 +73,19 @@ const ItemDisassemblingTable = {
 export const stageStart = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { endTime, totalWaitTime } = status.status
-        .resourceFarmRecoder as ResourceFarmRecoder;
+    const { endTime, totalWaitTime } = status.status.battleStats;
 
     if (endTime) {
         const waitTime = (curtime - endTime) / 1000;
         status.set({
-            resourceFarmRecoder: {
+            battleStats: {
                 startTime: curtime,
                 totalWaitTime: totalWaitTime + waitTime,
-            } as ResourceFarmRecoder,
+            },
         });
     } else {
         status.set({
-            resourceFarmRecoder: {
+            battleStats: {
                 startTime: curtime,
             },
         });
@@ -97,21 +95,20 @@ export const stageStart = () => {
 export const stageStop = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { waveTime, totalRoundTime, rounds } = status.status
-        .resourceFarmRecoder as ResourceFarmRecoder;
+    const { waveTime, totalRoundTime, rounds } = status.status.battleStats;
 
     if (waveTime) {
         const waitTime = (curtime - waveTime) / 1000;
         status.set({
-            resourceFarmRecoder: {
+            battleStats: {
                 endTime: curtime,
                 totalRoundTime: totalRoundTime + waitTime,
                 rounds: rounds + 1,
-            } as ResourceFarmRecoder,
+            },
         });
     } else {
         status.set({
-            resourceFarmRecoder: {
+            battleStats: {
                 endTime: curtime,
                 rounds: rounds + 1,
             },
@@ -125,28 +122,27 @@ export const calcResource = (res: WaveClearResponse) => {
     const status = unsafeWindow.LAOPLUS.status;
     // Get timer
     const curtime = new Date().getTime();
-    const { startTime, waveTime, totalRoundTime } = status.status
-        .resourceFarmRecoder as ResourceFarmRecoder;
+    const { startTime, waveTime, totalRoundTime } = status.status.battleStats;
 
     const newRoundTime = waveTime ?? startTime ?? undefined;
     if (newRoundTime) {
         const waitTime = (curtime - newRoundTime) / 1000;
         status.set({
-            resourceFarmRecoder: {
+            battleStats: {
                 waveTime: curtime,
                 totalRoundTime: totalRoundTime + waitTime,
-            } as ResourceFarmRecoder,
+            },
         });
     } else {
         status.set({
-            resourceFarmRecoder: {
+            battleStats: {
                 waveTime: curtime,
             },
         });
     }
 
     // Get reward
-    const { rounds } = status.status.resourceFarmRecoder as ResourceFarmRecoder;
+    const { rounds } = status.status.battleStats;
     let {
         Metal,
         Nutrient,
@@ -154,7 +150,7 @@ export const calcResource = (res: WaveClearResponse) => {
         Normal_Module,
         Advanced_Module,
         Special_Module,
-    } = status.status.resourceFarmRecoder as ResourceFarmRecoder;
+    } = status.status.battleStats;
     res.ClearRewardInfo.PCRewardList.forEach((pc) => {
         switch (pc.Grade) {
             case 2:
@@ -263,7 +259,7 @@ export const calcResource = (res: WaveClearResponse) => {
         `[${rounds}] ${Metal}/${Nutrient}/${Power} - ${Normal_Module}/${Advanced_Module}/${Special_Module}`
     );
     status.set({
-        resourceFarmRecoder: {
+        battleStats: {
             Metal: Metal,
             Nutrient: Nutrient,
             Power: Power,

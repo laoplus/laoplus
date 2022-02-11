@@ -1,13 +1,21 @@
 import { DeepPartial } from "./types";
-import { ResourceFarmRecoder } from "./features/types";
+import { BattleStats } from "./features/types";
 import { log } from "~/utils";
+
+type statusType = {
+    autorunDetection: {
+        enterTimerId: number | null;
+        latestEnterTime: Date | null;
+    };
+    battleStats: BattleStats;
+};
 
 const defaultStatus = {
     autorunDetection: {
         enterTimerId: null,
         latestEnterTime: null,
     },
-    resourceFarmRecoder: {
+    battleStats: {
         startTime: undefined,
         waveTime: undefined,
         endTime: undefined,
@@ -21,15 +29,7 @@ const defaultStatus = {
         Advanced_Module: 0,
         Special_Module: 0,
     },
-};
-
-type statusType = {
-    autorunDetection: {
-        enterTimerId: number | null;
-        latestEnterTime: Date | null;
-    };
-    resourceFarmRecoder: ResourceFarmRecoder;
-};
+} as statusType;
 
 export class Status {
     status: statusType;

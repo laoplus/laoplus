@@ -1,4 +1,4 @@
-import { ResourceFarmRecoder } from "~/features/types";
+import { BattleStats as TBattleStats } from "~/features/types";
 import { Icon } from "./Icon";
 function jsonEqual(a: any, b: any) {
     return JSON.stringify(a) === JSON.stringify(b);
@@ -7,7 +7,7 @@ function jsonEqual(a: any, b: any) {
 function resetRecoder() {
     const status = unsafeWindow.LAOPLUS.status;
     status.set({
-        resourceFarmRecoder: {
+        battleStats: {
             startTime: undefined,
             waveTime: undefined,
             endTime: undefined,
@@ -24,15 +24,14 @@ function resetRecoder() {
     });
 }
 
-export const ResourceFarmer: React.VFC = () => {
+export const BattleStats: React.VFC = () => {
     const status = unsafeWindow.LAOPLUS.status;
-    const [recorder, setRecorder] = React.useState<ResourceFarmRecoder>({
-        ...status.status.resourceFarmRecoder,
+    const [recorder, setRecorder] = React.useState<TBattleStats>({
+        ...status.status.battleStats,
     });
     status.events.on("changed", (e) => {
         setRecorder((old) => {
-            if (!jsonEqual(old, e.resourceFarmRecoder))
-                return { ...e.resourceFarmRecoder };
+            if (!jsonEqual(old, e.battleStats)) return { ...e.battleStats };
             return old;
         });
     });

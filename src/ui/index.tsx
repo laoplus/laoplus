@@ -1,7 +1,7 @@
 import { BootstrapIcon } from "~/ui/BootstrapIcon";
 import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
-import { ResourceFarmer } from "./components/ResourceFarmer";
+import { BattleStats } from "./components/BattleStats";
 import { ToggleAutorun } from "./components/ToggleAutorun";
 const IconWrapper: React.VFC<{ children: React.ReactNode }> = ({
     children,
@@ -18,7 +18,7 @@ const App: React.VFC = () => {
             <IconWrapper>
                 <ConfigModal />
                 <ToggleAutorun />
-                <ResourceFarmer />
+                <BattleStats />
             </IconWrapper>
             <AutorunStatus />
         </>
