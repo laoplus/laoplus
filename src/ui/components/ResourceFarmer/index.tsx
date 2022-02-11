@@ -1,5 +1,4 @@
 import { ResourceFarmRecoder } from "~/features/types";
-import "./Style.ts";
 import { Icon } from "./Icon";
 function jsonEqual(a: any, b: any) {
     return JSON.stringify(a) === JSON.stringify(b);
@@ -21,18 +20,54 @@ function resetRecoder() {
             Normal_Module: 0,
             Advanced_Module: 0,
             Special_Module: 0,
-        } as ResourceFarmRecoder,
+        },
     });
 }
 
-function AdvanceWindow(props: any) {
-    const isShow = props.isShow;
-    const recoder = props.recoder as ResourceFarmRecoder;
-    const totalTime = recoder.totalRoundTime + recoder.totalWaitTime;
+export const ResourceFarmer: React.VFC = () => {
+    const status = unsafeWindow.LAOPLUS.status;
+    const [recorder, setRecorder] = React.useState<ResourceFarmRecoder>({
+        ...status.status.resourceFarmRecoder,
+    });
+    status.events.on("changed", (e) => {
+        setRecorder((old) => {
+            if (!jsonEqual(old, e.resourceFarmRecoder))
+                return { ...e.resourceFarmRecoder };
+            return old;
+        });
+    });
+    const style = {
+        textShadow: "black 0.1em 0.1em 0.2em",
+    };
+
+    const totalTime = recorder.totalRoundTime + recorder.totalWaitTime;
     const [Research, setResearch] = React.useState<string>("2.5");
     const numResearch = parseFloat(Research);
-    if (isShow) {
-        return (
+
+    return (
+        <div
+            className="ml-[5%] text-slate-200 absolute left-0 top-0 px-3 w-1/2 whitespace-nowrap text-sm font-semibold"
+            style={style}
+        >
+            <div>
+                [Round:
+                <div className="text-emerald-300 inline-block">
+                    {recorder.rounds}
+                </div>
+                ]
+                <Icon type="metal" />
+                {recorder.Metal}
+                <Icon type="nutrient" />
+                {recorder.Nutrient}
+                <Icon type="power" />
+                {recorder.Power}
+                <Icon type="basic_module" />
+                {recorder.Normal_Module}
+                <Icon type="advanced_module" />
+                {recorder.Advanced_Module}
+                <Icon type="special_module" />
+                {recorder.Special_Module}
+            </div>
             <div>
                 Research:{" "}
                 <select
@@ -64,23 +99,23 @@ function AdvanceWindow(props: any) {
                             <th>Round Time</th>
                             <td>
                                 {(
-                                    recoder.totalRoundTime / recoder.rounds
+                                    recorder.totalRoundTime / recorder.rounds
                                 ).toFixed(2)}
                             </td>
-                            <td>{recoder.totalRoundTime.toFixed(2)}</td>
+                            <td>{recorder.totalRoundTime.toFixed(2)}</td>
                         </tr>
                         <tr>
                             <th>Wait Time</th>
                             <td>
                                 {(
-                                    recoder.totalWaitTime / recoder.rounds
+                                    recorder.totalWaitTime / recorder.rounds
                                 ).toFixed(2)}
                             </td>
-                            <td>{recoder.totalWaitTime.toFixed(2)}</td>
+                            <td>{recorder.totalWaitTime.toFixed(2)}</td>
                         </tr>
                         <tr>
                             <th>Total Time</th>
-                            <td>{(totalTime / recoder.rounds).toFixed(2)}</td>
+                            <td>{(totalTime / recorder.rounds).toFixed(2)}</td>
                             <td>{totalTime.toFixed(2)}</td>
                         </tr>
                     </table>
@@ -88,91 +123,43 @@ function AdvanceWindow(props: any) {
                 <p>
                     <Icon type="metal" />
                     per hour:{" "}
-                    {((recoder.Metal * numResearch * 3600) / totalTime).toFixed(
-                        2
-                    )}
+                    {(
+                        (recorder.Metal * numResearch * 3600) /
+                        totalTime
+                    ).toFixed(2)}
                 </p>
                 <p>
                     <Icon type="nutrient" />
                     per hour:{" "}
                     {(
-                        (recoder.Nutrient * numResearch * 3600) /
+                        (recorder.Nutrient * numResearch * 3600) /
                         totalTime
                     ).toFixed(2)}
                 </p>
                 <p>
                     <Icon type="power" />
                     per hour:{" "}
-                    {((recoder.Power * numResearch * 3600) / totalTime).toFixed(
-                        2
-                    )}
+                    {(
+                        (recorder.Power * numResearch * 3600) /
+                        totalTime
+                    ).toFixed(2)}
                 </p>
                 <p>
                     <Icon type="basic_module" />
                     per hour:{" "}
-                    {((recoder.Normal_Module * 3600) / totalTime).toFixed(2)}
+                    {((recorder.Normal_Module * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <Icon type="advanced_module" />
                     per hour:{" "}
-                    {((recoder.Advanced_Module * 3600) / totalTime).toFixed(2)}
+                    {((recorder.Advanced_Module * 3600) / totalTime).toFixed(2)}
                 </p>
                 <p>
                     <Icon type="special_module" />
                     per hour:{" "}
-                    {((recoder.Special_Module * 3600) / totalTime).toFixed(2)}
+                    {((recorder.Special_Module * 3600) / totalTime).toFixed(2)}
                 </p>
             </div>
-        );
-    }
-    return <></>;
-}
-
-export const ResourceFarmer: React.VFC = () => {
-    const status = unsafeWindow.LAOPLUS.status;
-    const [stat, setStat] = React.useState<ResourceFarmRecoder>({
-        ...status.status.resourceFarmRecoder,
-    });
-    status.events.on("changed", (e) => {
-        setStat((old) => {
-            if (!jsonEqual(old, e.resourceFarmRecoder))
-                return { ...e.resourceFarmRecoder };
-            return old;
-        });
-    });
-    const style = {
-        textShadow: "black 0.1em 0.1em 0.2em",
-    };
-    const [adv_show, setAdvShow] = React.useState<boolean>(false);
-
-    return (
-        <div
-            className="ml-[5%] text-slate-200 absolute left-0 top-0 px-3 w-1/2 whitespace-nowrap text-sm font-semibold"
-            style={style}
-        >
-            <div>
-                [Round:
-                <div className="text-emerald-300 inline-block">
-                    {stat.rounds}
-                </div>
-                ]
-                <Icon type="metal" />
-                {stat.Metal}
-                <Icon type="nutrient" />
-                {stat.Nutrient}
-                <Icon type="power" />
-                {stat.Power}
-                <Icon type="basic_module" />
-                {stat.Normal_Module}
-                <Icon type="advanced_module" />
-                {stat.Advanced_Module}
-                <Icon type="special_module" />
-                {stat.Special_Module}
-                <button onClick={() => setAdvShow((e) => !e)}>
-                    Open
-                </button>
-            </div>
-            <AdvanceWindow isShow={adv_show} recoder={stat}></AdvanceWindow>
         </div>
     );
 };
