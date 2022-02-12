@@ -3,6 +3,7 @@ import { BattleStats as TBattleStats } from "~/features/types";
 import { defaultStatus } from "~/Status";
 import { log } from "~/utils";
 import { Icon } from "./Icon";
+import { MemorizedTimeStat } from "./TimeStat";
 const cn = classNames;
 
 function jsonEqual(a: unknown, b: unknown) {
@@ -44,52 +45,6 @@ const ResourceCounter: React.VFC<{
                 {amount.toLocaleString()}
             </span>
         </div>
-    );
-};
-
-const TimeStat: React.VFC<{
-    lapCount: number;
-    totalWaitingTime: number;
-    totalRoundTime: number;
-}> = ({ lapCount, totalWaitingTime, totalRoundTime }) => {
-    const [displayTimeType, setDisplayTimeType] = React.useState<
-        "lapTime" | "battleTime"
-    >("lapTime");
-    const toggleDisplayTimeType = () => {
-        setDisplayTimeType((v) => (v === "lapTime" ? "battleTime" : "lapTime"));
-    };
-
-    const totalTime = totalRoundTime + totalWaitingTime;
-    const lapTimeAverage =
-        lapCount === 0 || totalTime === 0
-            ? "0.0"
-            : (totalTime / lapCount).toFixed(1);
-    const battleTimeAverage =
-        lapCount === 0 || totalTime === 0
-            ? "0.0"
-            : (totalRoundTime / lapCount).toFixed(1);
-
-    return (
-        <dl className="flex">
-            <dt
-                className="mr-auto cursor-pointer select-none"
-                onClick={toggleDisplayTimeType}
-            >
-                {displayTimeType === "lapTime"
-                    ? "平均周回時間"
-                    : "平均戦闘時間"}
-            </dt>
-            <dd>
-                <p className="text-gray-900 font-bold">
-                    <span>
-                        {displayTimeType === "lapTime"
-                            ? lapTimeAverage
-                            : battleTimeAverage}
-                    </span>
-                    <span className="text-gray-500 text-xs font-bold">秒</span>
-                </p>
-            </dd>
-        </dl>
     );
 };
 
@@ -146,8 +101,8 @@ export const BattleStats: React.VFC = () => {
 
                     <main className="flex flex-col gap-4 px-4 py-5 bg-white">
                         <div className="grid gap-4 grid-cols-2">
+                            <MemorizedTimeStat {...stats} />
                             <dl className="flex">
-                                <TimeStat {...stats} />
                                 <dt className="mr-auto">完了した周回数</dt>
                                 <dd>
                                     <p className="text-gray-900 font-bold">
