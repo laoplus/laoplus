@@ -77,7 +77,7 @@ export const BattleStats: React.VFC = () => {
             <button
                 onClick={handleButtonClick}
                 title="周回情報パネルを表示する"
-                className="h-6 text-white drop-shadow-featureIcon"
+                className="drop-shadow-featureIcon h-6 text-white"
             >
                 <i className="bi bi-recycle"></i>
             </button>
