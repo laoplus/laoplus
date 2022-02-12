@@ -4,7 +4,7 @@ export const Icon: React.VFC<{ type: Resource | Module }> = ({ type }) => {
     const url = (() => {
         const base = `https://cdn.laoplus.net/ui/`;
         switch (type) {
-            case "metal":
+            case "parts":
                 return base + "/currenncy/metal.png";
             case "nutrient":
                 return base + "/currenncy/nutrient.png";

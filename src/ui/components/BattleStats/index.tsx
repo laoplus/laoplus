@@ -1,7 +1,8 @@
-import { rankColor } from "~/constants";
+import { disassemblingTable, rankColor } from "~/constants";
 import { BattleStats as TBattleStats } from "~/features/types";
 import { defaultStatus } from "~/Status";
 import { log } from "~/utils";
+import { calcResourcesFromDrops } from "./calc";
 import { Icon } from "./Icon";
 import { MemorizedTimeStat } from "./TimeStat";
 const cn = classNames;
@@ -71,6 +72,54 @@ export const BattleStats: React.VFC = () => {
     const toggleCheckState = () => {
         setDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
     };
+
+    const disassembledResource = (() => {
+        const unitResorces = calcResourcesFromDrops({
+            drops: stats.drops.units,
+            table: disassemblingTable.units,
+            type: "units",
+        });
+        log.log(
+            "BattleStats",
+            "disassembledResource",
+            "unitResorces",
+            unitResorces
+        );
+
+        const equipmentResources = calcResourcesFromDrops({
+            drops: stats.drops.equipments,
+            table: disassemblingTable.equipments,
+            type: "equipments",
+        });
+        log.log(
+            "BattleStats",
+            "disassembledResource",
+            "equipmentResources",
+            equipmentResources
+        );
+
+        const total = [unitResorces, equipmentResources].reduce(
+            (sum, resources) => {
+                (Object.keys(resources) as (keyof typeof resources)[]).forEach(
+                    (key) => {
+                        sum[key] = sum[key] + resources[key];
+                    }
+                );
+                return sum;
+            },
+            {
+                parts: 0,
+                nutrients: 0,
+                power: 0,
+                basic_module: 0,
+                advanced_module: 0,
+                special_module: 0,
+            }
+        );
+        log.log("BattleStats", "disassembledResource", "total", total);
+
+        return total;
+    })();
 
     return (
         <div className="relative">
@@ -148,36 +197,30 @@ export const BattleStats: React.VFC = () => {
 
                         <div className="grid gap-3 grid-cols-3">
                             <ResourceCounter
-                                type="metal"
-                                // amount={recorder.Metal}
-                                amount={0}
+                                type="parts"
+                                amount={disassembledResource.parts}
                             />
                             <ResourceCounter
                                 type="nutrient"
-                                // amount={recorder.Nutrient}
-                                amount={0}
+                                amount={disassembledResource.nutrients}
                             />
                             <ResourceCounter
                                 type="power"
-                                // amount={recorder.Power}
-                                amount={0}
+                                amount={disassembledResource.power}
                             />
                         </div>
                         <div className="grid gap-3 grid-cols-3">
                             <ResourceCounter
                                 type="basic_module"
-                                // amount={recorder.Normal_Module}
-                                amount={0}
+                                amount={disassembledResource.basic_module}
                             />
                             <ResourceCounter
                                 type="advanced_module"
-                                // amount={recorder.Advanced_Module}
-                                amount={0}
+                                amount={disassembledResource.advanced_module}
                             />
                             <ResourceCounter
                                 type="special_module"
-                                // amount={recorder.Special_Module}
-                                amount={0}
+                                amount={disassembledResource.special_module}
                             />
                         </div>
 
