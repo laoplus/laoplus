@@ -49,26 +49,26 @@ const ResourceCounter: React.VFC<{
 
 export const BattleStats: React.VFC = () => {
     const status = unsafeWindow.LAOPLUS.status;
-    const [recorder, setRecorder] = React.useState<TBattleStats>({
+    const [stats, setStats] = React.useState<TBattleStats>({
         ...status.status.battleStats,
     });
     status.events.on("changed", (e) => {
-        setRecorder((old) => {
+        setStats((old) => {
             if (!jsonEqual(old, e.battleStats)) return { ...e.battleStats };
             return old;
         });
     });
-
-    const totalTime = recorder.totalRoundTime + recorder.totalWaitingTime;
-    const [Research] = React.useState<string>("2.5");
-    const numResearch = parseFloat(Research);
 
     const [showPanel, setShowPanel] = React.useState(false);
     const handleButtonClick = () => {
         setShowPanel((v) => !v);
     };
 
-    const lapAverage = (totalTime / recorder.lapCount).toFixed(1) || "0.0";
+    const totalTime = stats.totalRoundTime + stats.totalWaitingTime;
+    const lapAverage =
+        stats.lapCount === 0 || totalTime === 0
+            ? "0.0"
+            : (totalTime / stats.lapCount).toFixed(1);
 
     return (
         <div className="relative">
@@ -81,17 +81,17 @@ export const BattleStats: React.VFC = () => {
             </button>
             {showPanel && (
                 <div className="w-[420px] ring-gray-900/5 absolute bottom-6 left-0 mb-1 rounded-lg shadow-xl overflow-hidden ring-1">
-                    <header className="from-slate-800 to-slate-700 flex items-center p-2 pl-3 text-white bg-gradient-to-r">
+                    <header className="from-slate-800 to-slate-700 flex items-center p-2 pl-3 text-white font-bold bg-gradient-to-r">
                         <h1 className="flex gap-2 items-center mr-auto">
                             <i className="bi bi-info-circle text-lg"></i>
                             周回情報
                         </h1>
                         <div className="flex gap-2 items-center">
                             <button
-                                className="bg-amber-300 flex gap-1 items-center px-2 py-1 text-gray-900 rounded shadow"
+                                className="bg-amber-300 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow"
                                 onClick={resetRecoder}
                             >
-                                <i className="bi bi-stopwatch inline w-4"></i>
+                                <i className="bi bi-stopwatch-fill inline w-4"></i>
                                 リセット
                             </button>
                         </div>
@@ -114,7 +114,7 @@ export const BattleStats: React.VFC = () => {
                                 <dt className="mr-auto">完了した周回数</dt>
                                 <dd>
                                     <p className="text-gray-900 font-bold">
-                                        {recorder.lapCount.toLocaleString()}
+                                        {stats.lapCount.toLocaleString()}
                                     </p>
                                 </dd>
                             </dl>
@@ -180,19 +180,19 @@ export const BattleStats: React.VFC = () => {
                             <div className="grid flex-1 gap-3 grid-cols-4">
                                 <ResourceCounter
                                     type="B"
-                                    amount={recorder.drops.units.B}
+                                    amount={stats.drops.units.B}
                                 />
                                 <ResourceCounter
                                     type="A"
-                                    amount={recorder.drops.units.A}
+                                    amount={stats.drops.units.A}
                                 />
                                 <ResourceCounter
                                     type="S"
-                                    amount={recorder.drops.units.S}
+                                    amount={stats.drops.units.S}
                                 />
                                 <ResourceCounter
                                     type="SS"
-                                    amount={recorder.drops.units.SS}
+                                    amount={stats.drops.units.SS}
                                 />
                             </div>
                         </div>
@@ -202,19 +202,19 @@ export const BattleStats: React.VFC = () => {
                             <div className="grid flex-1 gap-3 grid-cols-4">
                                 <ResourceCounter
                                     type="B"
-                                    amount={recorder.drops.equipments.B}
+                                    amount={stats.drops.equipments.B}
                                 />
                                 <ResourceCounter
                                     type="A"
-                                    amount={recorder.drops.equipments.A}
+                                    amount={stats.drops.equipments.A}
                                 />
                                 <ResourceCounter
                                     type="S"
-                                    amount={recorder.drops.equipments.S}
+                                    amount={stats.drops.equipments.S}
                                 />
                                 <ResourceCounter
                                     type="SS"
-                                    amount={recorder.drops.equipments.SS}
+                                    amount={stats.drops.equipments.SS}
                                 />
                             </div>
                         </div>
