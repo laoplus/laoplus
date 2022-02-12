@@ -1,5 +1,7 @@
 import { rankColor } from "~/constants";
 import { BattleStats as TBattleStats } from "~/features/types";
+import { defaultStatus } from "~/Status";
+import { log } from "~/utils";
 import { Icon } from "./Icon";
 const cn = classNames;
 
@@ -8,22 +10,10 @@ function jsonEqual(a: unknown, b: unknown) {
 }
 
 function resetRecoder() {
-    const status = unsafeWindow.LAOPLUS.status;
-    status.set({
-        battleStats: {
-            startTime: undefined,
-            waveTime: undefined,
-            endTime: undefined,
-            totalWaitTime: 0,
-            totalRoundTime: 0,
-            lapCount: 0,
-            Metal: 0,
-            Nutrient: 0,
-            Power: 0,
-            Normal_Module: 0,
-            Advanced_Module: 0,
-            Special_Module: 0,
-        },
+    const d = defaultStatus.battleStats;
+    log.log("resetRecoder", "default", d);
+    unsafeWindow.LAOPLUS.status.set({
+        battleStats: { ...d },
     });
 }
 
@@ -69,7 +59,7 @@ export const BattleStats: React.VFC = () => {
         });
     });
 
-    const totalTime = recorder.totalRoundTime + recorder.totalWaitTime;
+    const totalTime = recorder.totalRoundTime + recorder.totalWaitingTime;
     const [Research] = React.useState<string>("2.5");
     const numResearch = parseFloat(Research);
 
@@ -146,29 +136,35 @@ export const BattleStats: React.VFC = () => {
                         <div className="grid gap-3 grid-cols-3">
                             <ResourceCounter
                                 type="metal"
-                                amount={recorder.Metal}
+                                // amount={recorder.Metal}
+                                amount={0}
                             />
                             <ResourceCounter
                                 type="nutrient"
-                                amount={recorder.Nutrient}
+                                // amount={recorder.Nutrient}
+                                amount={0}
                             />
                             <ResourceCounter
                                 type="power"
-                                amount={recorder.Power}
+                                // amount={recorder.Power}
+                                amount={0}
                             />
                         </div>
                         <div className="grid gap-3 grid-cols-3">
                             <ResourceCounter
                                 type="basic_module"
-                                amount={recorder.Normal_Module}
+                                // amount={recorder.Normal_Module}
+                                amount={0}
                             />
                             <ResourceCounter
                                 type="advanced_module"
-                                amount={recorder.Advanced_Module}
+                                // amount={recorder.Advanced_Module}
+                                amount={0}
                             />
                             <ResourceCounter
                                 type="special_module"
-                                amount={recorder.Special_Module}
+                                // amount={recorder.Special_Module}
+                                amount={0}
                             />
                         </div>
 
@@ -182,20 +178,44 @@ export const BattleStats: React.VFC = () => {
                                 title="戦闘員"
                             ></i>
                             <div className="grid flex-1 gap-3 grid-cols-4">
-                                <ResourceCounter type="B" amount={0} />
-                                <ResourceCounter type="A" amount={0} />
-                                <ResourceCounter type="S" amount={0} />
-                                <ResourceCounter type="SS" amount={0} />
+                                <ResourceCounter
+                                    type="B"
+                                    amount={recorder.drops.units.B}
+                                />
+                                <ResourceCounter
+                                    type="A"
+                                    amount={recorder.drops.units.A}
+                                />
+                                <ResourceCounter
+                                    type="S"
+                                    amount={recorder.drops.units.S}
+                                />
+                                <ResourceCounter
+                                    type="SS"
+                                    amount={recorder.drops.units.SS}
+                                />
                             </div>
                         </div>
 
                         <div className="flex gap-2">
                             <i className="bi bi-cpu text-xl" title="装備"></i>
                             <div className="grid flex-1 gap-3 grid-cols-4">
-                                <ResourceCounter type="B" amount={0} />
-                                <ResourceCounter type="A" amount={0} />
-                                <ResourceCounter type="S" amount={0} />
-                                <ResourceCounter type="SS" amount={0} />
+                                <ResourceCounter
+                                    type="B"
+                                    amount={recorder.drops.equipments.B}
+                                />
+                                <ResourceCounter
+                                    type="A"
+                                    amount={recorder.drops.equipments.A}
+                                />
+                                <ResourceCounter
+                                    type="S"
+                                    amount={recorder.drops.equipments.S}
+                                />
+                                <ResourceCounter
+                                    type="SS"
+                                    amount={recorder.drops.equipments.SS}
+                                />
                             </div>
                         </div>
                     </main>

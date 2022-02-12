@@ -21,16 +21,24 @@ export type RewardItem = {
     ItemKeyString: string;
 };
 export interface BattleStats {
-    startTime?: number;
-    waveTime?: number;
-    endTime?: number;
-    totalWaitTime: number;
+    latestEnterTime: number | null;
+    waveTime: number | null;
+    latestLeaveTime: number | null;
+    totalWaitingTime: number;
     totalRoundTime: number;
     lapCount: number;
-    Metal: number;
-    Nutrient: number;
-    Power: number;
-    Normal_Module: number;
-    Advanced_Module: number;
-    Special_Module: number;
+    drops: {
+        units: {
+            SS: number;
+            S: number;
+            A: number;
+            B: number;
+        };
+        equipments: {
+            SS: number;
+            S: number;
+            A: number;
+            B: number;
+        };
+    };
 }

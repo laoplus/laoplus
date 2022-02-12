@@ -10,24 +10,32 @@ type statusType = {
     battleStats: BattleStats;
 };
 
-const defaultStatus = {
+export const defaultStatus = {
     autorunDetection: {
         enterTimerId: null,
         latestEnterTime: null,
     },
     battleStats: {
-        startTime: undefined,
-        waveTime: undefined,
-        endTime: undefined,
-        totalWaitTime: 0,
+        latestEnterTime: null,
+        waveTime: null,
+        latestLeaveTime: null,
+        totalWaitingTime: 0,
         totalRoundTime: 0,
         lapCount: 0,
-        Metal: 0,
-        Nutrient: 0,
-        Power: 0,
-        Normal_Module: 0,
-        Advanced_Module: 0,
-        Special_Module: 0,
+        drops: {
+            units: {
+                SS: 0,
+                S: 0,
+                A: 0,
+                B: 0,
+            },
+            equipments: {
+                SS: 0,
+                S: 0,
+                A: 0,
+                B: 0,
+            },
+        },
     },
 } as statusType;
 Object.freeze(defaultStatus);

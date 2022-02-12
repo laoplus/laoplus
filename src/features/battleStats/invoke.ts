@@ -1,16 +1,17 @@
-import { stageStart, stageStop, calcResource } from "./functions";
+import { enter, leave, calcResource, incrementDrops } from "./functions";
 import { InvokeProps, WaveClearResponse } from "../types";
 
 export const invoke = ({ res, url }: InvokeProps) => {
     switch (url.pathname) {
         case "/battleserver_enter":
-            stageStart();
+            enter();
             return;
         case "/battleserver_leave":
-            stageStop();
+            leave();
             return;
         case "/wave_clear":
-            calcResource(res as WaveClearResponse);
+            incrementDrops(res as WaveClearResponse);
+            calcResource();
             return;
     }
 };
