@@ -64,6 +64,13 @@ export const BattleStats: React.VFC = () => {
         setShowPanel((v) => !v);
     };
 
+    const [displayType, setDisplayType] = React.useState<"perHour" | "sum">(
+        "sum"
+    );
+    const toggleCheckState = () => {
+        setDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
+    };
+
     const totalTime = stats.totalRoundTime + stats.totalWaitingTime;
     const lapAverage =
         stats.lapCount === 0 || totalTime === 0
@@ -124,12 +131,33 @@ export const BattleStats: React.VFC = () => {
 
                         <div className="flex gap-3">
                             <h2 className="font-bold">取得資源</h2>
-                            <div className="flex gap-1 items-center ml-auto">
-                                <span>時給</span>
-                                <div className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full">
-                                    <div className="w-4 h-4 bg-white rounded-full shadow-md transform translate-x-4"></div>
+                            <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">
+                                <span
+                                    onClick={() => {
+                                        setDisplayType("perHour");
+                                    }}
+                                >
+                                    時給
+                                </span>
+                                <div
+                                    className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full"
+                                    onClick={toggleCheckState}
+                                >
+                                    <div
+                                        className={cn(
+                                            "w-4 h-4 bg-white rounded-full shadow-md transform transition-transform",
+                                            displayType === "sum" &&
+                                                "translate-x-4"
+                                        )}
+                                    ></div>
                                 </div>
-                                <span>合計</span>
+                                <span
+                                    onClick={() => {
+                                        setDisplayType("sum");
+                                    }}
+                                >
+                                    合計
+                                </span>
                             </div>
                         </div>
 
