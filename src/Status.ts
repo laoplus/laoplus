@@ -30,12 +30,13 @@ const defaultStatus = {
         Special_Module: 0,
     },
 } as statusType;
+Object.freeze(defaultStatus);
 
 export class Status {
     status: statusType;
 
     constructor() {
-        this.status = defaultStatus;
+        this.status = _.cloneDeep(defaultStatus);
     }
 
     events = mitt<{ changed: statusType }>();

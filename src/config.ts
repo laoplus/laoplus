@@ -30,6 +30,7 @@ const defaultConfig = {
         },
     },
 };
+Object.freeze(defaultConfig);
 
 export class Config {
     config: typeof defaultConfig;
