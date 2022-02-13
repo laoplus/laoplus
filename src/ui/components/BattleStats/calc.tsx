@@ -55,32 +55,35 @@ export const calcResourcesFromDrops = ({
     const ranks = Object.keys(drops) as (keyof typeof drops)[];
 
     // ランクごとに集計・加算して返す
-    const total = ranks.reduce((sum, rank) => {
-        const resourceKeys = Object.keys(
-            sumInitialValue
-        ) as (keyof typeof sumInitialValue)[];
+    const total = ranks.reduce(
+        (sum, rank) => {
+            const resourceKeys = Object.keys(
+                sumInitialValue
+            ) as (keyof typeof sumInitialValue)[];
 
-        // このランクを分解して得られる資源量を保存するオブジェクト
-        const income = { ...sumInitialValue };
+            // このランクを分解して得られる資源量を保存するオブジェクト
+            const income = { ...sumInitialValue };
 
-        resourceKeys.forEach((key) => {
-            income[key] = table[rank][key] * drops[rank];
-        });
-        log.debug("BattleStats", type, rank, "倍率かける前", income);
+            resourceKeys.forEach((key) => {
+                income[key] = table[rank][key] * drops[rank];
+            });
+            log.debug("BattleStats", type, rank, "倍率かける前", income);
 
-        // 部品・栄養・電力のみ 上昇倍率をかける
-        income.parts = calcMultipliedValue(income.parts, type);
-        income.nutrients = calcMultipliedValue(income.nutrients, type);
-        income.power = calcMultipliedValue(income.power, type);
-        log.debug("BattleStats", type, rank, "倍率かけた後", income);
+            // 部品・栄養・電力のみ 上昇倍率をかける
+            income.parts = calcMultipliedValue(income.parts, type);
+            income.nutrients = calcMultipliedValue(income.nutrients, type);
+            income.power = calcMultipliedValue(income.power, type);
+            log.debug("BattleStats", type, rank, "倍率かけた後", income);
 
-        // sumとincomeを加算する
-        resourceKeys.forEach((key) => {
-            sum[key] += income[key];
-        });
+            // sumとincomeを加算する
+            resourceKeys.forEach((key) => {
+                sum[key] += income[key];
+            });
 
-        return sum;
-    }, sumInitialValue);
+            return sum;
+        },
+        { ...sumInitialValue }
+    );
 
     log.debug("BattleStats", type, "total", total);
     return total;
