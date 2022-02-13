@@ -1,4 +1,4 @@
-import { enter, leave, calcResource, incrementDrops } from "./functions";
+import { enter, leave, updateTimeStatus, incrementDrops } from "./functions";
 import { InvokeProps, WaveClearResponse } from "../types";
 
 export const invoke = ({ res, url }: InvokeProps) => {
@@ -11,7 +11,7 @@ export const invoke = ({ res, url }: InvokeProps) => {
             return;
         case "/wave_clear":
             incrementDrops(res as WaveClearResponse);
-            calcResource();
+            updateTimeStatus();
             return;
     }
 };

@@ -90,7 +90,7 @@ export const incrementDrops = (res: WaveClearResponse) => {
 /**
  * @package
  */
-export const calcResource = () => {
+export const updateTimeStatus = () => {
     const status = unsafeWindow.LAOPLUS.status;
 
     const curtime = new Date().getTime();
