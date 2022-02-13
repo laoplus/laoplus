@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1644755990-8b6caf84fc778232615081d251a1dbfdbf440a32
+// @version     1644756622-5e5ee179804f5a01b1dcf7d23126c6cc2e7cef75
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1254,6 +1254,68 @@
             showPanel && React.createElement(Panel, null)));
     };
 
+    const sendNotification$1 = () => {
+        const threshold = unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
+        const body = {
+            embeds: [
+                {
+                    color: colorHexToInteger(uiColor.error.hex()),
+                    title: "自動周回停止",
+                    description: `戦闘開始のインターバルがしきい値(${threshold}分)を超えました`,
+                },
+            ],
+        };
+        if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests.autorunStop) {
+            sendToDiscordWebhook(body);
+        }
+        else {
+            log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
+        }
+        clearTimer();
+    };
+    const getDalayMs = () => {
+        const threshold = Number(unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold);
+        const thresholdMs = threshold * 60 * 1000;
+        return thresholdMs;
+    };
+    const getLatestDate = (delayMs) => {
+        const now = new Date().getTime();
+        return new Date(now + delayMs);
+    };
+    const clearTimer = () => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const { enterTimerId } = status.status.autorunDetection;
+        if (enterTimerId) {
+            window.clearTimeout(enterTimerId);
+            status.set({
+                autorunDetection: { enterTimerId: null, latestEnterTime: null },
+            });
+            log.debug("Autorun Detection", "Reset enterTimer");
+        }
+        log.log("Autorun Detection", "Reset Timers", status.status.autorunDetection);
+    };
+    /**
+     * @package
+     */
+    const enter$1 = () => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const { enterTimerId } = status.status.autorunDetection;
+        if (enterTimerId !== null) {
+            window.clearTimeout(enterTimerId);
+            log.debug("Autorun Detection", "Remove Current Enter Timer");
+        }
+        const delay = getDalayMs();
+        const newEnterTimerId = window.setTimeout(sendNotification$1, delay);
+        status.set({
+            autorunDetection: {
+                enterTimerId: newEnterTimerId,
+                latestEnterTime: getLatestDate(delay),
+            },
+        });
+        log.log("Autorun Detection", "Set Enter Timer", delay);
+    };
+
     const cn = classNames;
     const ToggleAutorun = () => {
         const config = unsafeWindow.LAOPLUS.config;
@@ -1263,6 +1325,7 @@
         });
         const handleClick = () => {
             config.set({ features: { autorunDetection: { enabled: !enabled } } });
+            clearTimer();
         };
         return (React.createElement("button", { onClick: handleClick, title: `自動周回停止判定を${enabled ? "オフ" : "オン"}にする`, className: cn("text-white drop-shadow-featureIcon h-6", enabled && "animate-spin"), style: {
                 animationDuration: "2s",
@@ -1291,7 +1354,7 @@
         document.body.appendChild(root);
     };
 
-    const sendNotification$1 = () => {
+    const sendNotification = () => {
         const embedFields = unsafeWindow.LAOPLUS.exploration
             .sort((a, b) => a.EndTime - b.EndTime)
             .map((ex) => {
@@ -1341,7 +1404,7 @@
         unsafeWindow.LAOPLUS.exploration = ExplorationList.map((ex) => {
             const msToFinish = ex.EndTime * 1000 - Date.now();
             if (msToFinish > 0) {
-                const timeoutID = window.setTimeout(sendNotification$1, msToFinish);
+                const timeoutID = window.setTimeout(sendNotification, msToFinish);
                 return { ...ex, timeoutID };
             }
             else {
@@ -1353,9 +1416,9 @@
     /**
      * @package
      */
-    const enter$1 = ({ EnterInfo }) => {
+    const enter = ({ EnterInfo }) => {
         const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
-        const timeoutID = window.setTimeout(sendNotification$1, msToFinish);
+        const timeoutID = window.setTimeout(sendNotification, msToFinish);
         unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });
         log.log("Exploration Timer", "Add Exploration Timer", unsafeWindow.LAOPLUS.exploration);
     };
@@ -1385,7 +1448,7 @@
                 loginto(res);
                 return;
             case "/exploration_enter":
-                enter$1(res);
+                enter(res);
                 return;
             case "/exploration_reward":
                 reward(res);
@@ -1484,74 +1547,12 @@
         }
     };
 
-    const sendNotification = () => {
-        const threshold = unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold;
-        const body = {
-            embeds: [
-                {
-                    color: colorHexToInteger(uiColor.error.hex()),
-                    title: "自動周回停止",
-                    description: `戦闘開始のインターバルがしきい値(${threshold}分)を超えました`,
-                },
-            ],
-        };
-        if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
-            .interests.autorunStop) {
-            sendToDiscordWebhook(body);
-        }
-        else {
-            log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
-        }
-        clearTimer();
-    };
-    const getDalayMs = () => {
-        const threshold = Number(unsafeWindow.LAOPLUS.config.config.features.autorunDetection.threshold);
-        const thresholdMs = threshold * 60 * 1000;
-        return thresholdMs;
-    };
-    const getLatestDate = (delayMs) => {
-        const now = new Date().getTime();
-        return new Date(now + delayMs);
-    };
-    const clearTimer = () => {
-        const status = unsafeWindow.LAOPLUS.status;
-        const { enterTimerId } = status.status.autorunDetection;
-        if (enterTimerId) {
-            window.clearTimeout(enterTimerId);
-            status.set({
-                autorunDetection: { enterTimerId: null, latestEnterTime: null },
-            });
-            log.debug("Autorun Detection", "Reset enterTimer");
-        }
-        log.log("Autorun Detection", "Reset Timers", status.status.autorunDetection);
-    };
-    /**
-     * @package
-     */
-    const enter = () => {
-        const status = unsafeWindow.LAOPLUS.status;
-        const { enterTimerId } = status.status.autorunDetection;
-        if (enterTimerId !== null) {
-            window.clearTimeout(enterTimerId);
-            log.debug("Autorun Detection", "Remove Current Enter Timer");
-        }
-        const delay = getDalayMs();
-        const newEnterTimerId = window.setTimeout(sendNotification, delay);
-        status.set({
-            autorunDetection: {
-                enterTimerId: newEnterTimerId,
-                latestEnterTime: getLatestDate(delay),
-            },
-        });
-        log.log("Autorun Detection", "Set Enter Timer", delay);
-    };
-
     const invoke$1 = ({ url }) => {
         switch (url.pathname) {
             case "/battleserver_enter":
                 if (unsafeWindow.LAOPLUS.config.config.features.autorunDetection
                     .enabled) {
-                    enter();
+                    enter$1();
                 }
                 return;
         }
