@@ -157,7 +157,7 @@ export const BattleStats: React.VFC = () => {
                     </header>
 
                     <main className="flex flex-col gap-4 px-4 py-5 bg-white">
-                        <div className="grid gap-4 grid-cols-2">
+                        <div className="grid gap-4 grid-cols-2 items-center">
                             <MemorizedTimeStat {...stats} />
                             <dl className="flex">
                                 <dt className="mr-auto">完了した周回数</dt>
@@ -172,21 +172,24 @@ export const BattleStats: React.VFC = () => {
                         <hr />
 
                         <div className="flex gap-3">
-                            <h2
-                                className="font-bold cursor-pointer select-none"
-                                onClick={cycleShownResourceTypePerDropKinds}
-                            >
-                                取得資源
-                                {(() => {
-                                    switch (shownResourceTypePerDropKinds) {
-                                        case "units":
-                                            return "（戦闘員）";
-                                        case "equipments":
-                                            return "（装備）";
-                                        default:
-                                            return "";
-                                    }
-                                })()}
+                            <h2>
+                                <p
+                                    className="flex gap-1 items-center font-bold"
+                                    onClick={cycleShownResourceTypePerDropKinds}
+                                >
+                                    取得資源
+                                    {(() => {
+                                        switch (shownResourceTypePerDropKinds) {
+                                            case "units":
+                                                return "（戦闘員）";
+                                            case "equipments":
+                                                return "（装備）";
+                                            default:
+                                                return "";
+                                        }
+                                    })()}
+                                    <i className="bi bi-chevron-down before:!align-[inherit] text-xs"></i>
+                                </p>
                             </h2>
                             <div className="hidden">
                                 <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">

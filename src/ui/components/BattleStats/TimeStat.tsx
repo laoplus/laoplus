@@ -21,12 +21,16 @@ const TimeStat: React.VFC<{
             : (totalRoundTime / lapCount).toFixed(1);
 
     return (
-        <dl className="flex">
-            <dt className="mr-auto cursor-pointer select-none">
-                <button onClick={toggleDisplayTimeType}>
+        <dl className="flex items-center">
+            <dt className="mr-auto">
+                <button
+                    className="flex gap-1 items-center"
+                    onClick={toggleDisplayTimeType}
+                >
                     {displayTimeType === "lapTime"
                         ? "平均周回時間"
                         : "平均戦闘時間"}
+                    <i className="bi bi-chevron-down before:!align-[inherit] text-xs"></i>
                 </button>
             </dt>
             <dd>

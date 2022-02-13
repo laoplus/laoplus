@@ -27,9 +27,6 @@ element.innerText = `
 .ReactModal__Overlay--before-close {
     @apply opacity-0;
 }
-i.bi {
-    @apply flex items-center;
-}
 `;
 document.head.appendChild(element);
 
