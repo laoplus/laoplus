@@ -163,35 +163,37 @@ export const BattleStats: React.VFC = () => {
 
                         <hr />
 
-                        <div className="flex gap-3">
-                            <h2 className="font-bold">取得資源</h2>
-                            <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">
-                                <span
-                                    onClick={() => {
-                                        setDisplayType("perHour");
-                                    }}
-                                >
-                                    時給
-                                </span>
-                                <div
-                                    className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full"
-                                    onClick={toggleCheckState}
-                                >
+                            <div className="flex gap-3">
+                                <h2 className="font-bold">取得資源</h2>
+                            <div className="hidden">
+                                <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">
+                                    <span
+                                        onClick={() => {
+                                            setDisplayType("perHour");
+                                        }}
+                                    >
+                                        時給
+                                    </span>
                                     <div
-                                        className={cn(
-                                            "w-4 h-4 bg-white rounded-full shadow-md transform transition-transform",
-                                            displayType === "sum" &&
-                                                "translate-x-4"
-                                        )}
-                                    ></div>
+                                        className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full"
+                                        onClick={toggleCheckState}
+                                    >
+                                        <div
+                                            className={cn(
+                                                "w-4 h-4 bg-white rounded-full shadow-md transform transition-transform",
+                                                displayType === "sum" &&
+                                                    "translate-x-4"
+                                            )}
+                                        ></div>
+                                    </div>
+                                    <span
+                                        onClick={() => {
+                                            setDisplayType("sum");
+                                        }}
+                                    >
+                                        合計
+                                    </span>
                                 </div>
-                                <span
-                                    onClick={() => {
-                                        setDisplayType("sum");
-                                    }}
-                                >
-                                    合計
-                                </span>
                             </div>
                         </div>
 
