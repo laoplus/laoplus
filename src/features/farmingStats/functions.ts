@@ -1,5 +1,12 @@
+import { defaultStatus } from "~/Status";
 import { gradeToRank, itemKeyToRank } from "~/utils";
 import { WaveClearResponse } from "../types";
+
+export const reset = () => {
+    unsafeWindow.LAOPLUS.status.set({
+        farmingStats: { ...defaultStatus.farmingStats },
+    });
+};
 
 /**
  * @package

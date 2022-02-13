@@ -1,6 +1,6 @@
 import { disassemblingTable, rankColor } from "~/constants";
 import { FarmingStats as TFarmingStats } from "~/features/types";
-import { defaultStatus } from "~/Status";
+import { reset } from "~/features/farmingStats/functions";
 import { log } from "~/utils";
 import { calcResourcesFromDrops } from "./calc";
 import { Icon } from "./Icon";
@@ -9,14 +9,6 @@ const cn = classNames;
 
 function jsonEqual(a: unknown, b: unknown) {
     return JSON.stringify(a) === JSON.stringify(b);
-}
-
-function resetRecoder() {
-    const d = defaultStatus.farmingStats;
-    log.log("resetRecoder", "default", d);
-    unsafeWindow.LAOPLUS.status.set({
-        farmingStats: { ...d },
-    });
 }
 
 const ResourceCounter: React.VFC<{
@@ -134,7 +126,7 @@ export const Panel: React.VFC = () => {
                 <div className="flex gap-2 items-center">
                     <button
                         className="bg-amber-300 ring-amber-900/5 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow ring-1 ring-inset"
-                        onClick={resetRecoder}
+                        onClick={reset}
                     >
                         <i className="bi bi-stopwatch-fill inline w-4"></i>
                         リセット
