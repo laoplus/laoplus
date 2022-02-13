@@ -121,7 +121,7 @@ export const Panel: React.VFC = () => {
             <header className="from-slate-800 to-slate-700 flex items-center p-2 pl-3 text-white font-bold bg-gradient-to-r">
                 <h1 className="flex gap-2 items-center mr-auto">
                     <i className="bi bi-info-circle text-lg"></i>
-                    周回情報
+                    周回統計
                 </h1>
                 <div className="flex gap-2 items-center">
                     <button

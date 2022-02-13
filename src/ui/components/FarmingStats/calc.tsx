@@ -10,19 +10,24 @@ import { FarmingStats } from "~/features/types";
  * 素の分解獲得資源値に自分の分解獲得資源上昇値をかけた値を得る
  */
 const calcMultipliedValue = (amount: number, type: "units" | "equipments") => {
-    // TODO: 設定から倍率を取る
+    const config = unsafeWindow.LAOPLUS.config.config.features.farmingStats;
+
     /**
      * ユーザーが実際にゲームで見る数値
      *
-     * **追加で** xxx%得られるという意味なので、使うときは100足す
+     * **追加で** xxx%得られるという意味なので、使うときは100%分足す
      * @example 150
      */
-    const rawMultiplier = type === "units" ? 150 : 185;
+    const rawMultiplier =
+        type === "units"
+            ? config.unitDisassemblyMultiplier
+            : config.equipmentDisassemblyMultiplier;
+
     /**
      * 計算に使う数値
      * @example 2.5
      */
-    const multiplier = rawMultiplier * 0.01 + 1;
+    const multiplier = (Number(rawMultiplier) + 100) * 0.01;
 
     return Math.trunc(amount * multiplier);
 };

@@ -29,6 +29,11 @@ element.innerText = `
 `;
 document.head.appendChild(element);
 
+const isValidNumber = (value: string) => {
+    const number = Number(value);
+    return !isNaN(number) && number >= 0;
+};
+
 export const ConfigModal = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const {
@@ -425,6 +430,104 @@ export const ConfigModal = () => {
                                                 ?.threshold?.type ===
                                                 "validate" &&
                                                 "しきい値は数字で入力してください"}
+                                        </ErrorMessage>
+                                    )}
+                                </FeatureSectionContent>
+                            </FeatureSection>
+
+                            <FeatureSection
+                                hasError={!!errors.features?.farmingStats}
+                            >
+                                <FeatureSectionSummary
+                                    register={register(
+                                        "features.farmingStats.enabled"
+                                    )}
+                                    title="周回統計"
+                                    helpLink="https://github.com/eai04191/laoplus/wiki/features-FarmingStats"
+                                />
+                                <FeatureSectionContent
+                                    enable={watch(
+                                        "features.farmingStats.enabled"
+                                    )}
+                                >
+                                    <span className="flex gap-1 text-gray-600 text-sm">
+                                        <i className="bi bi-info-circle"></i>
+                                        ページ読み込み後に周回統計を有効化した場合、表示するにはページの再読み込みが必要です
+                                    </span>
+
+                                    <label className="flex gap-2 items-center">
+                                        <span className="flex-shrink-0">
+                                            戦闘員 分解獲得資源の上昇率:
+                                        </span>
+                                        <input
+                                            type="text"
+                                            disabled={
+                                                !watch(
+                                                    "features.farmingStats.enabled"
+                                                )
+                                            }
+                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            {...register(
+                                                "features.farmingStats.unitDisassemblyMultiplier",
+                                                {
+                                                    required: watch(
+                                                        "features.farmingStats.enabled"
+                                                    ),
+                                                    validate: isValidNumber,
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.farmingStats
+                                        ?.unitDisassemblyMultiplier && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features?.farmingStats
+                                                .unitDisassemblyMultiplier
+                                                .type === "required" &&
+                                                "周回統計を利用するには上昇率の指定が必要です"}
+                                            {errors.features?.farmingStats
+                                                ?.unitDisassemblyMultiplier
+                                                ?.type === "validate" &&
+                                                "上昇率は数字で入力してください（%は不要）"}
+                                        </ErrorMessage>
+                                    )}
+
+                                    <label className="flex gap-2 items-center">
+                                        <span className="flex-shrink-0">
+                                            装備 分解獲得資源の上昇率:
+                                        </span>
+                                        <input
+                                            type="text"
+                                            disabled={
+                                                !watch(
+                                                    "features.farmingStats.enabled"
+                                                )
+                                            }
+                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            {...register(
+                                                "features.farmingStats.equipmentDisassemblyMultiplier",
+                                                {
+                                                    required: watch(
+                                                        "features.farmingStats.enabled"
+                                                    ),
+                                                    validate: isValidNumber,
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.farmingStats
+                                        ?.equipmentDisassemblyMultiplier && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features?.farmingStats
+                                                .equipmentDisassemblyMultiplier
+                                                .type === "required" &&
+                                                "周回統計を利用するには上昇率の指定が必要です"}
+                                            {errors.features?.farmingStats
+                                                ?.equipmentDisassemblyMultiplier
+                                                ?.type === "validate" &&
+                                                "上昇率は数字で入力してください（%は不要）"}
                                         </ErrorMessage>
                                     )}
                                 </FeatureSectionContent>

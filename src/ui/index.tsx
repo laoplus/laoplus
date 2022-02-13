@@ -3,6 +3,7 @@ import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
 import { FarmingStats } from "./components/FarmingStats";
 import { ToggleAutorun } from "./components/ToggleAutorun";
+
 const IconWrapper: React.VFC<{ children: React.ReactNode }> = ({
     children,
 }) => {
@@ -12,13 +13,15 @@ const IconWrapper: React.VFC<{ children: React.ReactNode }> = ({
 };
 
 const App: React.VFC = () => {
+    const [config] = React.useState(unsafeWindow.LAOPLUS.config.config);
+
     return (
         <>
             <BootstrapIcon />
             <IconWrapper>
                 <ConfigModal />
                 <ToggleAutorun />
-                <FarmingStats />
+                {config.features.farmingStats.enabled && <FarmingStats />}
             </IconWrapper>
             <AutorunStatus />
         </>
