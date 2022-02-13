@@ -1,6 +1,6 @@
 import { Panel } from "./Panel";
 
-export const BattleStats: React.VFC = () => {
+export const FarmingStats: React.VFC = () => {
     const [showPanel, setShowPanel] = React.useState(false);
     const handleButtonClick = () => {
         setShowPanel((v) => !v);

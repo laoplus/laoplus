@@ -1,5 +1,5 @@
 import { DeepPartial } from "./types";
-import { BattleStats } from "./features/types";
+import { FarmingStats } from "./features/types";
 import { log } from "~/utils";
 
 type statusType = {
@@ -7,7 +7,7 @@ type statusType = {
         enterTimerId: number | null;
         latestEnterTime: Date | null;
     };
-    battleStats: BattleStats;
+    farmingStats: FarmingStats;
 };
 
 export const defaultStatus = {
@@ -15,7 +15,7 @@ export const defaultStatus = {
         enterTimerId: null,
         latestEnterTime: null,
     },
-    battleStats: {
+    farmingStats: {
         latestEnterTime: null,
         waveTime: null,
         latestLeaveTime: null,

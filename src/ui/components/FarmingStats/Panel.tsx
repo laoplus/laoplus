@@ -1,5 +1,5 @@
 import { disassemblingTable, rankColor } from "~/constants";
-import { BattleStats as TBattleStats } from "~/features/types";
+import { FarmingStats as TFarmingStats } from "~/features/types";
 import { defaultStatus } from "~/Status";
 import { log } from "~/utils";
 import { calcResourcesFromDrops } from "./calc";
@@ -12,10 +12,10 @@ function jsonEqual(a: unknown, b: unknown) {
 }
 
 function resetRecoder() {
-    const d = defaultStatus.battleStats;
+    const d = defaultStatus.farmingStats;
     log.log("resetRecoder", "default", d);
     unsafeWindow.LAOPLUS.status.set({
-        battleStats: { ...d },
+        farmingStats: { ...d },
     });
 }
 
@@ -51,12 +51,12 @@ const ResourceCounter: React.VFC<{
 
 export const Panel: React.VFC = () => {
     const status = unsafeWindow.LAOPLUS.status;
-    const [stats, setStats] = React.useState<TBattleStats>({
-        ...status.status.battleStats,
+    const [stats, setStats] = React.useState<TFarmingStats>({
+        ...status.status.farmingStats,
     });
     status.events.on("changed", (e) => {
         setStats((old) => {
-            if (!jsonEqual(old, e.battleStats)) return { ...e.battleStats };
+            if (!jsonEqual(old, e.farmingStats)) return { ...e.farmingStats };
             return old;
         });
     });
@@ -83,7 +83,7 @@ export const Panel: React.VFC = () => {
             table: disassemblingTable.units,
             type: "units",
         });
-        log.log("BattleStats", "disassembledResource", "units", units);
+        log.log("FarmingStats", "disassembledResource", "units", units);
 
         const equipments = calcResourcesFromDrops({
             drops: stats.drops.equipments,
@@ -91,7 +91,7 @@ export const Panel: React.VFC = () => {
             type: "equipments",
         });
         log.log(
-            "BattleStats",
+            "FarmingStats",
             "disassembledResource",
             "equipments",
             equipments
@@ -115,7 +115,7 @@ export const Panel: React.VFC = () => {
                 special_module: 0,
             }
         );
-        log.log("BattleStats", "disassembledResource", "total", total);
+        log.log("FarmingStats", "disassembledResource", "total", total);
 
         return {
             total,

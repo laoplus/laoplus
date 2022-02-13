@@ -7,19 +7,19 @@ import { WaveClearResponse } from "../types";
 export const enter = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { latestLeaveTime, totalWaitingTime } = status.status.battleStats;
+    const { latestLeaveTime, totalWaitingTime } = status.status.farmingStats;
 
     if (latestLeaveTime) {
         const waitTime = (curtime - latestLeaveTime) / 1000;
         status.set({
-            battleStats: {
+            farmingStats: {
                 latestEnterTime: curtime,
                 totalWaitingTime: totalWaitingTime + waitTime,
             },
         });
     } else {
         status.set({
-            battleStats: {
+            farmingStats: {
                 latestEnterTime: curtime,
             },
         });
@@ -32,12 +32,12 @@ export const enter = () => {
 export const leave = () => {
     const status = unsafeWindow.LAOPLUS.status;
     const curtime = new Date().getTime();
-    const { waveTime, totalRoundTime, lapCount } = status.status.battleStats;
+    const { waveTime, totalRoundTime, lapCount } = status.status.farmingStats;
 
     if (waveTime) {
         const waitTime = (curtime - waveTime) / 1000;
         status.set({
-            battleStats: {
+            farmingStats: {
                 latestLeaveTime: curtime,
                 totalRoundTime: totalRoundTime + waitTime,
                 lapCount: lapCount + 1,
@@ -45,7 +45,7 @@ export const leave = () => {
         });
     } else {
         status.set({
-            battleStats: {
+            farmingStats: {
                 latestLeaveTime: curtime,
                 lapCount: lapCount + 1,
             },
@@ -67,7 +67,7 @@ export const incrementDrops = (res: WaveClearResponse) => {
             ...unitDrops,
             [rank]: unitDrops[rank] + 1,
         };
-    }, status.status.battleStats.drops.units);
+    }, status.status.farmingStats.drops.units);
 
     const equipments = res.ClearRewardInfo.ItemRewardList.reduce(
         (equipmentDrops, item) => {
@@ -79,11 +79,11 @@ export const incrementDrops = (res: WaveClearResponse) => {
                 [rank]: equipmentDrops[rank] + 1,
             };
         },
-        status.status.battleStats.drops.equipments
+        status.status.farmingStats.drops.equipments
     );
 
     status.set({
-        battleStats: { drops: { units, equipments } },
+        farmingStats: { drops: { units, equipments } },
     });
 };
 
@@ -95,20 +95,20 @@ export const calcResource = () => {
 
     const curtime = new Date().getTime();
     const { latestEnterTime, waveTime, totalRoundTime } =
-        status.status.battleStats;
+        status.status.farmingStats;
 
     const newRoundTime = waveTime ?? latestEnterTime ?? undefined;
     if (newRoundTime) {
         const waitTime = (curtime - newRoundTime) / 1000;
         status.set({
-            battleStats: {
+            farmingStats: {
                 waveTime: curtime,
                 totalRoundTime: totalRoundTime + waitTime,
             },
         });
     } else {
         status.set({
-            battleStats: {
+            farmingStats: {
                 waveTime: curtime,
             },
         });

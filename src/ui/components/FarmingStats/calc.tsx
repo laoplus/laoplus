@@ -1,6 +1,6 @@
 import { log } from "~/utils";
 import { disassemblingTable } from "~/constants";
-import { BattleStats } from "~/features/types";
+import { FarmingStats } from "~/features/types";
 
 // 分解についてのメモ
 // 分解獲得資源上昇（研究「精密分解施設」, 基地「装備分解室」）で増えるのは部品・栄養・電力のみ
@@ -36,7 +36,7 @@ export const calcResourcesFromDrops = ({
     table,
     type,
 }: {
-    drops: BattleStats["drops"]["units"] | BattleStats["drops"]["equipments"];
+    drops: FarmingStats["drops"]["units"] | FarmingStats["drops"]["equipments"];
     table:
         | typeof disassemblingTable.units
         | typeof disassemblingTable.equipments;
@@ -67,13 +67,13 @@ export const calcResourcesFromDrops = ({
             resourceKeys.forEach((key) => {
                 income[key] = table[rank][key] * drops[rank];
             });
-            log.debug("BattleStats", type, rank, "倍率かける前", income);
+            log.debug("FarmingStats", type, rank, "倍率かける前", income);
 
             // 部品・栄養・電力のみ 上昇倍率をかける
             income.parts = calcMultipliedValue(income.parts, type);
             income.nutrients = calcMultipliedValue(income.nutrients, type);
             income.power = calcMultipliedValue(income.power, type);
-            log.debug("BattleStats", type, rank, "倍率かけた後", income);
+            log.debug("FarmingStats", type, rank, "倍率かけた後", income);
 
             // sumとincomeを加算する
             resourceKeys.forEach((key) => {
@@ -85,6 +85,6 @@ export const calcResourcesFromDrops = ({
         { ...sumInitialValue }
     );
 
-    log.debug("BattleStats", type, "total", total);
+    log.debug("FarmingStats", type, "total", total);
     return total;
 };

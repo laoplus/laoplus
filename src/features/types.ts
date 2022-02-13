@@ -20,7 +20,7 @@ export type RewardPC = {
 export type RewardItem = {
     ItemKeyString: string;
 };
-export interface BattleStats {
+export interface FarmingStats {
     latestEnterTime: number | null;
     waveTime: number | null;
     latestLeaveTime: number | null;

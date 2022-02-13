@@ -2,7 +2,7 @@ import { log } from "~/utils";
 import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
 import { invoke as invokeDropNotification } from "../dropNotification/invoke";
 import { invoke as invokeAutorunDetection } from "../autorunDetection/invoke";
-import { invoke as invokeBattleStats } from "../battleStats/invoke";
+import { invoke as invokeFarmingStats } from "../farmingStats/invoke";
 
 const interceptor = (xhr: XMLHttpRequest): void => {
     if (!xhr.responseURL) return;
@@ -24,7 +24,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
         invokeExplorationTimer(invokeProps);
         invokeDropNotification(invokeProps);
         invokeAutorunDetection(invokeProps);
-        invokeBattleStats(invokeProps);
+        invokeFarmingStats(invokeProps);
     } catch (error) {
         log.error("Interceptor", "Error", error);
     }
