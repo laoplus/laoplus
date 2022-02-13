@@ -16,6 +16,9 @@ module.exports = {
             lineHeight: {
                 zero: "0",
             },
+            dropShadow: {
+                featureIcon: "0 0 0.1em black",
+            },
         },
     },
     variants: {
