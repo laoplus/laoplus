@@ -10,6 +10,7 @@ import { FeatureSectionContent } from "./FeatureSectionContent";
 import { FooterLink } from "./FooterLink";
 import { WebhookTestButton } from "./WebhookTestButton";
 import "./index.css";
+import { resetLoginInfo } from "~/features/resetLoginInfo";
 
 const cn = classNames;
 ReactModal.defaultStyles = {};
@@ -560,6 +561,26 @@ export const ConfigModal = () => {
                                 </span>
                             </div>
                         </a>
+                    </div>
+
+                    <div className="p-4">
+                        <details className="flex flex-col gap-4">
+                            <summary>危険エリア</summary>
+
+                            <div className="flex flex-col gap-2 p-4">
+                                <button
+                                    className="bg-amber-300 ring-amber-900/5 px-1 py-2 rounded-lg ring-1"
+                                    onClick={resetLoginInfo}
+                                >
+                                    ログイン情報を削除する
+                                </button>
+                                <span className="flex gap-1 text-gray-600 text-sm">
+                                    <i className="bi bi-info-circle"></i>
+                                    タイトル画面でTouch
+                                    Screenが出なくなったときに使うと再ダウンロードしなくても直るかもしれません。
+                                </span>
+                            </div>
+                        </details>
                     </div>
 
                     <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md">
