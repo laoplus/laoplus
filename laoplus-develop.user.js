@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1644756622-5e5ee179804f5a01b1dcf7d23126c6cc2e7cef75
+// @version     1644758569-3dc929126594ad60ecae0ddd768651501e9d8dfd
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -495,6 +495,31 @@
     var css_248z = "details[open] .details-chevron {\n    transform: rotate(180deg);\n}\n";
     styleInject(css_248z);
 
+    const resetLoginInfo = () => {
+        const ok = confirm("ログイン情報を削除します。よろしいですか？");
+        if (!ok)
+            return;
+        try {
+            const script = document.createElement("script");
+            script.src = "https://unpkg.com/dexie/dist/dexie.js";
+            script.onload = async () => {
+                // @ts-ignore
+                const db = new Dexie("/idbfs");
+                await db.open();
+                const key = (await db.table("FILE_DATA").toCollection().keys())
+                    // @ts-ignore
+                    .find((key) => key.includes("E5C006E672BA1D17C9DEF34BC18AB8C147F0AF238DE7B480B6B51C7CC9E3FCD8"));
+                await db.table("FILE_DATA").delete(key);
+                alert("ログイン情報を削除しました。ページを再読み込みします。");
+                document.location.reload();
+            };
+            document.body.appendChild(script);
+        }
+        catch (error) {
+            alert("ログイン情報の削除に失敗しました。");
+        }
+    };
+
     const cn$5 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
@@ -702,6 +727,14 @@
                             React.createElement("div", { className: "flex flex-col" },
                                 React.createElement("span", { className: "text-lg font-semibold" }, "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C"),
                                 React.createElement("span", { className: "text-gray-400 text-sm" }, "by WolfgangKurz")))),
+                    React.createElement("div", { className: "p-4" },
+                        React.createElement("details", { className: "flex flex-col gap-4" },
+                            React.createElement("summary", null, "\u5371\u967A\u30A8\u30EA\u30A2"),
+                            React.createElement("div", { className: "flex flex-col gap-2 p-4" },
+                                React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 px-1 py-2 rounded-lg ring-1", onClick: resetLoginInfo }, "\u30ED\u30B0\u30A4\u30F3\u60C5\u5831\u3092\u524A\u9664\u3059\u308B"),
+                                React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                    React.createElement("i", { className: "bi bi-info-circle" }),
+                                    "\u30BF\u30A4\u30C8\u30EB\u753B\u9762\u3067Touch Screen\u304C\u51FA\u306A\u304F\u306A\u3063\u305F\u3068\u304D\u306B\u4F7F\u3046\u3068\u518D\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u306A\u304F\u3066\u3082\u76F4\u308B\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002")))),
                     React.createElement("footer", { className: "sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md" },
                         React.createElement("div", { className: "flex gap-3 h-full text-gray-500 text-sm" },
                             React.createElement(FooterLink, { href: "https://github.com/eai04191/laoplus" },
