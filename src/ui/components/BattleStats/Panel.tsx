@@ -133,7 +133,7 @@ export const Panel: React.VFC = () => {
                 </h1>
                 <div className="flex gap-2 items-center">
                     <button
-                        className="bg-amber-300 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow"
+                        className="bg-amber-300 ring-amber-900/5 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow ring-1 ring-inset"
                         onClick={resetRecoder}
                     >
                         <i className="bi bi-stopwatch-fill inline w-4"></i>
