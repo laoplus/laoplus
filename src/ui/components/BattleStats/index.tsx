@@ -66,27 +66,31 @@ export const BattleStats: React.VFC = () => {
         setShowPanel((v) => !v);
     };
 
-    const [displayType, setDisplayType] = React.useState<"perHour" | "sum">(
-        "sum"
-    );
-    const toggleCheckState = () => {
-        setDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
+    const [resourceDisplayType, setResourceDisplayType] = React.useState<
+        "perHour" | "sum"
+    >("sum");
+    const toggleResourceDisplayType = () => {
+        setResourceDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
+    };
+
+    // TODO: 命名なんとかする
+    const [shownResourceTypePerDropKinds, setShownResourceTypePerDropKinds] =
+        React.useState<"total" | "units" | "equipments">("total");
+    const cycleShownResourceTypePerDropKinds = () => {
+        setShownResourceTypePerDropKinds((v) =>
+            v === "total" ? "units" : v === "units" ? "equipments" : "total"
+        );
     };
 
     const disassembledResource = (() => {
-        const unitResorces = calcResourcesFromDrops({
+        const units = calcResourcesFromDrops({
             drops: stats.drops.units,
             table: disassemblingTable.units,
             type: "units",
         });
-        log.log(
-            "BattleStats",
-            "disassembledResource",
-            "unitResorces",
-            unitResorces
-        );
+        log.log("BattleStats", "disassembledResource", "units", units);
 
-        const equipmentResources = calcResourcesFromDrops({
+        const equipments = calcResourcesFromDrops({
             drops: stats.drops.equipments,
             table: disassemblingTable.equipments,
             type: "equipments",
@@ -94,11 +98,11 @@ export const BattleStats: React.VFC = () => {
         log.log(
             "BattleStats",
             "disassembledResource",
-            "equipmentResources",
-            equipmentResources
+            "equipments",
+            equipments
         );
 
-        const total = [unitResorces, equipmentResources].reduce(
+        const total = [units, equipments].reduce(
             (sum, resources) => {
                 (Object.keys(resources) as (keyof typeof resources)[]).forEach(
                     (key) => {
@@ -118,7 +122,11 @@ export const BattleStats: React.VFC = () => {
         );
         log.log("BattleStats", "disassembledResource", "total", total);
 
-        return total;
+        return {
+            total,
+            units,
+            equipments,
+        };
     })();
 
     return (
@@ -163,32 +171,47 @@ export const BattleStats: React.VFC = () => {
 
                         <hr />
 
-                            <div className="flex gap-3">
-                                <h2 className="font-bold">取得資源</h2>
+                        <div className="flex gap-3">
+                            <h2
+                                className="font-bold cursor-pointer select-none"
+                                onClick={cycleShownResourceTypePerDropKinds}
+                            >
+                                取得資源
+                                {(() => {
+                                    switch (shownResourceTypePerDropKinds) {
+                                        case "units":
+                                            return "（戦闘員）";
+                                        case "equipments":
+                                            return "（装備）";
+                                        default:
+                                            return "";
+                                    }
+                                })()}
+                            </h2>
                             <div className="hidden">
                                 <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">
                                     <span
                                         onClick={() => {
-                                            setDisplayType("perHour");
+                                            setResourceDisplayType("perHour");
                                         }}
                                     >
                                         時給
                                     </span>
                                     <div
                                         className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full"
-                                        onClick={toggleCheckState}
+                                        onClick={toggleResourceDisplayType}
                                     >
                                         <div
                                             className={cn(
                                                 "w-4 h-4 bg-white rounded-full shadow-md transform transition-transform",
-                                                displayType === "sum" &&
+                                                resourceDisplayType === "sum" &&
                                                     "translate-x-4"
                                             )}
                                         ></div>
                                     </div>
                                     <span
                                         onClick={() => {
-                                            setDisplayType("sum");
+                                            setResourceDisplayType("sum");
                                         }}
                                     >
                                         合計
@@ -200,29 +223,53 @@ export const BattleStats: React.VFC = () => {
                         <div className="grid gap-3 grid-cols-3">
                             <ResourceCounter
                                 type="parts"
-                                amount={disassembledResource.parts}
+                                amount={
+                                    disassembledResource[
+                                        shownResourceTypePerDropKinds
+                                    ].parts
+                                }
                             />
                             <ResourceCounter
                                 type="nutrient"
-                                amount={disassembledResource.nutrients}
+                                amount={
+                                    disassembledResource[
+                                        shownResourceTypePerDropKinds
+                                    ].nutrients
+                                }
                             />
                             <ResourceCounter
                                 type="power"
-                                amount={disassembledResource.power}
+                                amount={
+                                    disassembledResource[
+                                        shownResourceTypePerDropKinds
+                                    ].power
+                                }
                             />
                         </div>
                         <div className="grid gap-3 grid-cols-3">
                             <ResourceCounter
                                 type="basic_module"
-                                amount={disassembledResource.basic_module}
+                                amount={
+                                    disassembledResource[
+                                        shownResourceTypePerDropKinds
+                                    ].basic_module
+                                }
                             />
                             <ResourceCounter
                                 type="advanced_module"
-                                amount={disassembledResource.advanced_module}
+                                amount={
+                                    disassembledResource[
+                                        shownResourceTypePerDropKinds
+                                    ].advanced_module
+                                }
                             />
                             <ResourceCounter
                                 type="special_module"
-                                amount={disassembledResource.special_module}
+                                amount={
+                                    disassembledResource[
+                                        shownResourceTypePerDropKinds
+                                    ].special_module
+                                }
                             />
                         </div>
 
@@ -235,7 +282,13 @@ export const BattleStats: React.VFC = () => {
                                 className="bi bi-person-fill text-xl"
                                 title="戦闘員"
                             ></i>
-                            <div className="grid flex-1 gap-3 grid-cols-4">
+                            <div
+                                className={cn(
+                                    "grid gap-3 grid-cols-4 flex-1 transition-opacity",
+                                    shownResourceTypePerDropKinds ===
+                                        "equipments" && "opacity-50"
+                                )}
+                            >
                                 <ResourceCounter
                                     type="B"
                                     amount={stats.drops.units.B}
@@ -257,7 +310,13 @@ export const BattleStats: React.VFC = () => {
 
                         <div className="flex gap-2">
                             <i className="bi bi-cpu text-xl" title="装備"></i>
-                            <div className="grid flex-1 gap-3 grid-cols-4">
+                            <div
+                                className={cn(
+                                    "grid gap-3 grid-cols-4 flex-1 transition-opacity",
+                                    shownResourceTypePerDropKinds === "units" &&
+                                        "opacity-50"
+                                )}
+                            >
                                 <ResourceCounter
                                     type="B"
                                     amount={stats.drops.equipments.B}
