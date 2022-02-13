@@ -150,6 +150,9 @@ export const Panel: React.VFC = () => {
                         <dd>
                             <p className="text-gray-900 font-bold">
                                 {stats.lapCount.toLocaleString()}
+                                <span className="ml-0.5 text-gray-500 text-xs font-bold">
+                                    回
+                                </span>
                             </p>
                         </dd>
                     </dl>

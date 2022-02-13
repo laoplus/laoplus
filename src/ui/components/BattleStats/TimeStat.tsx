@@ -40,7 +40,9 @@ const TimeStat: React.VFC<{
                             ? lapTimeAverage
                             : battleTimeAverage}
                     </span>
-                    <span className="text-gray-500 text-xs font-bold">秒</span>
+                    <span className="ml-0.5 text-gray-500 text-xs font-bold">
+                        秒
+                    </span>
                 </p>
             </dd>
         </dl>
