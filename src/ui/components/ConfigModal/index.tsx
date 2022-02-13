@@ -8,9 +8,8 @@ import { FeatureSection } from "./FeatureSection";
 import { FeatureSectionSummary } from "./FeatureSectionSummary";
 import { FeatureSectionContent } from "./FeatureSectionContent";
 import { FooterLink } from "./FooterLink";
-import "./index.css";
-import { sendToDiscordWebhook } from "~/features/discordNotification";
 import { WebhookTestButton } from "./WebhookTestButton";
+import "./index.css";
 
 const cn = classNames;
 ReactModal.defaultStyles = {};
