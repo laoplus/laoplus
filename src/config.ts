@@ -28,8 +28,14 @@ const defaultConfig = {
             hideTimer: false,
             threshold: "5",
         },
+        farmingStats: {
+            enabled: true,
+            unitDisassemblyMultiplier: "0",
+            equipmentDisassemblyMultiplier: "0",
+        },
     },
 };
+Object.freeze(defaultConfig);
 
 export class Config {
     config: typeof defaultConfig;
