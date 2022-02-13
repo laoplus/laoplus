@@ -1,3 +1,5 @@
+import { clearTimer } from "~/features/autorunDetection/functions";
+
 const cn = classNames;
 
 export const ToggleAutorun: React.VFC = () => {
@@ -13,6 +15,7 @@ export const ToggleAutorun: React.VFC = () => {
 
     const handleClick = () => {
         config.set({ features: { autorunDetection: { enabled: !enabled } } });
+        clearTimer();
     };
 
     return (
