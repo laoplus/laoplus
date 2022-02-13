@@ -11,6 +11,9 @@ export const tailwindConfig: import("tailwindcss/tailwind-config").TailwindConfi
                 lineHeight: {
                     zero: "0",
                 },
+                dropShadow: {
+                    featureIcon: "0 0 0.1em black",
+                },
             },
         },
         variants: {

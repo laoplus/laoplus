@@ -1,3 +1,5 @@
+import { clearTimer } from "~/features/autorunDetection/functions";
+
 const cn = classNames;
 
 export const ToggleAutorun: React.VFC = () => {
@@ -13,17 +15,20 @@ export const ToggleAutorun: React.VFC = () => {
 
     const handleClick = () => {
         config.set({ features: { autorunDetection: { enabled: !enabled } } });
+        clearTimer();
     };
 
     return (
         <button
             onClick={handleClick}
             title={`自動周回停止判定を${enabled ? "オフ" : "オン"}にする`}
-            className={cn("text-white drop-shadow", enabled && "animate-spin")}
+            className={cn(
+                "text-white drop-shadow-featureIcon h-6",
+                enabled && "animate-spin"
+            )}
             style={{
                 animationDuration: "2s",
                 animationTimingFunction: "ease-in-out",
-                filter: "drop-shadow(0 0 0.1em black)",
             }}
         >
             <i className="bi bi-arrow-repeat"></i>
