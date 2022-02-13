@@ -1,24 +1,42 @@
 import { Resource, Module } from "./type";
 
 export const Icon: React.VFC<{ type: Resource | Module }> = ({ type }) => {
-    const url = (() => {
+    const icon = (() => {
         const base = `https://cdn.laoplus.net/ui/`;
         switch (type) {
             case "parts":
-                return base + "/currenncy/metal.png";
+                return { url: base + "/currenncy/metal.png", name: "部品" };
             case "nutrient":
-                return base + "/currenncy/nutrient.png";
+                return { url: base + "/currenncy/nutrient.png", name: "栄養" };
             case "power":
-                return base + "/currenncy/power.png";
+                return { url: base + "/currenncy/power.png", name: "電力" };
 
             case "basic_module":
-                return base + "/item/module/basic.png";
+                return {
+                    url: base + "/item/module/basic.png",
+                    name: "一般モジュール",
+                };
             case "advanced_module":
-                return base + "/item/module/advanced.png";
+                return {
+                    url: base + "/item/module/advanced.png",
+                    name: "高級モジュール",
+                };
             case "special_module":
-                return base + "/item/module/special.png";
+                return {
+                    url: base + "/item/module/special.png",
+                    name: "特殊モジュール",
+                };
+
+            case "tuna":
+                return { url: base + "/currenncy/tuna.png", name: "ツナ缶" };
         }
     })();
 
-    return <img className="w-full h-full object-contain" src={url} />;
+    return (
+        <img
+            className="w-full h-full object-contain"
+            src={icon.url}
+            title={icon.name}
+        />
+    );
 };
