@@ -1,5 +1,6 @@
 import { DeepPartial, FarmingStats } from "./types/Status";
 import { log } from "~/utils";
+import { Unit } from "./features/unitList/type";
 
 type statusType = {
     autorunDetection: {
@@ -7,6 +8,7 @@ type statusType = {
         latestEnterTime: Date | null;
     };
     farmingStats: FarmingStats;
+    units: Set<Unit>;
 };
 
 export const defaultStatus = {
@@ -41,6 +43,7 @@ export const defaultStatus = {
         latestResources: null,
         currentSquadCosts: null,
     },
+    units: new Set(),
 } as statusType;
 Object.freeze(defaultStatus);
 
