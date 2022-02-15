@@ -34,7 +34,7 @@ export const Icon: React.VFC<{ type: Resource | Module }> = ({ type }) => {
 
     return (
         <img
-            className="w-full h-full object-contain"
+            className="h-full w-full object-contain"
             src={icon.url}
             title={icon.name}
         />

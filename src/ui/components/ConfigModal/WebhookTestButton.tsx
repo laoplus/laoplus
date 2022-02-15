@@ -5,7 +5,7 @@ export const WebhookTestButton: React.VFC<{ webhookURL: string }> = ({
 }) => {
     return (
         <button
-            className="bg-amber-300 px-2 py-1 border rounded"
+            className="bg-amber-300 rounded border px-2 py-1"
             onClick={async (e) => {
                 e.preventDefault();
 

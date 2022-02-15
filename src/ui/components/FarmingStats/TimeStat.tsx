@@ -24,23 +24,23 @@ const TimeStat: React.VFC<{
         <dl className="flex items-center">
             <dt className="mr-auto">
                 <button
-                    className="flex gap-1 items-center"
+                    className="flex items-center gap-1"
                     onClick={toggleDisplayTimeType}
                 >
                     {displayTimeType === "lapTime"
                         ? "平均周回時間"
                         : "平均戦闘時間"}
-                    <i className="bi bi-chevron-down before:!align-[inherit] text-xs"></i>
+                    <i className="bi bi-chevron-down text-xs before:!align-[inherit]"></i>
                 </button>
             </dt>
             <dd>
-                <p className="text-gray-900 font-bold">
+                <p className="font-bold text-gray-900">
                     <span>
                         {displayTimeType === "lapTime"
                             ? lapTimeAverage
                             : battleTimeAverage}
                     </span>
-                    <span className="ml-0.5 text-gray-500 text-xs font-bold">
+                    <span className="ml-0.5 text-xs font-bold text-gray-500">
                         秒
                     </span>
                 </p>

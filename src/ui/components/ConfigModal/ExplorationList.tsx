@@ -16,7 +16,7 @@ export const ExplorationList: React.VFC = () => {
             <div
                 key={exp.StageKeyString}
                 className={cn(
-                    "flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing",
+                    "flex items-center gap-3 rounded-md bg-white px-2 py-4 text-gray-800 shadow-md transition-spacing md:px-6",
                     { "animate-bounce": isFinished }
                 )}
             >
