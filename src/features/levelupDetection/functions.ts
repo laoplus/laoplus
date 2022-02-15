@@ -14,6 +14,7 @@ export const waveClear = ({
     PCExpAndLevelupList,
     SkillExpAndLevelupList,
 }: wave_clear) => {
+    const setConfig = unsafeWindow.LAOPLUS.config.set;
     const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
     const webhookInterests =
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
@@ -50,8 +51,16 @@ export const waveClear = ({
                 },
             ],
         };
-
         sendToDiscordWebhook(body);
+
+        // 通知したらオフにする
+        setConfig({
+            features: {
+                levelupDetection: {
+                    watchUnitLevel: false,
+                },
+            },
+        });
     }
 
     if (config.watchSkillLevel) {
@@ -89,5 +98,14 @@ export const waveClear = ({
         };
 
         sendToDiscordWebhook(body);
+
+        // 通知したらオフにする
+        setConfig({
+            features: {
+                levelupDetection: {
+                    watchSkillLevel: false,
+                },
+            },
+        });
     }
 };
