@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1644759180-3206805d1ef47b6f33f88e7f35cd6b60f9a00eee
+// @version     1644938962-f14906e6eb0b0c31a800ff7b8cedfdd0ddeca850
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -302,7 +302,7 @@
 
     const cn$a = classNames;
     const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$a("text-red-600 text-sm", className) }, children));
+        return (React.createElement("span", { className: cn$a("text-sm text-red-600", className) }, children));
     };
 
     const cn$9 = classNames;
@@ -312,7 +312,7 @@
             const endDate = dayjs(exp.EndTime * 1000);
             const duration = dayjs.duration(endDate.diff(dayjs()));
             const isFinished = endDate.isSameOrBefore(dayjs());
-            return (React.createElement("div", { key: exp.StageKeyString, className: cn$9("flex gap-3 items-center px-2 py-4 text-gray-800 bg-white rounded-md shadow-md md:px-6 transition-spacing", { "animate-bounce": isFinished }) },
+            return (React.createElement("div", { key: exp.StageKeyString, className: cn$9("flex items-center gap-3 rounded-md bg-white px-2 py-4 text-gray-800 shadow-md transition-spacing md:px-6", { "animate-bounce": isFinished }) },
                 React.createElement("span", { className: "text-3xl font-bold" }, exp.SquadIndex),
                 React.createElement("div", { className: "flex flex-col" },
                     React.createElement("span", { className: "text-sm" }, humanFriendlyStageKey(exp.StageKeyString)),
@@ -383,8 +383,8 @@
 
     const cn$7 = classNames;
     const FeatureSection = ({ children, hasError }) => {
-        return (React.createElement("details", { className: cn$7("pl-10 rounded shadow border", hasError
-                ? "border-red-600 shadow-red-300/50"
+        return (React.createElement("details", { className: cn$7("rounded border pl-10 shadow", hasError
+                ? "shadow-red-300/50 border-red-600"
                 : "border-b-transparent") }, children));
     };
 
@@ -394,25 +394,25 @@
     };
 
     const FeatureSectionSummary = ({ register, title, helpLink }) => {
-        return (React.createElement("summary", { className: "relative flex justify-between pr-4 py-4 cursor-pointer select-none" },
-            React.createElement("h2", { className: "inline-flex gap-2 items-center" },
+        return (React.createElement("summary", { className: "relative flex cursor-pointer select-none justify-between py-4 pr-4" },
+            React.createElement("h2", { className: "inline-flex items-center gap-2" },
                 title,
                 helpLink && React.createElement(HelpIcon, { href: helpLink })),
             React.createElement("div", { className: "details-chevron flex items-center" },
                 React.createElement("i", { className: "bi bi-chevron-down" })),
-            React.createElement("label", { className: "absolute left-0 top-0 flex items-center justify-center -ml-10 w-10 h-full cursor-pointer" },
-                React.createElement("input", { type: "checkbox", className: "w-4 h-4 before:cursor-pointer", ...register }))));
+            React.createElement("label", { className: "absolute left-0 top-0 -ml-10 flex h-full w-10 cursor-pointer items-center justify-center" },
+                React.createElement("input", { type: "checkbox", className: "h-4 w-4 before:cursor-pointer", ...register }))));
     };
 
     const cn$6 = classNames;
     const FeatureSectionContent = ({ children, enable }) => {
-        return (React.createElement("div", { className: cn$6("flex flex-col gap-2 p-4 pl-0 border-t", {
+        return (React.createElement("div", { className: cn$6("flex flex-col gap-2 border-t p-4 pl-0", {
                 "opacity-50": !enable,
             }) }, children));
     };
 
     const FooterLink = ({ href, children }) => {
-        return (React.createElement("a", { href: href, className: "flex gap-1 items-center", target: "_blank", rel: "noopener" }, children));
+        return (React.createElement("a", { href: href, className: "flex items-center gap-1", target: "_blank", rel: "noopener" }, children));
     };
 
     const sendToDiscordWebhook = (body, option) => {
@@ -440,7 +440,7 @@
     };
 
     const WebhookTestButton = ({ webhookURL, }) => {
-        return (React.createElement("button", { className: "bg-amber-300 px-2 py-1 border rounded", onClick: async (e) => {
+        return (React.createElement("button", { className: "bg-amber-300 rounded border px-2 py-1", onClick: async (e) => {
                 e.preventDefault();
                 const response = await sendToDiscordWebhook({
                     content: ":ok: このメッセージを確認できているので、Discord通知は正しく設定されています！",
@@ -564,20 +564,20 @@
                 closeTimeoutMS: 150, isOpen: isOpen, onAfterOpen: () => {
                     // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
                     reset();
-                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10", className: "min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden", id: "laoplus-modal" },
-                React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "relative flex flex-col w-full divide-y overflow-auto" },
-                    React.createElement("header", { className: "flex items-center place-content-between p-4" },
-                        React.createElement("div", { className: "flex gap-2 items-end" },
+                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10", className: "flex max-h-[90%] min-w-[50%] max-w-[90%] overflow-hidden rounded bg-gray-50 shadow", id: "laoplus-modal" },
+                React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "relative flex w-full flex-col divide-y overflow-auto" },
+                    React.createElement("header", { className: "flex place-content-between items-center p-4" },
+                        React.createElement("div", { className: "flex items-end gap-2" },
                             React.createElement("h1", { className: "text-xl font-semibold" }, GM_info.script.name),
-                            React.createElement("span", { className: "pb-0.5 text-gray-500 text-sm" }, GM_info.script.version))),
+                            React.createElement("span", { className: "pb-0.5 text-sm text-gray-500" }, GM_info.script.version))),
                     React.createElement("main", { className: "p-4" },
                         React.createElement("div", { className: "flex flex-col gap-4" },
                             React.createElement(FeatureSection, { hasError: !!errors.features?.discordNotification },
                                 React.createElement(FeatureSectionSummary, { register: register("features.discordNotification.enabled"), title: "Discord\u901A\u77E5", helpLink: "https://github.com/eai04191/laoplus/wiki/features-discordNotification" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.discordNotification.enabled") },
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "Discord Webhook URL:"),
-                                        React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 px-1 border border-gray-500 rounded", ...register("features.discordNotification.webhookURL", {
+                                        React.createElement("input", { type: "text", disabled: !watch("features.discordNotification.enabled"), className: "min-w-[1rem] flex-1 rounded border border-gray-500 px-1", ...register("features.discordNotification.webhookURL", {
                                                 required: watch("features.discordNotification.enabled"),
                                                 pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
                                             }) }),
@@ -598,46 +598,46 @@
                                     React.createElement("span", { className: "flex gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
                                         React.createElement("div", { className: "flex flex-col gap-1" },
-                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                            React.createElement("label", { className: "flex items-center gap-1" },
                                                 React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
                                                 "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7"),
-                                            React.createElement("div", { className: cn$5("flex gap-3 pl-4 ml-1", {
+                                            React.createElement("div", { className: cn$5("ml-1 flex gap-3 pl-4", {
                                                     "opacity-50": !watch("features.discordNotification.interests.pcDrop"),
                                                 }) },
-                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("label", { className: "flex items-center gap-1" },
                                                     React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.B") }),
                                                     "B"),
-                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("label", { className: "flex items-center gap-1" },
                                                     React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.A") }),
                                                     "A"),
-                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("label", { className: "flex items-center gap-1" },
                                                     React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.S") }),
                                                     "S"),
-                                                React.createElement("label", { className: "flex gap-1 items-center" },
+                                                React.createElement("label", { className: "flex items-center gap-1" },
                                                     React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.interests.pcDrop"), ...register("features.discordNotification.interests.pcRank.SS") }),
                                                     "SS")),
-                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                            React.createElement("label", { className: "flex items-center gap-1" },
                                                 React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.itemDrop") }),
-                                                React.createElement("span", { className: "flex gap-1 items-center" },
+                                                React.createElement("span", { className: "flex items-center gap-1" },
                                                     "\u30A2\u30A4\u30C6\u30E0\u30C9\u30ED\u30C3\u30D7",
-                                                    React.createElement("span", { className: "text-gray-600 text-xs" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
-                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                                    React.createElement("span", { className: "text-xs text-gray-600" }, "\u73FE\u5728\u306FSS\u306E\u307F"))),
+                                            React.createElement("label", { className: "flex items-center gap-1" },
                                                 React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.exploration") }),
                                                 React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
-                                            React.createElement("label", { className: "flex gap-1 items-center" },
+                                            React.createElement("label", { className: "flex items-center gap-1" },
                                                 React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
                                                 React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62")))))),
                             React.createElement(FeatureSection, { hasError: !!errors.features?.wheelAmplify },
                                 React.createElement(FeatureSectionSummary, { register: register("features.wheelAmplify.enabled"), title: "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45", helpLink: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.wheelAmplify.enabled") },
-                                    React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                    React.createElement("span", { className: "flex gap-1 text-sm text-gray-600" },
                                         React.createElement("i", { className: "bi bi-info-circle" }),
                                         "\u3053\u306E\u8A2D\u5B9A\u306E\u5909\u66F4\u306F\u30DA\u30FC\u30B8\u518D\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u53CD\u6620\u3055\u308C\u307E\u3059"),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u5897\u5E45\u500D\u7387:"),
                                         React.createElement("input", { 
                                             // numberだと値が二重になる
-                                            type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.wheelAmplify.ratio", {
+                                            type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.wheelAmplify.ratio", {
                                                 required: watch("features.wheelAmplify.enabled"),
                                                 validate: (value) => 
                                                 // prettier-ignore
@@ -655,12 +655,12 @@
                             React.createElement(FeatureSection, { hasError: !!errors.features?.autorunDetection },
                                 React.createElement(FeatureSectionSummary, { register: register("features.autorunDetection.enabled"), title: "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A", helpLink: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.autorunDetection.enabled") },
-                                    React.createElement("label", { className: "flex gap-1 items-center" },
+                                    React.createElement("label", { className: "flex items-center gap-1" },
                                         React.createElement("input", { type: "checkbox", disabled: !watch("features.autorunDetection.enabled"), ...register("features.autorunDetection.hideTimer") }),
                                         "\u753B\u9762\u306B\u30BF\u30A4\u30DE\u30FC\u3092\u8868\u793A\u3057\u306A\u3044"),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
-                                        React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.autorunDetection.threshold", {
+                                        React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.autorunDetection.threshold", {
                                                 required: watch("features.autorunDetection.enabled"),
                                                 validate: (value) => 
                                                 // prettier-ignore
@@ -681,12 +681,12 @@
                             React.createElement(FeatureSection, { hasError: !!errors.features?.farmingStats },
                                 React.createElement(FeatureSectionSummary, { register: register("features.farmingStats.enabled"), title: "\u5468\u56DE\u7D71\u8A08", helpLink: "https://github.com/eai04191/laoplus/wiki/features-FarmingStats" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.farmingStats.enabled") },
-                                    React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                    React.createElement("span", { className: "flex gap-1 text-sm text-gray-600" },
                                         React.createElement("i", { className: "bi bi-info-circle" }),
                                         "\u30DA\u30FC\u30B8\u8AAD\u307F\u8FBC\u307F\u5F8C\u306B\u5468\u56DE\u7D71\u8A08\u3092\u6709\u52B9\u5316\u3057\u305F\u5834\u5408\u3001\u8868\u793A\u3059\u308B\u306B\u306F\u30DA\u30FC\u30B8\u306E\u518D\u8AAD\u307F\u8FBC\u307F\u304C\u5FC5\u8981\u3067\u3059"),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u6226\u95D8\u54E1 \u5206\u89E3\u7372\u5F97\u8CC7\u6E90\u306E\u4E0A\u6607\u7387:"),
-                                        React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.farmingStats.unitDisassemblyMultiplier", {
+                                        React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.farmingStats.unitDisassemblyMultiplier", {
                                                 required: watch("features.farmingStats.enabled"),
                                                 validate: isValidNumber,
                                             }) })),
@@ -701,9 +701,9 @@
                                             ?.unitDisassemblyMultiplier
                                             ?.type === "validate" &&
                                             "上昇率は数字で入力してください（%は不要）")),
-                                    React.createElement("label", { className: "flex gap-2 items-center" },
+                                    React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u88C5\u5099 \u5206\u89E3\u7372\u5F97\u8CC7\u6E90\u306E\u4E0A\u6607\u7387:"),
-                                        React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "min-w-[1rem] px-1 w-16 border border-gray-500 rounded", ...register("features.farmingStats.equipmentDisassemblyMultiplier", {
+                                        React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.farmingStats.equipmentDisassemblyMultiplier", {
                                                 required: watch("features.farmingStats.enabled"),
                                                 validate: isValidNumber,
                                             }) })),
@@ -718,25 +718,25 @@
                                             ?.equipmentDisassemblyMultiplier
                                             ?.type === "validate" &&
                                             "上昇率は数字で入力してください（%は不要）")))))),
-                    React.createElement("div", { className: "flex flex-col gap-2 items-center p-4" },
-                        React.createElement("span", { className: "text-gray-600 text-sm" },
+                    React.createElement("div", { className: "flex flex-col items-center gap-2 p-4" },
+                        React.createElement("span", { className: "text-sm text-gray-600" },
                             GM_info.script.name,
                             "\u306F\u4EE5\u4E0B\u306E\u30B5\u30FC\u30D3\u30B9\u304C\u63D0\u4F9B\u3059\u308B\u30B2\u30FC\u30E0\u30C7\u30FC\u30BF\u3092\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059"),
-                        React.createElement("a", { title: "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C", href: "https://lo.swaytwig.com/", target: "_blank", rel: "noopener", className: "flex gap-1 items-center p-2 px-3 bg-white rounded shadow" },
+                        React.createElement("a", { title: "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C", href: "https://lo.swaytwig.com/", target: "_blank", rel: "noopener", className: "flex items-center gap-1 rounded bg-white p-2 px-3 shadow" },
                             React.createElement("img", { src: GM_getResourceURL("TacticsManualIcon"), className: "w-12" }),
                             React.createElement("div", { className: "flex flex-col" },
                                 React.createElement("span", { className: "text-lg font-semibold" }, "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C"),
-                                React.createElement("span", { className: "text-gray-400 text-sm" }, "by WolfgangKurz")))),
+                                React.createElement("span", { className: "text-sm text-gray-400" }, "by WolfgangKurz")))),
                     React.createElement("div", { className: "p-4" },
                         React.createElement("details", { className: "flex flex-col gap-4" },
                             React.createElement("summary", null, "\u5371\u967A\u30A8\u30EA\u30A2"),
                             React.createElement("div", { className: "flex flex-col gap-2 p-4" },
-                                React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 px-1 py-2 rounded-lg ring-1", onClick: resetLoginInfo }, "\u30ED\u30B0\u30A4\u30F3\u60C5\u5831\u3092\u524A\u9664\u3059\u308B"),
-                                React.createElement("span", { className: "flex gap-1 text-gray-600 text-sm" },
+                                React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 rounded-lg px-1 py-2 ring-1", onClick: resetLoginInfo }, "\u30ED\u30B0\u30A4\u30F3\u60C5\u5831\u3092\u524A\u9664\u3059\u308B"),
+                                React.createElement("span", { className: "flex gap-1 text-sm text-gray-600" },
                                     React.createElement("i", { className: "bi bi-info-circle" }),
                                     "\u30BF\u30A4\u30C8\u30EB\u753B\u9762\u3067Touch Screen\u304C\u51FA\u306A\u304F\u306A\u3063\u305F\u3068\u304D\u306B\u4F7F\u3046\u3068\u518D\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u306A\u304F\u3066\u3082\u76F4\u308B\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002")))),
-                    React.createElement("footer", { className: "sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md" },
-                        React.createElement("div", { className: "flex gap-3 h-full text-gray-500 text-sm" },
+                    React.createElement("footer", { className: "sticky bottom-0 flex items-center justify-between border-t p-4 backdrop-blur-md" },
+                        React.createElement("div", { className: "flex h-full gap-3 text-sm text-gray-500" },
                             React.createElement(FooterLink, { href: "https://github.com/eai04191/laoplus" },
                                 React.createElement("i", { className: "bi bi-github" }),
                                 "GitHub"),
@@ -744,10 +744,10 @@
                                 React.createElement("i", { className: "bi bi-discord" }),
                                 "Discord")),
                         React.createElement(SubmitButton, null, "\u4FDD\u5B58"))),
-                React.createElement("div", { className: "absolute bottom-0 inset-x-0 flex items-center mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg shadow-lg" },
+                React.createElement("div", { className: "absolute inset-x-0 bottom-0 mx-auto flex h-8 w-4/5 items-center rounded-t-lg bg-gray-200 bg-opacity-80 shadow-lg" },
                     React.createElement("div", { className: "px-2" },
                         React.createElement("span", { className: "text-xl uppercase" }, "Exploration")),
-                    React.createElement("div", { className: "top-[-2.5rem] absolute flex gap-2 justify-center mx-auto w-full md:gap-6" },
+                    React.createElement("div", { className: "absolute top-[-2.5rem] mx-auto flex w-full justify-center gap-2 md:gap-6" },
                         React.createElement(ExplorationList, null))))));
     };
 
@@ -798,10 +798,10 @@
         if (!shown) {
             return React.createElement(React.Fragment, null);
         }
-        return (React.createElement("div", { className: cn$2("-translate-x-[50%] absolute inset-y-0 left-0 flex items-center text-white pointer-events-none select-none drop-shadow-lg", enterDate === null ? "opacity-50" : "opacity-90") },
-            React.createElement(Spinner, { className: "text-[70vh] leading-zero animate-spin", style: { animationDuration: "12s" } }),
-            React.createElement("div", { className: "pl-[50%] absolute inset-0 flex items-center justify-center" },
-                React.createElement(Timer, { targetDate: enterDate, className: "pt-[60%] rotate-90" }))));
+        return (React.createElement("div", { className: cn$2("pointer-events-none absolute inset-y-0 left-0 flex -translate-x-[50%] select-none items-center text-white drop-shadow-lg", enterDate === null ? "opacity-50" : "opacity-90") },
+            React.createElement(Spinner, { className: "animate-spin text-[70vh] leading-zero", style: { animationDuration: "12s" } }),
+            React.createElement("div", { className: "absolute inset-0 flex items-center justify-center pl-[50%]" },
+                React.createElement(Timer, { targetDate: enterDate, className: "rotate-90 pt-[60%]" }))));
     };
 
     const rankColor = {
@@ -1091,7 +1091,7 @@
                     return { url: base + "/currenncy/tuna.png", name: "ツナ缶" };
             }
         })();
-        return (React.createElement("img", { className: "w-full h-full object-contain", src: icon.url, title: icon.name }));
+        return (React.createElement("img", { className: "h-full w-full object-contain", src: icon.url, title: icon.name }));
     };
 
     const TimeStat = ({ lapCount, totalWaitingTime, totalRoundTime }) => {
@@ -1108,17 +1108,17 @@
             : (totalRoundTime / lapCount).toFixed(1);
         return (React.createElement("dl", { className: "flex items-center" },
             React.createElement("dt", { className: "mr-auto" },
-                React.createElement("button", { className: "flex gap-1 items-center", onClick: toggleDisplayTimeType },
+                React.createElement("button", { className: "flex items-center gap-1", onClick: toggleDisplayTimeType },
                     displayTimeType === "lapTime"
                         ? "平均周回時間"
                         : "平均戦闘時間",
-                    React.createElement("i", { className: "bi bi-chevron-down before:!align-[inherit] text-xs" }))),
+                    React.createElement("i", { className: "bi bi-chevron-down text-xs before:!align-[inherit]" }))),
             React.createElement("dd", null,
-                React.createElement("p", { className: "text-gray-900 font-bold" },
+                React.createElement("p", { className: "font-bold text-gray-900" },
                     React.createElement("span", null, displayTimeType === "lapTime"
                         ? lapTimeAverage
                         : battleTimeAverage),
-                    React.createElement("span", { className: "ml-0.5 text-gray-500 text-xs font-bold" }, "\u79D2")))));
+                    React.createElement("span", { className: "ml-0.5 text-xs font-bold text-gray-500" }, "\u79D2")))));
     };
     // FIXME: 表示する平均値がブレないようにlapCountが変わったときだけ描画したいので
     // React.memoのareEqualで判別しているが、本来そういうふうに使ってはいけないらしい。
@@ -1137,11 +1137,11 @@
         return JSON.stringify(a) === JSON.stringify(b);
     }
     const ResourceCounter = ({ type, amount }) => {
-        return (React.createElement("div", { className: "flex gap-2 items-center" },
-            type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement("div", { className: cn$1("flex-shrink-0 px-2 rounded-md font-bold ring-1 ring-gray-900/5", `bg-[${rankColor[type].hex()}]`, type === "SS" ? "text-black" : "text-white") }, type)) : (React.createElement("div", { className: "flex-shrink-0 w-6 h-6" },
+        return (React.createElement("div", { className: "flex items-center gap-2" },
+            type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement("div", { className: cn$1("flex-shrink-0 rounded-md px-2 font-bold ring-1 ring-gray-900/5", `bg-[${rankColor[type].hex()}]`, type === "SS" ? "text-black" : "text-white") }, type)) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
                 React.createElement(Icon, { type: type }))),
-            React.createElement("hr", { className: "h-[2px] w-full bg-gray-200 border-0 rounded-full" }),
-            React.createElement("span", { className: "text-gray-900 font-bold" }, amount.toLocaleString())));
+            React.createElement("hr", { className: "h-[2px] w-full rounded-full border-0 bg-gray-200" }),
+            React.createElement("span", { className: "font-bold text-gray-900" }, amount.toLocaleString())));
     };
     const Panel = () => {
         const status = unsafeWindow.LAOPLUS.status;
@@ -1197,28 +1197,28 @@
                 equipments,
             };
         })();
-        return (React.createElement("div", { className: "w-[420px] ring-gray-900/5 absolute bottom-6 left-0 mb-1 rounded-lg shadow-xl overflow-hidden ring-1" },
-            React.createElement("header", { className: "from-slate-800 to-slate-700 flex items-center p-2 pl-3 text-white font-bold bg-gradient-to-r" },
-                React.createElement("h1", { className: "flex gap-2 items-center mr-auto" },
+        return (React.createElement("div", { className: "absolute bottom-6 left-0 mb-1 w-[420px] overflow-hidden rounded-lg shadow-xl ring-1 ring-gray-900/5" },
+            React.createElement("header", { className: "from-slate-800 to-slate-700 flex items-center bg-gradient-to-r p-2 pl-3 font-bold text-white" },
+                React.createElement("h1", { className: "mr-auto flex items-center gap-2" },
                     React.createElement("i", { className: "bi bi-info-circle text-lg" }),
                     "\u5468\u56DE\u7D71\u8A08"),
-                React.createElement("div", { className: "flex gap-2 items-center" },
-                    React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow ring-1 ring-inset", onClick: reset },
+                React.createElement("div", { className: "flex items-center gap-2" },
+                    React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 flex items-center gap-1 rounded px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset", onClick: reset },
                         React.createElement("i", { className: "bi bi-stopwatch-fill inline w-4" }),
                         "\u30EA\u30BB\u30C3\u30C8"))),
-            React.createElement("main", { className: "flex flex-col gap-4 px-4 py-5 bg-white" },
-                React.createElement("div", { className: "grid gap-4 grid-cols-2 items-center" },
+            React.createElement("main", { className: "flex flex-col gap-4 bg-white px-4 py-5" },
+                React.createElement("div", { className: "grid grid-cols-2 items-center gap-4" },
                     React.createElement(MemorizedTimeStat, { ...stats }),
                     React.createElement("dl", { className: "flex" },
                         React.createElement("dt", { className: "mr-auto" }, "\u5B8C\u4E86\u3057\u305F\u5468\u56DE\u6570"),
                         React.createElement("dd", null,
-                            React.createElement("p", { className: "text-gray-900 font-bold" },
+                            React.createElement("p", { className: "font-bold text-gray-900" },
                                 stats.lapCount.toLocaleString(),
-                                React.createElement("span", { className: "ml-0.5 text-gray-500 text-xs font-bold" }, "\u56DE"))))),
+                                React.createElement("span", { className: "ml-0.5 text-xs font-bold text-gray-500" }, "\u56DE"))))),
                 React.createElement("hr", null),
                 React.createElement("div", { className: "flex gap-3" },
                     React.createElement("h2", null,
-                        React.createElement("button", { className: "flex gap-1 items-center font-bold", onClick: cycleShownResourceTypePerDropKinds },
+                        React.createElement("button", { className: "flex items-center gap-1 font-bold", onClick: cycleShownResourceTypePerDropKinds },
                             "\u53D6\u5F97\u8CC7\u6E90",
                             (() => {
                                 switch (shownResourceTypePerDropKinds) {
@@ -1230,26 +1230,26 @@
                                         return "";
                                 }
                             })(),
-                            React.createElement("i", { className: "bi bi-chevron-down before:!align-[inherit] text-xs" }))),
+                            React.createElement("i", { className: "bi bi-chevron-down text-xs before:!align-[inherit]" }))),
                     React.createElement("div", { className: "hidden" },
-                        React.createElement("div", { className: "flex gap-1 items-center ml-auto cursor-pointer select-none" },
+                        React.createElement("div", { className: "ml-auto flex cursor-pointer select-none items-center gap-1" },
                             React.createElement("span", { onClick: () => {
                                     setResourceDisplayType("perHour");
                                 } }, "\u6642\u7D66"),
-                            React.createElement("div", { className: "flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full", onClick: toggleResourceDisplayType },
-                                React.createElement("div", { className: cn$1("w-4 h-4 bg-white rounded-full shadow-md transform transition-transform", resourceDisplayType === "sum" &&
+                            React.createElement("div", { className: "flex h-5 w-10 items-center rounded-full bg-gray-300 px-1", onClick: toggleResourceDisplayType },
+                                React.createElement("div", { className: cn$1("h-4 w-4 transform rounded-full bg-white shadow-md transition-transform", resourceDisplayType === "sum" &&
                                         "translate-x-4") })),
                             React.createElement("span", { onClick: () => {
                                     setResourceDisplayType("sum");
                                 } }, "\u5408\u8A08")))),
-                React.createElement("div", { className: "grid gap-3 grid-cols-3" },
+                React.createElement("div", { className: "grid grid-cols-3 gap-3" },
                     React.createElement(ResourceCounter, { type: "parts", amount: disassembledResource[shownResourceTypePerDropKinds]
                             .parts }),
                     React.createElement(ResourceCounter, { type: "nutrient", amount: disassembledResource[shownResourceTypePerDropKinds]
                             .nutrients }),
                     React.createElement(ResourceCounter, { type: "power", amount: disassembledResource[shownResourceTypePerDropKinds]
                             .power })),
-                React.createElement("div", { className: "grid gap-3 grid-cols-3" },
+                React.createElement("div", { className: "grid grid-cols-3 gap-3" },
                     React.createElement(ResourceCounter, { type: "basic_module", amount: disassembledResource[shownResourceTypePerDropKinds]
                             .basic_module }),
                     React.createElement(ResourceCounter, { type: "advanced_module", amount: disassembledResource[shownResourceTypePerDropKinds]
@@ -1260,7 +1260,7 @@
                     React.createElement("h2", { className: "font-bold" }, "\u30C9\u30ED\u30C3\u30D7\u8A73\u7D30")),
                 React.createElement("div", { className: "flex gap-2" },
                     React.createElement("i", { className: "bi bi-person-fill text-xl", title: "\u6226\u95D8\u54E1" }),
-                    React.createElement("div", { className: cn$1("grid gap-3 grid-cols-4 flex-1 transition-opacity", shownResourceTypePerDropKinds === "equipments" &&
+                    React.createElement("div", { className: cn$1("grid flex-1 grid-cols-4 gap-3 transition-opacity", shownResourceTypePerDropKinds === "equipments" &&
                             "opacity-50") },
                         React.createElement(ResourceCounter, { type: "B", amount: stats.drops.units.B }),
                         React.createElement(ResourceCounter, { type: "A", amount: stats.drops.units.A }),
@@ -1268,7 +1268,7 @@
                         React.createElement(ResourceCounter, { type: "SS", amount: stats.drops.units.SS }))),
                 React.createElement("div", { className: "flex gap-2" },
                     React.createElement("i", { className: "bi bi-cpu text-xl", title: "\u88C5\u5099" }),
-                    React.createElement("div", { className: cn$1("grid gap-3 grid-cols-4 flex-1 transition-opacity", shownResourceTypePerDropKinds === "units" &&
+                    React.createElement("div", { className: cn$1("grid flex-1 grid-cols-4 gap-3 transition-opacity", shownResourceTypePerDropKinds === "units" &&
                             "opacity-50") },
                         React.createElement(ResourceCounter, { type: "B", amount: stats.drops.equipments.B }),
                         React.createElement(ResourceCounter, { type: "A", amount: stats.drops.equipments.A }),
@@ -1360,7 +1360,7 @@
             config.set({ features: { autorunDetection: { enabled: !enabled } } });
             clearTimer();
         };
-        return (React.createElement("button", { onClick: handleClick, title: `自動周回停止判定を${enabled ? "オフ" : "オン"}にする`, className: cn("text-white drop-shadow-featureIcon h-6", enabled && "animate-spin"), style: {
+        return (React.createElement("button", { onClick: handleClick, title: `自動周回停止判定を${enabled ? "オフ" : "オン"}にする`, className: cn("h-6 text-white drop-shadow-featureIcon", enabled && "animate-spin"), style: {
                 animationDuration: "2s",
                 animationTimingFunction: "ease-in-out",
             } },
