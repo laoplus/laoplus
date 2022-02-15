@@ -1,8 +1,8 @@
-import { ErrorCode, Sequence, CurrencyInfo } from "../";
+import { ErrorCode, Sequence, CurrencyInfo } from "../api";
 import { PC } from "./PC";
 import { Monster } from "./Monster";
 import { FriendPCInfo } from "./FriendPCInfo";
-import { UpdateQuestInfo } from "./UpdateQuestInfo";
+import { QuestInfo } from "../QuestInfo";
 
 export type battleserver_enter = {
     ErrorCode: ErrorCode;
@@ -15,5 +15,5 @@ export type battleserver_enter = {
     FriendPCInfoList: FriendPCInfo[];
     CurrTrainingTicket: number;
     CurrChallengeTicket: number;
-    UpdateQuestInfoList: UpdateQuestInfo[];
+    UpdateQuestInfoList: QuestInfo[];
 };
