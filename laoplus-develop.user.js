@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1644940877-6de5f49b527fcb6eaa63fc894ae933a010c16cbd
+// @version     1644948651-1d9456d1ccb70e77abf0e6490f05ef98f8162070
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -378,13 +378,13 @@
             }
         })();
         return (React.createElement("div", { className: "drop-shadow" },
-            React.createElement("button", { type: "submit", className: cn$8("bg-amber-300 min-w-[6rem] p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+            React.createElement("button", { type: "submit", className: cn$8("min-w-[6rem] bg-amber-300 p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
     };
 
     const cn$7 = classNames;
     const FeatureSection = ({ children, hasError }) => {
         return (React.createElement("details", { className: cn$7("rounded border pl-10 shadow", hasError
-                ? "shadow-red-300/50 border-red-600"
+                ? "border-red-600 shadow-red-300/50"
                 : "border-b-transparent") }, children));
     };
 
@@ -440,7 +440,7 @@
     };
 
     const WebhookTestButton = ({ webhookURL, }) => {
-        return (React.createElement("button", { className: "bg-amber-300 rounded border px-2 py-1", onClick: async (e) => {
+        return (React.createElement("button", { className: "rounded border bg-amber-300 px-2 py-1", onClick: async (e) => {
                 e.preventDefault();
                 const response = await sendToDiscordWebhook({
                     content: ":ok: このメッセージを確認できているので、Discord通知は正しく設定されています！",
@@ -731,7 +731,7 @@
                         React.createElement("details", { className: "flex flex-col gap-4" },
                             React.createElement("summary", null, "\u5371\u967A\u30A8\u30EA\u30A2"),
                             React.createElement("div", { className: "flex flex-col gap-2 p-4" },
-                                React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 rounded-lg px-1 py-2 ring-1", onClick: resetLoginInfo }, "\u30ED\u30B0\u30A4\u30F3\u60C5\u5831\u3092\u524A\u9664\u3059\u308B"),
+                                React.createElement("button", { className: "rounded-lg bg-amber-300 px-1 py-2 ring-1 ring-amber-900/5", onClick: resetLoginInfo }, "\u30ED\u30B0\u30A4\u30F3\u60C5\u5831\u3092\u524A\u9664\u3059\u308B"),
                                 React.createElement("span", { className: "flex gap-1 text-sm text-gray-600" },
                                     React.createElement("i", { className: "bi bi-info-circle" }),
                                     "\u30BF\u30A4\u30C8\u30EB\u753B\u9762\u3067Touch Screen\u304C\u51FA\u306A\u304F\u306A\u3063\u305F\u3068\u304D\u306B\u4F7F\u3046\u3068\u518D\u30C0\u30A6\u30F3\u30ED\u30FC\u30C9\u3057\u306A\u304F\u3066\u3082\u76F4\u308B\u304B\u3082\u3057\u308C\u307E\u305B\u3093\u3002")))),
@@ -1198,12 +1198,12 @@
             };
         })();
         return (React.createElement("div", { className: "absolute bottom-6 left-0 mb-1 w-[420px] overflow-hidden rounded-lg shadow-xl ring-1 ring-gray-900/5" },
-            React.createElement("header", { className: "from-slate-800 to-slate-700 flex items-center bg-gradient-to-r p-2 pl-3 font-bold text-white" },
+            React.createElement("header", { className: "flex items-center bg-gradient-to-r from-slate-800 to-slate-700 p-2 pl-3 font-bold text-white" },
                 React.createElement("h1", { className: "mr-auto flex items-center gap-2" },
                     React.createElement("i", { className: "bi bi-info-circle text-lg" }),
                     "\u5468\u56DE\u7D71\u8A08"),
                 React.createElement("div", { className: "flex items-center gap-2" },
-                    React.createElement("button", { className: "bg-amber-300 ring-amber-900/5 flex items-center gap-1 rounded px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset", onClick: reset },
+                    React.createElement("button", { className: "flex items-center gap-1 rounded bg-amber-300 px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset ring-amber-900/5", onClick: reset },
                         React.createElement("i", { className: "bi bi-stopwatch-fill inline w-4" }),
                         "\u30EA\u30BB\u30C3\u30C8"))),
             React.createElement("main", { className: "flex flex-col gap-4 bg-white px-4 py-5" },
