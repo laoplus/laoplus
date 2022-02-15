@@ -55,7 +55,7 @@ export const SubmitButton: React.VFC<{
             <button
                 type="submit"
                 className={cn(
-                    "bg-amber-300 min-w-[6rem] p-3 font-bold leading-none",
+                    "min-w-[6rem] bg-amber-300 p-3 font-bold leading-none",
                     { rounded: variant === 1 },
                     className
                 )}

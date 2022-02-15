@@ -569,7 +569,7 @@ export const ConfigModal = () => {
 
                             <div className="flex flex-col gap-2 p-4">
                                 <button
-                                    className="bg-amber-300 ring-amber-900/5 rounded-lg px-1 py-2 ring-1"
+                                    className="rounded-lg bg-amber-300 px-1 py-2 ring-1 ring-amber-900/5"
                                     onClick={resetLoginInfo}
                                 >
                                     ログイン情報を削除する

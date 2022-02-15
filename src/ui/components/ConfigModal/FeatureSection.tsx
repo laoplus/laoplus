@@ -9,7 +9,7 @@ export const FeatureSection: React.VFC<{
             className={cn(
                 "rounded border pl-10 shadow",
                 hasError
-                    ? "shadow-red-300/50 border-red-600"
+                    ? "border-red-600 shadow-red-300/50"
                     : "border-b-transparent"
             )}
         >

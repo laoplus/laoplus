@@ -118,14 +118,14 @@ export const Panel: React.VFC = () => {
 
     return (
         <div className="absolute bottom-6 left-0 mb-1 w-[420px] overflow-hidden rounded-lg shadow-xl ring-1 ring-gray-900/5">
-            <header className="from-slate-800 to-slate-700 flex items-center bg-gradient-to-r p-2 pl-3 font-bold text-white">
+            <header className="flex items-center bg-gradient-to-r from-slate-800 to-slate-700 p-2 pl-3 font-bold text-white">
                 <h1 className="mr-auto flex items-center gap-2">
                     <i className="bi bi-info-circle text-lg"></i>
                     周回統計
                 </h1>
                 <div className="flex items-center gap-2">
                     <button
-                        className="bg-amber-300 ring-amber-900/5 flex items-center gap-1 rounded px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset"
+                        className="flex items-center gap-1 rounded bg-amber-300 px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset ring-amber-900/5"
                         onClick={reset}
                     >
                         <i className="bi bi-stopwatch-fill inline w-4"></i>
