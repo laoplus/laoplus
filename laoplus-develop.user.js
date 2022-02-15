@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1644938962-f14906e6eb0b0c31a800ff7b8cedfdd0ddeca850
+// @version     1644940222-44f6656012ea853782fac4b4240cfd79e5a03667
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -20,8 +20,8 @@
 // @require     https://unpkg.com/react@17.0.2/umd/react.production.min.js
 // @require     https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js
 // @require     https://unpkg.com/react-modal@3.14.4/dist/react-modal.js
-// @require     https://unpkg.com/@headlessui/react@1.4.2/dist/headlessui.umd.development.js
-// @require     https://unpkg.com/react-hook-form@7.20.4/dist/index.umd.js
+// @require     https://unpkg.com/@headlessui/react@1.4.3/dist/headlessui.umd.development.js
+// @require     https://unpkg.com/react-hook-form@7.27.0/dist/index.umd.js
 // @require     https://unpkg.com/chroma-js@2.1.2/chroma.js
 // @require     https://unpkg.com/dayjs@1.10.7/dayjs.min.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
