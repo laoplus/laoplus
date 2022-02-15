@@ -19,8 +19,8 @@
 // @require     https://unpkg.com/react@17.0.2/umd/react.production.min.js
 // @require     https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js
 // @require     https://unpkg.com/react-modal@3.14.4/dist/react-modal.js
-// @require     https://unpkg.com/@headlessui/react@1.4.2/dist/headlessui.umd.development.js
-// @require     https://unpkg.com/react-hook-form@7.20.4/dist/index.umd.js
+// @require     https://unpkg.com/@headlessui/react@1.4.3/dist/headlessui.umd.development.js
+// @require     https://unpkg.com/react-hook-form@7.27.0/dist/index.umd.js
 // @require     https://unpkg.com/chroma-js@2.1.2/chroma.js
 // @require     https://unpkg.com/dayjs@1.10.7/dayjs.min.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/relativeTime.js
