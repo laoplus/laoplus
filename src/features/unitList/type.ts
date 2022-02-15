@@ -4,6 +4,16 @@ type Skill = {
     SkillExp: number;
 };
 
+type EquippedSlot = {
+    // EquippedItemInfo:
+    IsPermanentCoreSlot: number;
+    IsSetSkin: number;
+    PCGrade: number;
+    PermanentCore_PCKeyString: string;
+    SkinKeyString: string;
+    SlotNo: number;
+};
+
 export type Unit = {
     PCId: number;
     Index: string;
@@ -21,7 +31,7 @@ export type Unit = {
     RESLIGHTNING: number;
     CreateTime: number;
     HaveSkillList: Skill[];
-    PCEquipSlotList: boolean;
+    PCEquipSlotList: EquippedSlot[] | false;
     MaxEnchantCount: number;
     // PCEnchantAttrInfoList:
     // PCMaxEnchantAttrInfo:
