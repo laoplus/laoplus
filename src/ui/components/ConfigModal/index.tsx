@@ -82,19 +82,19 @@ export const ConfigModal = () => {
                     reset();
                 }}
                 overlayClassName="backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10"
-                className="min-w-[50%] max-w-[90%] max-h-[90%] flex bg-gray-50 rounded shadow overflow-hidden"
+                className="flex max-h-[90%] min-w-[50%] max-w-[90%] overflow-hidden rounded bg-gray-50 shadow"
                 id="laoplus-modal"
             >
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="relative flex flex-col w-full divide-y overflow-auto"
+                    className="relative flex w-full flex-col divide-y overflow-auto"
                 >
-                    <header className="flex items-center place-content-between p-4">
-                        <div className="flex gap-2 items-end">
+                    <header className="flex place-content-between items-center p-4">
+                        <div className="flex items-end gap-2">
                             <h1 className="text-xl font-semibold">
                                 {GM_info.script.name}
                             </h1>
-                            <span className="pb-0.5 text-gray-500 text-sm">
+                            <span className="pb-0.5 text-sm text-gray-500">
                                 {GM_info.script.version}
                             </span>
                         </div>
@@ -119,7 +119,7 @@ export const ConfigModal = () => {
                                         "features.discordNotification.enabled"
                                     )}
                                 >
-                                    <label className="flex gap-2 items-center">
+                                    <label className="flex items-center gap-2">
                                         <span className="flex-shrink-0">
                                             Discord Webhook URL:
                                         </span>
@@ -130,7 +130,7 @@ export const ConfigModal = () => {
                                                     "features.discordNotification.enabled"
                                                 )
                                             }
-                                            className="min-w-[1rem] flex-1 px-1 border border-gray-500 rounded"
+                                            className="min-w-[1rem] flex-1 rounded border border-gray-500 px-1"
                                             {...register(
                                                 "features.discordNotification.webhookURL",
                                                 {
@@ -170,7 +170,7 @@ export const ConfigModal = () => {
                                             通知項目:
                                         </span>
                                         <div className="flex flex-col gap-1">
-                                            <label className="flex gap-1 items-center">
+                                            <label className="flex items-center gap-1">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -186,7 +186,7 @@ export const ConfigModal = () => {
                                             </label>
                                             <div
                                                 className={cn(
-                                                    "flex gap-3 pl-4 ml-1",
+                                                    "ml-1 flex gap-3 pl-4",
                                                     {
                                                         "opacity-50": !watch(
                                                             "features.discordNotification.interests.pcDrop"
@@ -194,7 +194,7 @@ export const ConfigModal = () => {
                                                     }
                                                 )}
                                             >
-                                                <label className="flex gap-1 items-center">
+                                                <label className="flex items-center gap-1">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -208,7 +208,7 @@ export const ConfigModal = () => {
                                                     />
                                                     B
                                                 </label>
-                                                <label className="flex gap-1 items-center">
+                                                <label className="flex items-center gap-1">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -222,7 +222,7 @@ export const ConfigModal = () => {
                                                     />
                                                     A
                                                 </label>
-                                                <label className="flex gap-1 items-center">
+                                                <label className="flex items-center gap-1">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -236,7 +236,7 @@ export const ConfigModal = () => {
                                                     />
                                                     S
                                                 </label>
-                                                <label className="flex gap-1 items-center">
+                                                <label className="flex items-center gap-1">
                                                     <input
                                                         type="checkbox"
                                                         disabled={
@@ -251,7 +251,7 @@ export const ConfigModal = () => {
                                                     SS
                                                 </label>
                                             </div>
-                                            <label className="flex gap-1 items-center">
+                                            <label className="flex items-center gap-1">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -263,14 +263,14 @@ export const ConfigModal = () => {
                                                         "features.discordNotification.interests.itemDrop"
                                                     )}
                                                 />
-                                                <span className="flex gap-1 items-center">
+                                                <span className="flex items-center gap-1">
                                                     アイテムドロップ
-                                                    <span className="text-gray-600 text-xs">
+                                                    <span className="text-xs text-gray-600">
                                                         現在はSSのみ
                                                     </span>
                                                 </span>
                                             </label>
-                                            <label className="flex gap-1 items-center">
+                                            <label className="flex items-center gap-1">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -284,7 +284,7 @@ export const ConfigModal = () => {
                                                 />
                                                 <span>探索完了</span>
                                             </label>
-                                            <label className="flex gap-1 items-center">
+                                            <label className="flex items-center gap-1">
                                                 <input
                                                     type="checkbox"
                                                     disabled={
@@ -318,11 +318,11 @@ export const ConfigModal = () => {
                                         "features.wheelAmplify.enabled"
                                     )}
                                 >
-                                    <span className="flex gap-1 text-gray-600 text-sm">
+                                    <span className="flex gap-1 text-sm text-gray-600">
                                         <i className="bi bi-info-circle"></i>
                                         この設定の変更はページ再読み込み後に反映されます
                                     </span>
-                                    <label className="flex gap-2 items-center">
+                                    <label className="flex items-center gap-2">
                                         <span className="flex-shrink-0">
                                             増幅倍率:
                                         </span>
@@ -334,7 +334,7 @@ export const ConfigModal = () => {
                                                     "features.wheelAmplify.enabled"
                                                 )
                                             }
-                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                                             {...register(
                                                 "features.wheelAmplify.ratio",
                                                 {
@@ -378,7 +378,7 @@ export const ConfigModal = () => {
                                         "features.autorunDetection.enabled"
                                     )}
                                 >
-                                    <label className="flex gap-1 items-center">
+                                    <label className="flex items-center gap-1">
                                         <input
                                             type="checkbox"
                                             disabled={
@@ -393,7 +393,7 @@ export const ConfigModal = () => {
                                         画面にタイマーを表示しない
                                     </label>
 
-                                    <label className="flex gap-2 items-center">
+                                    <label className="flex items-center gap-2">
                                         <span className="flex-shrink-0">
                                             インターバルのしきい値(分):
                                         </span>
@@ -404,7 +404,7 @@ export const ConfigModal = () => {
                                                     "features.autorunDetection.enabled"
                                                 )
                                             }
-                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                                             {...register(
                                                 "features.autorunDetection.threshold",
                                                 {
@@ -451,12 +451,12 @@ export const ConfigModal = () => {
                                         "features.farmingStats.enabled"
                                     )}
                                 >
-                                    <span className="flex gap-1 text-gray-600 text-sm">
+                                    <span className="flex gap-1 text-sm text-gray-600">
                                         <i className="bi bi-info-circle"></i>
                                         ページ読み込み後に周回統計を有効化した場合、表示するにはページの再読み込みが必要です
                                     </span>
 
-                                    <label className="flex gap-2 items-center">
+                                    <label className="flex items-center gap-2">
                                         <span className="flex-shrink-0">
                                             戦闘員 分解獲得資源の上昇率:
                                         </span>
@@ -467,7 +467,7 @@ export const ConfigModal = () => {
                                                     "features.farmingStats.enabled"
                                                 )
                                             }
-                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                                             {...register(
                                                 "features.farmingStats.unitDisassemblyMultiplier",
                                                 {
@@ -494,7 +494,7 @@ export const ConfigModal = () => {
                                         </ErrorMessage>
                                     )}
 
-                                    <label className="flex gap-2 items-center">
+                                    <label className="flex items-center gap-2">
                                         <span className="flex-shrink-0">
                                             装備 分解獲得資源の上昇率:
                                         </span>
@@ -505,7 +505,7 @@ export const ConfigModal = () => {
                                                     "features.farmingStats.enabled"
                                                 )
                                             }
-                                            className="min-w-[1rem] px-1 w-16 border border-gray-500 rounded"
+                                            className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                                             {...register(
                                                 "features.farmingStats.equipmentDisassemblyMultiplier",
                                                 {
@@ -536,8 +536,8 @@ export const ConfigModal = () => {
                         </div>
                     </main>
 
-                    <div className="flex flex-col gap-2 items-center p-4">
-                        <span className="text-gray-600 text-sm">
+                    <div className="flex flex-col items-center gap-2 p-4">
+                        <span className="text-sm text-gray-600">
                             {GM_info.script.name}
                             は以下のサービスが提供するゲームデータを使用しています
                         </span>
@@ -546,7 +546,7 @@ export const ConfigModal = () => {
                             href="https://lo.swaytwig.com/"
                             target="_blank"
                             rel="noopener"
-                            className="flex gap-1 items-center p-2 px-3 bg-white rounded shadow"
+                            className="flex items-center gap-1 rounded bg-white p-2 px-3 shadow"
                         >
                             <img
                                 src={GM_getResourceURL("TacticsManualIcon")}
@@ -556,7 +556,7 @@ export const ConfigModal = () => {
                                 <span className="text-lg font-semibold">
                                     滅亡前の戦術教本
                                 </span>
-                                <span className="text-gray-400 text-sm">
+                                <span className="text-sm text-gray-400">
                                     by WolfgangKurz
                                 </span>
                             </div>
@@ -569,12 +569,12 @@ export const ConfigModal = () => {
 
                             <div className="flex flex-col gap-2 p-4">
                                 <button
-                                    className="bg-amber-300 ring-amber-900/5 px-1 py-2 rounded-lg ring-1"
+                                    className="bg-amber-300 ring-amber-900/5 rounded-lg px-1 py-2 ring-1"
                                     onClick={resetLoginInfo}
                                 >
                                     ログイン情報を削除する
                                 </button>
-                                <span className="flex gap-1 text-gray-600 text-sm">
+                                <span className="flex gap-1 text-sm text-gray-600">
                                     <i className="bi bi-info-circle"></i>
                                     タイトル画面でTouch
                                     Screenが出なくなったときに使うと再ダウンロードしなくても直るかもしれません。
@@ -583,8 +583,8 @@ export const ConfigModal = () => {
                         </details>
                     </div>
 
-                    <footer className="sticky bottom-0 flex items-center justify-between p-4 border-t backdrop-blur-md">
-                        <div className="flex gap-3 h-full text-gray-500 text-sm">
+                    <footer className="sticky bottom-0 flex items-center justify-between border-t p-4 backdrop-blur-md">
+                        <div className="flex h-full gap-3 text-sm text-gray-500">
                             <FooterLink href="https://github.com/eai04191/laoplus">
                                 <i className="bi bi-github"></i>
                                 GitHub
@@ -598,11 +598,11 @@ export const ConfigModal = () => {
                     </footer>
                 </form>
 
-                <div className="absolute bottom-0 inset-x-0 flex items-center mx-auto w-4/5 h-8 bg-gray-200 bg-opacity-80 rounded-t-lg shadow-lg">
+                <div className="absolute inset-x-0 bottom-0 mx-auto flex h-8 w-4/5 items-center rounded-t-lg bg-gray-200 bg-opacity-80 shadow-lg">
                     <div className="px-2">
                         <span className="text-xl uppercase">Exploration</span>
                     </div>
-                    <div className="top-[-2.5rem] absolute flex gap-2 justify-center mx-auto w-full md:gap-6">
+                    <div className="absolute top-[-2.5rem] mx-auto flex w-full justify-center gap-2 md:gap-6">
                         <ExplorationList />
                     </div>
                 </div>

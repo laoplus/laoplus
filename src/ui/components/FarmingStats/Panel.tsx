@@ -16,11 +16,11 @@ const ResourceCounter: React.VFC<{
     amount: number;
 }> = ({ type, amount }) => {
     return (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
             {type === "B" || type === "A" || type === "S" || type === "SS" ? (
                 <div
                     className={cn(
-                        "flex-shrink-0 px-2 rounded-md font-bold ring-1 ring-gray-900/5",
+                        "flex-shrink-0 rounded-md px-2 font-bold ring-1 ring-gray-900/5",
                         `bg-[${rankColor[type].hex()}]`,
                         type === "SS" ? "text-black" : "text-white"
                     )}
@@ -28,13 +28,13 @@ const ResourceCounter: React.VFC<{
                     {type}
                 </div>
             ) : (
-                <div className="flex-shrink-0 w-6 h-6">
+                <div className="h-6 w-6 flex-shrink-0">
                     <Icon type={type} />
                 </div>
             )}
 
-            <hr className="h-[2px] w-full bg-gray-200 border-0 rounded-full" />
-            <span className="text-gray-900 font-bold">
+            <hr className="h-[2px] w-full rounded-full border-0 bg-gray-200" />
+            <span className="font-bold text-gray-900">
                 {amount.toLocaleString()}
             </span>
         </div>
@@ -117,15 +117,15 @@ export const Panel: React.VFC = () => {
     })();
 
     return (
-        <div className="w-[420px] ring-gray-900/5 absolute bottom-6 left-0 mb-1 rounded-lg shadow-xl overflow-hidden ring-1">
-            <header className="from-slate-800 to-slate-700 flex items-center p-2 pl-3 text-white font-bold bg-gradient-to-r">
-                <h1 className="flex gap-2 items-center mr-auto">
+        <div className="absolute bottom-6 left-0 mb-1 w-[420px] overflow-hidden rounded-lg shadow-xl ring-1 ring-gray-900/5">
+            <header className="from-slate-800 to-slate-700 flex items-center bg-gradient-to-r p-2 pl-3 font-bold text-white">
+                <h1 className="mr-auto flex items-center gap-2">
                     <i className="bi bi-info-circle text-lg"></i>
                     周回統計
                 </h1>
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                     <button
-                        className="bg-amber-300 ring-amber-900/5 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow ring-1 ring-inset"
+                        className="bg-amber-300 ring-amber-900/5 flex items-center gap-1 rounded px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset"
                         onClick={reset}
                     >
                         <i className="bi bi-stopwatch-fill inline w-4"></i>
@@ -134,15 +134,15 @@ export const Panel: React.VFC = () => {
                 </div>
             </header>
 
-            <main className="flex flex-col gap-4 px-4 py-5 bg-white">
-                <div className="grid gap-4 grid-cols-2 items-center">
+            <main className="flex flex-col gap-4 bg-white px-4 py-5">
+                <div className="grid grid-cols-2 items-center gap-4">
                     <MemorizedTimeStat {...stats} />
                     <dl className="flex">
                         <dt className="mr-auto">完了した周回数</dt>
                         <dd>
-                            <p className="text-gray-900 font-bold">
+                            <p className="font-bold text-gray-900">
                                 {stats.lapCount.toLocaleString()}
-                                <span className="ml-0.5 text-gray-500 text-xs font-bold">
+                                <span className="ml-0.5 text-xs font-bold text-gray-500">
                                     回
                                 </span>
                             </p>
@@ -155,7 +155,7 @@ export const Panel: React.VFC = () => {
                 <div className="flex gap-3">
                     <h2>
                         <button
-                            className="flex gap-1 items-center font-bold"
+                            className="flex items-center gap-1 font-bold"
                             onClick={cycleShownResourceTypePerDropKinds}
                         >
                             取得資源
@@ -169,11 +169,11 @@ export const Panel: React.VFC = () => {
                                         return "";
                                 }
                             })()}
-                            <i className="bi bi-chevron-down before:!align-[inherit] text-xs"></i>
+                            <i className="bi bi-chevron-down text-xs before:!align-[inherit]"></i>
                         </button>
                     </h2>
                     <div className="hidden">
-                        <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">
+                        <div className="ml-auto flex cursor-pointer select-none items-center gap-1">
                             <span
                                 onClick={() => {
                                     setResourceDisplayType("perHour");
@@ -182,12 +182,12 @@ export const Panel: React.VFC = () => {
                                 時給
                             </span>
                             <div
-                                className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full"
+                                className="flex h-5 w-10 items-center rounded-full bg-gray-300 px-1"
                                 onClick={toggleResourceDisplayType}
                             >
                                 <div
                                     className={cn(
-                                        "w-4 h-4 bg-white rounded-full shadow-md transform transition-transform",
+                                        "h-4 w-4 transform rounded-full bg-white shadow-md transition-transform",
                                         resourceDisplayType === "sum" &&
                                             "translate-x-4"
                                     )}
@@ -204,7 +204,7 @@ export const Panel: React.VFC = () => {
                     </div>
                 </div>
 
-                <div className="grid gap-3 grid-cols-3">
+                <div className="grid grid-cols-3 gap-3">
                     <ResourceCounter
                         type="parts"
                         amount={
@@ -227,7 +227,7 @@ export const Panel: React.VFC = () => {
                         }
                     />
                 </div>
-                <div className="grid gap-3 grid-cols-3">
+                <div className="grid grid-cols-3 gap-3">
                     <ResourceCounter
                         type="basic_module"
                         amount={
@@ -259,7 +259,7 @@ export const Panel: React.VFC = () => {
                     <i className="bi bi-person-fill text-xl" title="戦闘員"></i>
                     <div
                         className={cn(
-                            "grid gap-3 grid-cols-4 flex-1 transition-opacity",
+                            "grid flex-1 grid-cols-4 gap-3 transition-opacity",
                             shownResourceTypePerDropKinds === "equipments" &&
                                 "opacity-50"
                         )}
@@ -287,7 +287,7 @@ export const Panel: React.VFC = () => {
                     <i className="bi bi-cpu text-xl" title="装備"></i>
                     <div
                         className={cn(
-                            "grid gap-3 grid-cols-4 flex-1 transition-opacity",
+                            "grid flex-1 grid-cols-4 gap-3 transition-opacity",
                             shownResourceTypePerDropKinds === "units" &&
                                 "opacity-50"
                         )}

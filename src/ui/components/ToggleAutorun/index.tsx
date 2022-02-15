@@ -23,7 +23,7 @@ export const ToggleAutorun: React.VFC = () => {
             onClick={handleClick}
             title={`自動周回停止判定を${enabled ? "オフ" : "オン"}にする`}
             className={cn(
-                "text-white drop-shadow-featureIcon h-6",
+                "h-6 text-white drop-shadow-featureIcon",
                 enabled && "animate-spin"
             )}
             style={{
