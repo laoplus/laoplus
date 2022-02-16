@@ -3,6 +3,7 @@ import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
 import { invoke as invokeDropNotification } from "../dropNotification/invoke";
 import { invoke as invokeAutorunDetection } from "../autorunDetection/invoke";
 import { invoke as invokeFarmingStats } from "../farmingStats/invoke";
+import { invoke as invokeLevelupDetection } from "../levelupDetection/invoke";
 
 const interceptor = (xhr: XMLHttpRequest): void => {
     if (!xhr.responseURL) return;
@@ -25,6 +26,7 @@ const interceptor = (xhr: XMLHttpRequest): void => {
         invokeDropNotification(invokeProps);
         invokeAutorunDetection(invokeProps);
         invokeFarmingStats(invokeProps);
+        invokeLevelupDetection(invokeProps);
     } catch (error) {
         log.error("Interceptor", "Error", error);
     }
