@@ -26,6 +26,7 @@ export const waveClear = ({
                 return true;
             }
         });
+        log.debug("Levelup Detection", "unit level", "isDone", isDone);
 
         // まだ条件を満たしていない
         if (!isDone) {
@@ -71,6 +72,7 @@ export const waveClear = ({
                 }
             });
         });
+        log.debug("Levelup Detection", "skill level", "isDone", isDone);
 
         // まだ条件を満たしていない
         if (!isDone) {
