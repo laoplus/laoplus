@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1644948651-1d9456d1ccb70e77abf0e6490f05ef98f8162070
+// @version     1645111789-f76e94c0006f7ef4df73bea6df866c67fa75d548
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1613,12 +1613,14 @@
         if (url.host !== "gate.last-origin.com") {
             return;
         }
+        const requestText = new TextDecoder("utf-8").decode(xhr._request);
         const responseText = new TextDecoder("utf-8").decode(xhr.response);
         // JSONが不正なことがあるのでtry-catch
         try {
+            const req = JSON.parse(requestText);
             const res = JSON.parse(responseText);
-            log.debug("Interceptor", url.pathname, res);
-            const invokeProps = { xhr, res, url };
+            log.debug("Interceptor", url.pathname, { req, res });
+            const invokeProps = { xhr, req, res, url };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
             invoke$3(invokeProps);
             invoke$2(invokeProps);
@@ -1630,19 +1632,24 @@
         }
     };
     const initInterceptor = () => {
-        (function (open) {
-            XMLHttpRequest.prototype.open = function () {
-                this.addEventListener("readystatechange", () => {
-                    // 完了した通信のみ
-                    if (this.readyState === 4) {
-                        interceptor(this);
-                    }
-                }, false);
-                // @ts-ignore
-                // eslint-disable-next-line prefer-rest-params
-                open.apply(this, arguments);
-            };
-        })(XMLHttpRequest.prototype.open);
+        // オリジナルのメソッド
+        const { open, send } = XMLHttpRequest.prototype;
+        XMLHttpRequest.prototype.open = function (method, url) {
+            this._method = method;
+            this._requestURL = url;
+            // @ts-ignore
+            // eslint-disable-next-line prefer-rest-params
+            open.apply(this, arguments);
+        };
+        XMLHttpRequest.prototype.send = function (body) {
+            this._request = body;
+            this.addEventListener("load", function () {
+                interceptor(this);
+            });
+            // @ts-ignore
+            // eslint-disable-next-line prefer-rest-params
+            send.apply(this, arguments);
+        };
     };
 
     const initResizeObserver = () => {
