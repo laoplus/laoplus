@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645111789-f76e94c0006f7ef4df73bea6df866c67fa75d548
+// @version     1645112270-b08792e242df0b2d46ffb5f24a15f61ffe1faab3
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -221,6 +221,8 @@
                     itemDrop: true,
                     exploration: true,
                     autorunStop: true,
+                    levelUp: true,
+                    skillLevelUp: true,
                 },
             },
             wheelAmplify: {
@@ -236,6 +238,13 @@
                 enabled: true,
                 unitDisassemblyMultiplier: "0",
                 equipmentDisassemblyMultiplier: "0",
+            },
+            levelupDetection: {
+                enabled: false,
+                watchSkillLevel: true,
+                skillLevelRequirement: "10",
+                watchUnitLevel: true,
+                unitLevelRequirement: "90",
             },
         },
     };
@@ -537,6 +546,8 @@
 `;
     document.head.appendChild(element);
     const isValidNumber = (value) => {
+        if (value.includes("."))
+            return false;
         const number = Number(value);
         return !isNaN(number) && number >= 0;
     };
@@ -626,7 +637,13 @@
                                                 React.createElement("span", null, "\u63A2\u7D22\u5B8C\u4E86")),
                                             React.createElement("label", { className: "flex items-center gap-1" },
                                                 React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.autorunStop") }),
-                                                React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62")))))),
+                                                React.createElement("span", null, "\u81EA\u52D5\u5468\u56DE\u505C\u6B62")),
+                                            React.createElement("label", { className: "flex items-center gap-1" },
+                                                React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.levelUp") }),
+                                                React.createElement("span", null, "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5\uFF08\u30AD\u30E3\u30E9\u30EC\u30D9\u30EB\uFF09")),
+                                            React.createElement("label", { className: "flex items-center gap-1" },
+                                                React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.skillLevelUp") }),
+                                                React.createElement("span", null, "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5\uFF08\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\uFF09")))))),
                             React.createElement(FeatureSection, { hasError: !!errors.features?.wheelAmplify },
                                 React.createElement(FeatureSectionSummary, { register: register("features.wheelAmplify.enabled"), title: "\u30DB\u30A4\u30FC\u30EB\u30B9\u30AF\u30ED\u30FC\u30EB\u5897\u5E45", helpLink: "https://github.com/eai04191/laoplus/wiki/features-wheelAmplify" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.wheelAmplify.enabled") },
@@ -700,7 +717,7 @@
                                         errors.features?.farmingStats
                                             ?.unitDisassemblyMultiplier
                                             ?.type === "validate" &&
-                                            "上昇率は数字で入力してください（%は不要）")),
+                                            "上昇率は整数で入力してください（%は不要）")),
                                     React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u88C5\u5099 \u5206\u89E3\u7372\u5F97\u8CC7\u6E90\u306E\u4E0A\u6607\u7387:"),
                                         React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.farmingStats.equipmentDisassemblyMultiplier", {
@@ -717,7 +734,58 @@
                                         errors.features?.farmingStats
                                             ?.equipmentDisassemblyMultiplier
                                             ?.type === "validate" &&
-                                            "上昇率は数字で入力してください（%は不要）")))))),
+                                            "上昇率は整数で入力してください（%は不要）")))),
+                            React.createElement(FeatureSection, { hasError: !!errors.features?.levelupDetection },
+                                React.createElement(FeatureSectionSummary, { register: register("features.levelupDetection.enabled"), title: "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5" }),
+                                React.createElement(FeatureSectionContent, { enable: watch("features.levelupDetection.enabled") },
+                                    React.createElement("label", { className: "flex items-center gap-1" },
+                                        React.createElement("input", { type: "checkbox", disabled: !watch("features.levelupDetection.enabled"), ...register("features.levelupDetection.watchUnitLevel") }),
+                                        "\u6226\u95D8\u54E1\u306E\u30EC\u30D9\u30EB\u3092\u76E3\u8996\u3059\u308B"),
+                                    React.createElement("label", { className: cn$5("flex items-center gap-2", {
+                                            "opacity-50": !watch("features.levelupDetection.watchUnitLevel"),
+                                        }) },
+                                        React.createElement("span", { className: "flex-shrink-0" }, "\u90E8\u968A\u306E\u5168\u54E1\u306E\u30EC\u30D9\u30EB\u304C\u4E0A\u56DE\u3063\u305F\u3089\u901A\u77E5\u3059\u308B\u76EE\u6A19\u5024:"),
+                                        React.createElement("input", { type: "text", disabled: !watch("features.levelupDetection.enabled") ||
+                                                !watch("features.levelupDetection.watchUnitLevel"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.levelupDetection.unitLevelRequirement", {
+                                                required: watch("features.levelupDetection.enabled") &&
+                                                    watch("features.levelupDetection.watchUnitLevel"),
+                                                validate: isValidNumber,
+                                            }) })),
+                                    errors.features?.levelupDetection
+                                        ?.unitLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                        React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                        errors.features?.levelupDetection
+                                            ?.unitLevelRequirement?.type ===
+                                            "required" &&
+                                            "レベリング通知を利用するには目標値の指定が必要です",
+                                        errors.features?.levelupDetection
+                                            ?.unitLevelRequirement?.type ===
+                                            "validate" &&
+                                            "目標値は整数で入力してください")),
+                                    React.createElement("label", { className: "flex items-center gap-1" },
+                                        React.createElement("input", { type: "checkbox", disabled: !watch("features.levelupDetection.enabled"), ...register("features.levelupDetection.watchSkillLevel") }),
+                                        "\u6226\u95D8\u54E1\u306E\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u3092\u76E3\u8996\u3059\u308B"),
+                                    React.createElement("label", { className: cn$5("flex items-center gap-2", {
+                                            "opacity-50": !watch("features.levelupDetection.watchSkillLevel"),
+                                        }) },
+                                        React.createElement("span", { className: "flex-shrink-0" }, "\u90E8\u968A\u306E\u5168\u54E1\u306E\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u304C\u4E0A\u56DE\u3063\u305F\u3089\u901A\u77E5\u3059\u308B\u76EE\u6A19\u5024:"),
+                                        React.createElement("input", { type: "text", disabled: !watch("features.levelupDetection.enabled") ||
+                                                !watch("features.levelupDetection.watchSkillLevel"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.levelupDetection.skillLevelRequirement", {
+                                                required: watch("features.levelupDetection.enabled") &&
+                                                    watch("features.levelupDetection.watchSkillLevel"),
+                                                validate: isValidNumber,
+                                            }) })),
+                                    errors.features?.levelupDetection
+                                        ?.skillLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                        React.createElement("i", { className: "bi bi-exclamation-triangle" }),
+                                        errors.features?.levelupDetection
+                                            ?.skillLevelRequirement
+                                            ?.type === "required" &&
+                                            "レベリング通知を利用するには目標値の指定が必要です",
+                                        errors.features?.levelupDetection
+                                            ?.skillLevelRequirement
+                                            ?.type === "validate" &&
+                                            "目標値は整数で入力してください")))))),
                     React.createElement("div", { className: "flex flex-col items-center gap-2 p-4" },
                         React.createElement("span", { className: "text-sm text-gray-600" },
                             GM_info.script.name,
@@ -1475,7 +1543,7 @@
     };
 
     // TODO: 型を用意してanyをキャストする
-    const invoke$3 = ({ res, url }) => {
+    const invoke$4 = ({ res, url }) => {
         switch (url.pathname) {
             case "/exploration_inginfo":
                 loginto(res);
@@ -1571,7 +1639,7 @@
     };
 
     // TODO: 渡す前にキャストする
-    const invoke$2 = ({ res, url }) => {
+    const invoke$3 = ({ res, url }) => {
         switch (url.pathname) {
             case "/wave_clear":
                 PcDropNotification(res);
@@ -1580,7 +1648,7 @@
         }
     };
 
-    const invoke$1 = ({ url }) => {
+    const invoke$2 = ({ url }) => {
         switch (url.pathname) {
             case "/battleserver_enter":
                 if (unsafeWindow.LAOPLUS.config.config.features.autorunDetection
@@ -1591,7 +1659,7 @@
         }
     };
 
-    const invoke = ({ res, url }) => {
+    const invoke$1 = ({ res, url }) => {
         switch (url.pathname) {
             case "/battleserver_enter":
                 enter$2();
@@ -1602,6 +1670,100 @@
             case "/wave_clear":
                 incrementDrops(res);
                 updateTimeStatus();
+                return;
+        }
+    };
+
+    /**
+     * 渡されたユニット一覧の全員が要求レベルを超えているか返す
+     */
+    const checkUnitLevel = ({ list, requirement, }) => {
+        const isDone = list.every((unit) => {
+            if (unit.AfterLevel >= requirement) {
+                return true;
+            }
+        });
+        log.debug("Levelup Detection", "checkUnitLevel", "isDone", isDone);
+        return isDone;
+    };
+    /**
+     * 渡されたユニット一覧の全員の全スキルが要求レベルを超えているか返す
+     */
+    const checkSkillLevel = ({ list, requirement, }) => {
+        const isDone = list.every((unit) => {
+            return unit.SkillInfo.every((skill) => {
+                if (skill.AfterLevel >= requirement) {
+                    return true;
+                }
+            });
+        });
+        log.debug("Levelup Detection", "checkSkillLevel", "isDone", isDone);
+        return isDone;
+    };
+    /**
+     * @package
+     */
+    const waveClear = ({ PCExpAndLevelupList, SkillExpAndLevelupList, }) => {
+        const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
+        const webhookInterests = unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests;
+        const shouldReportUnitLevel = checkUnitLevel({
+            list: PCExpAndLevelupList,
+            requirement: Number(config.unitLevelRequirement),
+        });
+        if (shouldReportUnitLevel && webhookInterests.levelUp) {
+            const body = {
+                embeds: [
+                    {
+                        color: colorHexToInteger(uiColor.success.hex()),
+                        title: "レベリング完了",
+                        description: `全ての戦闘員のレベルが${config.unitLevelRequirement}を超えました`,
+                    },
+                ],
+            };
+            sendToDiscordWebhook(body);
+            // 通知したらオフにする
+            unsafeWindow.LAOPLUS.config.set({
+                features: {
+                    levelupDetection: {
+                        watchUnitLevel: false,
+                    },
+                },
+            });
+        }
+        const shouldReportSkillLevel = checkSkillLevel({
+            list: SkillExpAndLevelupList,
+            requirement: Number(config.skillLevelRequirement),
+        });
+        if (shouldReportSkillLevel && webhookInterests.skillLevelUp) {
+            const body = {
+                embeds: [
+                    {
+                        color: colorHexToInteger(uiColor.success.hex()),
+                        title: "レベリング完了",
+                        description: `全ての戦闘員のスキルレベルが${config.skillLevelRequirement}を超えました`,
+                    },
+                ],
+            };
+            sendToDiscordWebhook(body);
+            // 通知したらオフにする
+            unsafeWindow.LAOPLUS.config.set({
+                features: {
+                    levelupDetection: {
+                        watchSkillLevel: false,
+                    },
+                },
+            });
+        }
+    };
+
+    const invoke = ({ res, url }) => {
+        if (!unsafeWindow.LAOPLUS.config.config.features.levelupDetection.enabled) {
+            return;
+        }
+        switch (url.pathname) {
+            case "/wave_clear":
+                waveClear(res);
                 return;
         }
     };
@@ -1622,6 +1784,7 @@
             log.debug("Interceptor", url.pathname, { req, res });
             const invokeProps = { xhr, req, res, url };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
+            invoke$4(invokeProps);
             invoke$3(invokeProps);
             invoke$2(invokeProps);
             invoke$1(invokeProps);
