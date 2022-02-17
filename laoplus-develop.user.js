@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645112270-b08792e242df0b2d46ffb5f24a15f61ffe1faab3
+// @version     1645113972-059a4fda0f960478b28409c4de80fad0481faba0
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -593,18 +593,11 @@
                                                 pattern: /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//,
                                             }) }),
                                         React.createElement(WebhookTestButton, { webhookURL: watch("features.discordNotification.webhookURL") })),
-                                    errors.features?.discordNotification
-                                        ?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    errors.features?.discordNotification?.webhookURL && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features
-                                            ?.discordNotification
-                                            ?.webhookURL?.type ===
-                                            "required" &&
+                                        errors.features?.discordNotification?.webhookURL?.type === "required" &&
                                             "Discord通知を利用するにはWebhook URLが必要です",
-                                        errors.features
-                                            ?.discordNotification
-                                            ?.webhookURL?.type ===
-                                            "pattern" &&
+                                        errors.features?.discordNotification?.webhookURL?.type === "pattern" &&
                                             "有効なDiscordのWebhook URLではありません")),
                                     React.createElement("span", { className: "flex gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u901A\u77E5\u9805\u76EE:"),
@@ -663,11 +656,9 @@
                                             }) })),
                                     errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features?.wheelAmplify
-                                            ?.ratio?.type === "required" &&
+                                        errors.features?.wheelAmplify?.ratio?.type === "required" &&
                                             "ホイールスクロール増幅を利用するには増幅倍率の指定が必要です",
-                                        errors.features?.wheelAmplify
-                                            ?.ratio?.type === "validate" &&
+                                        errors.features?.wheelAmplify?.ratio?.type === "validate" &&
                                             "増幅倍率は数字で入力してください")))),
                             React.createElement(FeatureSection, { hasError: !!errors.features?.autorunDetection },
                                 React.createElement(FeatureSectionSummary, { register: register("features.autorunDetection.enabled"), title: "\u81EA\u52D5\u5468\u56DE\u505C\u6B62\u5224\u5B9A", helpLink: "https://github.com/eai04191/laoplus/wiki/features-autorunDetection" }),
@@ -684,16 +675,11 @@
                                                 typeof Number(value) === "number"
                                                     && !Number.isNaN(Number(value)),
                                             }) })),
-                                    errors.features?.autorunDetection
-                                        ?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    errors.features?.autorunDetection?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features?.autorunDetection
-                                            ?.threshold?.type ===
-                                            "required" &&
+                                        errors.features?.autorunDetection?.threshold?.type === "required" &&
                                             "自動周回停止判定を利用するにはしきい値の指定が必要です",
-                                        errors.features?.autorunDetection
-                                            ?.threshold?.type ===
-                                            "validate" &&
+                                        errors.features?.autorunDetection?.threshold?.type === "validate" &&
                                             "しきい値は数字で入力してください")))),
                             React.createElement(FeatureSection, { hasError: !!errors.features?.farmingStats },
                                 React.createElement(FeatureSectionSummary, { register: register("features.farmingStats.enabled"), title: "\u5468\u56DE\u7D71\u8A08", helpLink: "https://github.com/eai04191/laoplus/wiki/features-FarmingStats" }),
@@ -707,34 +693,24 @@
                                                 required: watch("features.farmingStats.enabled"),
                                                 validate: isValidNumber,
                                             }) })),
-                                    errors.features?.farmingStats
-                                        ?.unitDisassemblyMultiplier && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    errors.features?.farmingStats?.unitDisassemblyMultiplier && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features?.farmingStats
-                                            .unitDisassemblyMultiplier
-                                            .type === "required" &&
-                                            "周回統計を利用するには上昇率の指定が必要です",
-                                        errors.features?.farmingStats
-                                            ?.unitDisassemblyMultiplier
-                                            ?.type === "validate" &&
-                                            "上昇率は整数で入力してください（%は不要）")),
+                                        errors.features?.farmingStats.unitDisassemblyMultiplier.type ===
+                                            "required" && "周回統計を利用するには上昇率の指定が必要です",
+                                        errors.features?.farmingStats?.unitDisassemblyMultiplier?.type ===
+                                            "validate" && "上昇率は整数で入力してください（%は不要）")),
                                     React.createElement("label", { className: "flex items-center gap-2" },
                                         React.createElement("span", { className: "flex-shrink-0" }, "\u88C5\u5099 \u5206\u89E3\u7372\u5F97\u8CC7\u6E90\u306E\u4E0A\u6607\u7387:"),
                                         React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.farmingStats.equipmentDisassemblyMultiplier", {
                                                 required: watch("features.farmingStats.enabled"),
                                                 validate: isValidNumber,
                                             }) })),
-                                    errors.features?.farmingStats
-                                        ?.equipmentDisassemblyMultiplier && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    errors.features?.farmingStats?.equipmentDisassemblyMultiplier && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features?.farmingStats
-                                            .equipmentDisassemblyMultiplier
-                                            .type === "required" &&
-                                            "周回統計を利用するには上昇率の指定が必要です",
-                                        errors.features?.farmingStats
-                                            ?.equipmentDisassemblyMultiplier
-                                            ?.type === "validate" &&
-                                            "上昇率は整数で入力してください（%は不要）")))),
+                                        errors.features?.farmingStats.equipmentDisassemblyMultiplier.type ===
+                                            "required" && "周回統計を利用するには上昇率の指定が必要です",
+                                        errors.features?.farmingStats?.equipmentDisassemblyMultiplier?.type ===
+                                            "validate" && "上昇率は整数で入力してください（%は不要）")))),
                             React.createElement(FeatureSection, { hasError: !!errors.features?.levelupDetection },
                                 React.createElement(FeatureSectionSummary, { register: register("features.levelupDetection.enabled"), title: "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5" }),
                                 React.createElement(FeatureSectionContent, { enable: watch("features.levelupDetection.enabled") },
@@ -751,17 +727,12 @@
                                                     watch("features.levelupDetection.watchUnitLevel"),
                                                 validate: isValidNumber,
                                             }) })),
-                                    errors.features?.levelupDetection
-                                        ?.unitLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    errors.features?.levelupDetection?.unitLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features?.levelupDetection
-                                            ?.unitLevelRequirement?.type ===
-                                            "required" &&
-                                            "レベリング通知を利用するには目標値の指定が必要です",
-                                        errors.features?.levelupDetection
-                                            ?.unitLevelRequirement?.type ===
-                                            "validate" &&
-                                            "目標値は整数で入力してください")),
+                                        errors.features?.levelupDetection?.unitLevelRequirement?.type ===
+                                            "required" && "レベリング通知を利用するには目標値の指定が必要です",
+                                        errors.features?.levelupDetection?.unitLevelRequirement?.type ===
+                                            "validate" && "目標値は整数で入力してください")),
                                     React.createElement("label", { className: "flex items-center gap-1" },
                                         React.createElement("input", { type: "checkbox", disabled: !watch("features.levelupDetection.enabled"), ...register("features.levelupDetection.watchSkillLevel") }),
                                         "\u6226\u95D8\u54E1\u306E\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u3092\u76E3\u8996\u3059\u308B"),
@@ -775,17 +746,12 @@
                                                     watch("features.levelupDetection.watchSkillLevel"),
                                                 validate: isValidNumber,
                                             }) })),
-                                    errors.features?.levelupDetection
-                                        ?.skillLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
+                                    errors.features?.levelupDetection?.skillLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                         React.createElement("i", { className: "bi bi-exclamation-triangle" }),
-                                        errors.features?.levelupDetection
-                                            ?.skillLevelRequirement
-                                            ?.type === "required" &&
-                                            "レベリング通知を利用するには目標値の指定が必要です",
-                                        errors.features?.levelupDetection
-                                            ?.skillLevelRequirement
-                                            ?.type === "validate" &&
-                                            "目標値は整数で入力してください")))))),
+                                        errors.features?.levelupDetection?.skillLevelRequirement?.type ===
+                                            "required" && "レベリング通知を利用するには目標値の指定が必要です",
+                                        errors.features?.levelupDetection?.skillLevelRequirement?.type ===
+                                            "validate" && "目標値は整数で入力してください")))))),
                     React.createElement("div", { className: "flex flex-col items-center gap-2 p-4" },
                         React.createElement("span", { className: "text-sm text-gray-600" },
                             GM_info.script.name,
