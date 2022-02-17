@@ -8,6 +8,46 @@ import {
 } from "../discordNotification";
 
 /**
+ * 渡されたユニット一覧の全員が要求レベルを超えているか返す
+ */
+const checkUnitLevel = ({
+    list,
+    requirement,
+}: {
+    list: wave_clear["PCExpAndLevelupList"];
+    requirement: number;
+}) => {
+    const isDone = list.every((unit) => {
+        if (unit.AfterLevel >= requirement) {
+            return true;
+        }
+    });
+    log.debug("Levelup Detection", "checkUnitLevel", "isDone", isDone);
+    return isDone;
+};
+
+/**
+ * 渡されたユニット一覧の全員の全スキルが要求レベルを超えているか返す
+ */
+const checkSkillLevel = ({
+    list,
+    requirement,
+}: {
+    list: wave_clear["SkillExpAndLevelupList"];
+    requirement: number;
+}) => {
+    const isDone = list.every((unit) => {
+        return unit.SkillInfo.every((skill) => {
+            if (skill.AfterLevel >= requirement) {
+                return true;
+            }
+        });
+    });
+    log.debug("Levelup Detection", "checkSkillLevel", "isDone", isDone);
+    return isDone;
+};
+
+/**
  * @package
  */
 export const waveClear = ({
@@ -19,35 +59,17 @@ export const waveClear = ({
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests;
 
-    if (config.watchUnitLevel) {
-        const requirement = Number(config.unitLevelRequirement);
-        const isDone = PCExpAndLevelupList.every((unit) => {
-            if (unit.AfterLevel >= requirement) {
-                return true;
-            }
-        });
-        log.debug("Levelup Detection", "unit level", "isDone", isDone);
-
-        // まだ条件を満たしていない
-        if (!isDone) {
-            return;
-        }
-
-        // 条件を満たしたが、通知をしない設定
-        if (!webhookInterests.levelUp) {
-            log.log(
-                "Levelup Detection",
-                "レベルが通知の条件を満たしましたが、設定が無効のためDiscord通知を送信しませんでした"
-            );
-        }
-
-        // 通知を送信する
+    const shouldReportUnitLevel = checkUnitLevel({
+        list: PCExpAndLevelupList,
+        requirement: Number(config.unitLevelRequirement),
+    });
+    if (shouldReportUnitLevel && webhookInterests.levelUp) {
         const body: Webhook.input.POST = {
             embeds: [
                 {
                     color: colorHexToInteger(uiColor.success.hex()),
                     title: "レベリング完了",
-                    description: `全ての戦闘員のレベルが${requirement}を超えました`,
+                    description: `全ての戦闘員のレベルが${config.unitLevelRequirement}を超えました`,
                 },
             ],
         };
@@ -63,41 +85,21 @@ export const waveClear = ({
         });
     }
 
-    if (config.watchSkillLevel) {
-        const requirement = Number(config.skillLevelRequirement);
-        const isDone = SkillExpAndLevelupList.every((unit) => {
-            return unit.SkillInfo.every((skill) => {
-                if (skill.AfterLevel >= requirement) {
-                    return true;
-                }
-            });
-        });
-        log.debug("Levelup Detection", "skill level", "isDone", isDone);
+    const shouldReportSkillLevel = checkSkillLevel({
+        list: SkillExpAndLevelupList,
+        requirement: Number(config.skillLevelRequirement),
+    });
 
-        // まだ条件を満たしていない
-        if (!isDone) {
-            return;
-        }
-
-        // 条件を満たしたが、通知をしない設定
-        if (!webhookInterests.levelUp) {
-            log.log(
-                "Levelup Detection",
-                "スキルレベルが通知の条件を満たしましたが、設定が無効のためDiscord通知を送信しませんでした"
-            );
-        }
-
-        // 通知を送信する
+    if (shouldReportSkillLevel && webhookInterests.skillLevelUp) {
         const body: Webhook.input.POST = {
             embeds: [
                 {
                     color: colorHexToInteger(uiColor.success.hex()),
                     title: "レベリング完了",
-                    description: `全ての戦闘員のスキルレベルが${requirement}を超えました`,
+                    description: `全ての戦闘員のスキルレベルが${config.skillLevelRequirement}を超えました`,
                 },
             ],
         };
-
         sendToDiscordWebhook(body);
 
         // 通知したらオフにする
