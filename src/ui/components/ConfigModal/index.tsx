@@ -31,6 +31,7 @@ element.innerText = `
 document.head.appendChild(element);
 
 const isValidNumber = (value: string) => {
+    if (value.includes(".")) return false;
     const number = Number(value);
     return !isNaN(number) && number >= 0;
 };
@@ -298,6 +299,38 @@ export const ConfigModal = () => {
                                                 />
                                                 <span>自動周回停止</span>
                                             </label>
+                                            <label className="flex items-center gap-1">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={
+                                                        !watch(
+                                                            "features.discordNotification.enabled"
+                                                        )
+                                                    }
+                                                    {...register(
+                                                        "features.discordNotification.interests.levelUp"
+                                                    )}
+                                                />
+                                                <span>
+                                                    レベリング通知（キャラレベル）
+                                                </span>
+                                            </label>
+                                            <label className="flex items-center gap-1">
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={
+                                                        !watch(
+                                                            "features.discordNotification.enabled"
+                                                        )
+                                                    }
+                                                    {...register(
+                                                        "features.discordNotification.interests.skillLevelUp"
+                                                    )}
+                                                />
+                                                <span>
+                                                    レベリング通知（スキルレベル）
+                                                </span>
+                                            </label>
                                         </div>
                                     </span>
                                 </FeatureSectionContent>
@@ -490,7 +523,7 @@ export const ConfigModal = () => {
                                             {errors.features?.farmingStats
                                                 ?.unitDisassemblyMultiplier
                                                 ?.type === "validate" &&
-                                                "上昇率は数字で入力してください（%は不要）"}
+                                                "上昇率は整数で入力してください（%は不要）"}
                                         </ErrorMessage>
                                     )}
 
@@ -528,7 +561,160 @@ export const ConfigModal = () => {
                                             {errors.features?.farmingStats
                                                 ?.equipmentDisassemblyMultiplier
                                                 ?.type === "validate" &&
-                                                "上昇率は数字で入力してください（%は不要）"}
+                                                "上昇率は整数で入力してください（%は不要）"}
+                                        </ErrorMessage>
+                                    )}
+                                </FeatureSectionContent>
+                            </FeatureSection>
+                            <FeatureSection
+                                hasError={!!errors.features?.levelupDetection}
+                            >
+                                <FeatureSectionSummary
+                                    register={register(
+                                        "features.levelupDetection.enabled"
+                                    )}
+                                    title="レベリング通知"
+                                />
+                                <FeatureSectionContent
+                                    enable={watch(
+                                        "features.levelupDetection.enabled"
+                                    )}
+                                >
+                                    <label className="flex items-center gap-1">
+                                        <input
+                                            type="checkbox"
+                                            disabled={
+                                                !watch(
+                                                    "features.levelupDetection.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.levelupDetection.watchUnitLevel"
+                                            )}
+                                        />
+                                        戦闘員のレベルを監視する
+                                    </label>
+
+                                    <label
+                                        className={cn(
+                                            "flex items-center gap-2",
+                                            {
+                                                "opacity-50": !watch(
+                                                    "features.levelupDetection.watchUnitLevel"
+                                                ),
+                                            }
+                                        )}
+                                    >
+                                        <span className="flex-shrink-0">
+                                            部隊の全員のレベルが上回ったら通知する目標値:
+                                        </span>
+                                        <input
+                                            type="text"
+                                            disabled={
+                                                !watch(
+                                                    "features.levelupDetection.enabled"
+                                                ) ||
+                                                !watch(
+                                                    "features.levelupDetection.watchUnitLevel"
+                                                )
+                                            }
+                                            className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
+                                            {...register(
+                                                "features.levelupDetection.unitLevelRequirement",
+                                                {
+                                                    required:
+                                                        watch(
+                                                            "features.levelupDetection.enabled"
+                                                        ) &&
+                                                        watch(
+                                                            "features.levelupDetection.watchUnitLevel"
+                                                        ),
+                                                    validate: isValidNumber,
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.levelupDetection
+                                        ?.unitLevelRequirement && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features?.levelupDetection
+                                                ?.unitLevelRequirement?.type ===
+                                                "required" &&
+                                                "レベリング通知を利用するには目標値の指定が必要です"}
+                                            {errors.features?.levelupDetection
+                                                ?.unitLevelRequirement?.type ===
+                                                "validate" &&
+                                                "目標値は整数で入力してください"}
+                                        </ErrorMessage>
+                                    )}
+
+                                    <label className="flex items-center gap-1">
+                                        <input
+                                            type="checkbox"
+                                            disabled={
+                                                !watch(
+                                                    "features.levelupDetection.enabled"
+                                                )
+                                            }
+                                            {...register(
+                                                "features.levelupDetection.watchSkillLevel"
+                                            )}
+                                        />
+                                        戦闘員のスキルレベルを監視する
+                                    </label>
+
+                                    <label
+                                        className={cn(
+                                            "flex items-center gap-2",
+                                            {
+                                                "opacity-50": !watch(
+                                                    "features.levelupDetection.watchSkillLevel"
+                                                ),
+                                            }
+                                        )}
+                                    >
+                                        <span className="flex-shrink-0">
+                                            部隊の全員のスキルレベルが上回ったら通知する目標値:
+                                        </span>
+                                        <input
+                                            type="text"
+                                            disabled={
+                                                !watch(
+                                                    "features.levelupDetection.enabled"
+                                                ) ||
+                                                !watch(
+                                                    "features.levelupDetection.watchSkillLevel"
+                                                )
+                                            }
+                                            className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
+                                            {...register(
+                                                "features.levelupDetection.skillLevelRequirement",
+                                                {
+                                                    required:
+                                                        watch(
+                                                            "features.levelupDetection.enabled"
+                                                        ) &&
+                                                        watch(
+                                                            "features.levelupDetection.watchSkillLevel"
+                                                        ),
+                                                    validate: isValidNumber,
+                                                }
+                                            )}
+                                        />
+                                    </label>
+                                    {errors.features?.levelupDetection
+                                        ?.skillLevelRequirement && (
+                                        <ErrorMessage className="flex gap-1">
+                                            <i className="bi bi-exclamation-triangle"></i>
+                                            {errors.features?.levelupDetection
+                                                ?.skillLevelRequirement
+                                                ?.type === "required" &&
+                                                "レベリング通知を利用するには目標値の指定が必要です"}
+                                            {errors.features?.levelupDetection
+                                                ?.skillLevelRequirement
+                                                ?.type === "validate" &&
+                                                "目標値は整数で入力してください"}
                                         </ErrorMessage>
                                     )}
                                 </FeatureSectionContent>
