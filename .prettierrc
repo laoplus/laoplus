@@ -1,1 +1,11 @@
-{}
+{
+    "overrides": [
+        {
+            "files": ["src/ui/components/ConfigModal/index.tsx"],
+            "options": {
+                "tabWidth": 2,
+                "printWidth": 100
+            }
+        }
+    ]
+}
