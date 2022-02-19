@@ -36,6 +36,8 @@ export const defaultStatus = {
                 B: 0,
             },
         },
+        latestResources: null,
+        currentSquadCosts: null,
     },
 } as statusType;
 Object.freeze(defaultStatus);

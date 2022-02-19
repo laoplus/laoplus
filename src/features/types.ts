@@ -41,4 +41,14 @@ export interface FarmingStats {
             B: number;
         };
     };
+    latestResources: {
+        parts: number;
+        nutrients: number;
+        power: number;
+    } | null;
+    currentSquadCosts: {
+        parts: number;
+        nutrients: number;
+        power: number;
+    } | null;
 }
