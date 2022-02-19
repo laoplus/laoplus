@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645286631-63909256147b0c7396122d1c54edf20dc65f8efa
+// @version     1645297889-4f34a5744124e3010fc7c40c7df6972a8a2eac02
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -979,7 +979,7 @@
             };
             // どれか一つでもマイナスになってたらなにかが変わったのでresetしてnullを返す
             if (Object.values(current).some((n) => n < 0)) {
-                log.warn("farmingStats", "calcSquadCosts", "currentSquadCostsがマイナスになっていたためresetします", current);
+                log.warn("farmingStats", "calcSquadCosts", "currentSquadCostsがマイナスになっていたためリセットします", current);
                 reset();
                 return null;
             }
@@ -1531,7 +1531,7 @@
                 return { ...ex, timeoutID };
             }
             else {
-                return ex;
+                return { ...ex, timeoutID: null };
             }
         });
         log.log("Exploration Timer", "Restore Exploration Timers", unsafeWindow.LAOPLUS.exploration);
@@ -1564,21 +1564,26 @@
         log.log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
     };
 
-    // TODO: 型を用意してanyをキャストする
-    const invoke$4 = ({ res, url }) => {
-        switch (url.pathname) {
-            case "/exploration_inginfo":
-                loginto(res);
-                return;
-            case "/exploration_enter":
-                enter(res);
-                return;
-            case "/exploration_reward":
-                reward(res);
-                return;
-            case "/exploration_cancel":
-                cancel(res);
-                return;
+    const invoke$4 = (props) => {
+        if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests.exploration) {
+            return;
+        }
+        if (props.pathname === "/exploration_inginfo") {
+            loginto(props.res);
+            return;
+        }
+        if (props.pathname === "/exploration_enter") {
+            enter(props.res);
+            return;
+        }
+        if (props.pathname === "/exploration_reward") {
+            reward(props.res);
+            return;
+        }
+        if (props.pathname === "/exploration_cancel") {
+            cancel(props.res);
+            return;
         }
     };
 
@@ -1660,40 +1665,38 @@
         }
     };
 
-    // TODO: 渡す前にキャストする
-    const invoke$3 = ({ res, url }) => {
-        switch (url.pathname) {
-            case "/wave_clear":
-                PcDropNotification(res);
-                itemDropNotification(res);
-                return;
+    const invoke$3 = (props) => {
+        if (props.pathname === "/wave_clear") {
+            PcDropNotification(props.res);
+            itemDropNotification(props.res);
+            return;
         }
     };
 
-    const invoke$2 = ({ url }) => {
-        switch (url.pathname) {
-            case "/battleserver_enter":
-                if (unsafeWindow.LAOPLUS.config.config.features.autorunDetection
-                    .enabled) {
-                    enter$1();
-                }
-                return;
+    const invoke$2 = ({ pathname }) => {
+        if (!unsafeWindow.LAOPLUS.config.config.features.autorunDetection.enabled) {
+            return;
+        }
+        if (pathname === "/battleserver_enter") {
+            enter$1();
+            return;
         }
     };
 
-    const invoke$1 = ({ res, url }) => {
-        switch (url.pathname) {
-            case "/battleserver_enter":
-                enter$2();
-                calcSquadCosts(res);
-                return;
-            case "/battleserver_leave":
-                leave();
-                return;
-            case "/wave_clear":
-                incrementDrops(res);
-                updateTimeStatus();
-                return;
+    const invoke$1 = (props) => {
+        if (props.pathname === "/battleserver_enter") {
+            enter$2();
+            calcSquadCosts(props.res);
+            return;
+        }
+        if (props.pathname === "/battleserver_leave") {
+            leave();
+            return;
+        }
+        if (props.pathname === "/wave_clear") {
+            incrementDrops(props.res);
+            updateTimeStatus();
+            return;
         }
     };
 
@@ -1780,14 +1783,13 @@
         }
     };
 
-    const invoke = ({ res, url }) => {
+    const invoke = (props) => {
         if (!unsafeWindow.LAOPLUS.config.config.features.levelupDetection.enabled) {
             return;
         }
-        switch (url.pathname) {
-            case "/wave_clear":
-                waveClear(res);
-                return;
+        if (props.pathname === "/wave_clear") {
+            waveClear(props.res);
+            return;
         }
     };
 
@@ -1805,7 +1807,14 @@
             const req = JSON.parse(requestText);
             const res = JSON.parse(responseText);
             log.debug("Interceptor", url.pathname, { req, res });
-            const invokeProps = { xhr, req, res, url };
+            const invokeProps = {
+                xhr,
+                req,
+                res,
+                url,
+                // @ts-ignore
+                pathname: url.pathname,
+            };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
             invoke$4(invokeProps);
             invoke$3(invokeProps);
