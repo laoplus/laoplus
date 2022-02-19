@@ -14,9 +14,10 @@ function jsonEqual(a: unknown, b: unknown) {
 const ResourceCounter: React.VFC<{
     type: React.ComponentProps<typeof Icon>["type"] | "B" | "A" | "S" | "SS";
     amount: number;
-}> = ({ type, amount }) => {
+    sign?: boolean;
+}> = ({ type, amount, sign = false }) => {
     return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 font-bold text-gray-900">
             {type === "B" || type === "A" || type === "S" || type === "SS" ? (
                 <div
                     className={cn(
@@ -34,8 +35,9 @@ const ResourceCounter: React.VFC<{
             )}
 
             <hr className="h-[2px] w-full rounded-full border-0 bg-gray-200" />
-            <span className="font-bold text-gray-900">
-                {amount.toLocaleString()}
+            <span className={cn(sign && amount < 0 && "text-red-500")}>
+                {sign && (amount === 0 ? "±" : amount < 0 ? "-" : "+")}
+                {Math.abs(amount).toLocaleString()}
             </span>
         </div>
     );
@@ -250,6 +252,50 @@ export const Panel: React.VFC = () => {
                         }
                     />
                 </div>
+
+                <div className="flex gap-3">
+                    <h2 className="font-bold">収支</h2>
+                </div>
+                {stats.currentSquadCosts === null ? (
+                    <p className="text-sm text-gray-600">
+                        <i className="bi bi-info-circle mr-1"></i>
+                        同じ部隊で2周以上出撃すると、ここに収支が表示されます
+                    </p>
+                ) : (
+                    <div className="grid grid-cols-3 gap-3">
+                        <ResourceCounter
+                            type="parts"
+                            sign
+                            amount={
+                                disassembledResource[
+                                    shownResourceTypePerDropKinds
+                                ].parts -
+                                stats.currentSquadCosts.parts * stats.lapCount
+                            }
+                        />
+                        <ResourceCounter
+                            type="nutrient"
+                            sign
+                            amount={
+                                disassembledResource[
+                                    shownResourceTypePerDropKinds
+                                ].nutrients -
+                                stats.currentSquadCosts.nutrients *
+                                    stats.lapCount
+                            }
+                        />
+                        <ResourceCounter
+                            type="power"
+                            sign
+                            amount={
+                                disassembledResource[
+                                    shownResourceTypePerDropKinds
+                                ].power -
+                                stats.currentSquadCosts.power * stats.lapCount
+                            }
+                        />
+                    </div>
+                )}
 
                 <div className="flex gap-3">
                     <h2 className="font-bold">ドロップ詳細</h2>

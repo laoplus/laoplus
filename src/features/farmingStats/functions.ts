@@ -1,5 +1,6 @@
 import { defaultStatus } from "~/Status";
-import { gradeToRank, itemKeyToRank } from "~/utils";
+import { battleserver_enter } from "~/types/battleserver_enter";
+import { log, gradeToRank, itemKeyToRank } from "~/utils";
 import { WaveClearResponse } from "../types";
 
 export const reset = () => {
@@ -31,6 +32,55 @@ export const enter = () => {
             },
         });
     }
+};
+
+/**
+ * @package
+ */
+export const calcSquadCosts = (res: battleserver_enter) => {
+    const status = unsafeWindow.LAOPLUS.status;
+    const latestResources = status.status.farmingStats.latestResources;
+
+    const currentResources = {
+        parts: res.CurrencyInfo.Metal + res.CurrencyInfo.FreeMetal,
+        nutrients: res.CurrencyInfo.Nutrient + res.CurrencyInfo.FreeNutrient,
+        power: res.CurrencyInfo.Power + res.CurrencyInfo.FreePower,
+    };
+
+    const currentSquadCosts = (() => {
+        if (latestResources === null) {
+            return null;
+        }
+        const current = {
+            parts: latestResources.parts - currentResources.parts,
+            nutrients: latestResources.nutrients - currentResources.nutrients,
+            power: latestResources.power - currentResources.power,
+        };
+
+        // どれか一つでもマイナスになってたらなにかが変わったのでresetしてnullを返す
+        if (Object.values(current).some((n) => n < 0)) {
+            log.warn(
+                "farmingStats",
+                "calcSquadCosts",
+                "currentSquadCostsがマイナスになっていたためresetします",
+                current
+            );
+            reset();
+            return null;
+        }
+        return current;
+    })();
+
+    status.set({
+        farmingStats: {
+            latestResources: {
+                parts: currentResources.parts,
+                nutrients: currentResources.nutrients,
+                power: currentResources.power,
+            },
+            currentSquadCosts,
+        },
+    });
 };
 
 /**
