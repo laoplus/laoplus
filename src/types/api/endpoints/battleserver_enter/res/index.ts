@@ -1,9 +1,4 @@
-import type {
-    ErrorCode,
-    Sequence,
-    CurrencyInfo,
-    QuestInfo,
-} from "~/types/api/shared";
+import type { CurrencyInfo, QuestInfo, ResBase } from "~/types/api/shared";
 import type { PC } from "./PC";
 import type { Monster } from "./Monster";
 import type { FriendPCInfo } from "./FriendPCInfo";
@@ -11,10 +6,7 @@ import type { FriendPCInfo } from "./FriendPCInfo";
 /**
  * @package
  */
-type res = {
-    ErrorCode: ErrorCode;
-    Sequence: Sequence;
-
+type res = ResBase & {
     CurrencyInfo: CurrencyInfo;
 
     PCList: PC[];

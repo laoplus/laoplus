@@ -1,12 +1,11 @@
-/**
- * @package
- */
-export type ErrorCode = number;
+type ErrorCode = number;
+type Sequence = number;
 
 /**
- * @package
+ * ユーザーのアクセストークンを使ってはいけない
  */
-export type Sequence = number;
+type AccessToken = never;
+type WID = number;
 
 /**
  * @package
@@ -23,12 +22,18 @@ export type CurrencyInfo = {
 };
 
 /**
- * ユーザーのアクセストークンを使ってはいけない
  * @package
  */
-export type AccessToken = never;
+export type ReqBase = {
+    AccessToken: AccessToken;
+    Sequence: Sequence;
+    WID: WID;
+};
 
 /**
  * @package
  */
-export type WID = number;
+export type ResBase = {
+    ErrorCode: ErrorCode;
+    Sequence: Sequence;
+};

@@ -1,7 +1,9 @@
+import type { ReqBase } from "~/types/api/shared";
+
 /**
  * @package
  */
-type res = {
+type res = ReqBase & {
     // not implemented
 };
 

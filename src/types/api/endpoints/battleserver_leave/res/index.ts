@@ -1,19 +1,11 @@
-import type {
-    ErrorCode,
-    Sequence,
-    PCInfo,
-    QuestInfo,
-} from "~/types/api/shared";
+import type { ResBase, PCInfo, QuestInfo } from "~/types/api/shared";
 import type { ItemUpdateType } from "./ItemUpdateType";
 import type { ItemInfo } from "./ItemInfo";
 
 /**
  * @package
  */
-type res = {
-    ErrorCode: ErrorCode;
-    Sequence: Sequence;
-
+type res = ResBase & {
     ItemUpdateTypeList: ItemUpdateType[];
     ItemInfoList: ItemInfo[];
     PCInfoList: PCInfo[];

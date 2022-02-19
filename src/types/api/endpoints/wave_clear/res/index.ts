@@ -1,9 +1,4 @@
-import type {
-    ErrorCode,
-    Sequence,
-    PCInfo,
-    QuestInfo,
-} from "~/types/api/shared";
+import type { ResBase, PCInfo, QuestInfo } from "~/types/api/shared";
 import type { ClearRewardInfo } from "./ClearRewardInfo";
 import type { PCExpAndLevelup } from "./PCExpAndLevelup";
 import type { SkillExpAndLevelup } from "./SkillExpAndLevelup";
@@ -14,10 +9,7 @@ import type { UpdateItemInfo } from "./UpdateItemInfo";
 /**
  * @package
  */
-type res = {
-    ErrorCode: ErrorCode;
-    Sequence: Sequence;
-
+type res = ResBase & {
     ClearRewardInfo: ClearRewardInfo;
     CreatePCInfos: PCInfo[];
     PCExpAndLevelupList: PCExpAndLevelup[];

@@ -1,9 +1,3 @@
-export type {
-    ErrorCode,
-    Sequence,
-    CurrencyInfo,
-    AccessToken,
-    WID,
-} from "./common";
+export type { CurrencyInfo, ReqBase, ResBase } from "./common";
 export type { PCInfo } from "./PCInfo";
 export type { QuestInfo } from "./QuestInfo";
