@@ -3,8 +3,8 @@ import type { ReqBase } from "~/types/api/shared";
 /**
  * @package
  */
-type res = ReqBase & {
+type req = ReqBase & {
     // not implemented
 };
 
-export default res;
+export default req;
