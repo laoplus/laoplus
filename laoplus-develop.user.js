@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645283561-9114b5d0910d3dda393b9bffa95ce510aeac0501
+// @version     1645286631-63909256147b0c7396122d1c54edf20dc65f8efa
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -289,6 +289,8 @@
                     B: 0,
                 },
             },
+            latestResources: null,
+            currentSquadCosts: null,
         },
     };
     Object.freeze(defaultStatus);
@@ -958,6 +960,45 @@
     /**
      * @package
      */
+    const calcSquadCosts = (res) => {
+        const status = unsafeWindow.LAOPLUS.status;
+        const latestResources = status.status.farmingStats.latestResources;
+        const currentResources = {
+            parts: res.CurrencyInfo.Metal + res.CurrencyInfo.FreeMetal,
+            nutrients: res.CurrencyInfo.Nutrient + res.CurrencyInfo.FreeNutrient,
+            power: res.CurrencyInfo.Power + res.CurrencyInfo.FreePower,
+        };
+        const currentSquadCosts = (() => {
+            if (latestResources === null) {
+                return null;
+            }
+            const current = {
+                parts: latestResources.parts - currentResources.parts,
+                nutrients: latestResources.nutrients - currentResources.nutrients,
+                power: latestResources.power - currentResources.power,
+            };
+            // どれか一つでもマイナスになってたらなにかが変わったのでresetしてnullを返す
+            if (Object.values(current).some((n) => n < 0)) {
+                log.warn("farmingStats", "calcSquadCosts", "currentSquadCostsがマイナスになっていたためresetします", current);
+                reset();
+                return null;
+            }
+            return current;
+        })();
+        status.set({
+            farmingStats: {
+                latestResources: {
+                    parts: currentResources.parts,
+                    nutrients: currentResources.nutrients,
+                    power: currentResources.power,
+                },
+                currentSquadCosts,
+            },
+        });
+    };
+    /**
+     * @package
+     */
     const leave = () => {
         const status = unsafeWindow.LAOPLUS.status;
         const curtime = new Date().getTime();
@@ -1171,12 +1212,14 @@
     function jsonEqual(a, b) {
         return JSON.stringify(a) === JSON.stringify(b);
     }
-    const ResourceCounter = ({ type, amount }) => {
-        return (React.createElement("div", { className: "flex items-center gap-2" },
+    const ResourceCounter = ({ type, amount, sign = false }) => {
+        return (React.createElement("div", { className: "flex items-center gap-2 font-bold text-gray-900" },
             type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement("div", { className: cn$1("flex-shrink-0 rounded-md px-2 font-bold ring-1 ring-gray-900/5", `bg-[${rankColor[type].hex()}]`, type === "SS" ? "text-black" : "text-white") }, type)) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
                 React.createElement(Icon, { type: type }))),
             React.createElement("hr", { className: "h-[2px] w-full rounded-full border-0 bg-gray-200" }),
-            React.createElement("span", { className: "font-bold text-gray-900" }, amount.toLocaleString())));
+            React.createElement("span", { className: cn$1(sign && amount < 0 && "text-red-500") },
+                sign && (amount === 0 ? "±" : amount < 0 ? "-" : "+"),
+                Math.abs(amount).toLocaleString())));
     };
     const Panel = () => {
         const status = unsafeWindow.LAOPLUS.status;
@@ -1291,6 +1334,18 @@
                             .advanced_module }),
                     React.createElement(ResourceCounter, { type: "special_module", amount: disassembledResource[shownResourceTypePerDropKinds]
                             .special_module })),
+                React.createElement("div", { className: "flex gap-3" },
+                    React.createElement("h2", { className: "font-bold" }, "\u53CE\u652F")),
+                stats.currentSquadCosts === null ? (React.createElement("p", { className: "text-sm text-gray-600" },
+                    React.createElement("i", { className: "bi bi-info-circle mr-1" }),
+                    "\u540C\u3058\u90E8\u968A\u30672\u5468\u4EE5\u4E0A\u51FA\u6483\u3059\u308B\u3068\u3001\u3053\u3053\u306B\u53CE\u652F\u304C\u8868\u793A\u3055\u308C\u307E\u3059")) : (React.createElement("div", { className: "grid grid-cols-3 gap-3" },
+                    React.createElement(ResourceCounter, { type: "parts", sign: true, amount: disassembledResource[shownResourceTypePerDropKinds].parts -
+                            stats.currentSquadCosts.parts * stats.lapCount }),
+                    React.createElement(ResourceCounter, { type: "nutrient", sign: true, amount: disassembledResource[shownResourceTypePerDropKinds].nutrients -
+                            stats.currentSquadCosts.nutrients *
+                                stats.lapCount }),
+                    React.createElement(ResourceCounter, { type: "power", sign: true, amount: disassembledResource[shownResourceTypePerDropKinds].power -
+                            stats.currentSquadCosts.power * stats.lapCount }))),
                 React.createElement("div", { className: "flex gap-3" },
                     React.createElement("h2", { className: "font-bold" }, "\u30C9\u30ED\u30C3\u30D7\u8A73\u7D30")),
                 React.createElement("div", { className: "flex gap-2" },
@@ -1630,6 +1685,7 @@
         switch (url.pathname) {
             case "/battleserver_enter":
                 enter$2();
+                calcSquadCosts(res);
                 return;
             case "/battleserver_leave":
                 leave();
