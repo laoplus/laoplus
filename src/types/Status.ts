@@ -1,26 +1,9 @@
-export type InvokeProps = {
-    xhr: XMLHttpRequest;
-    res: unknown;
-    url: URL;
+// https://stackoverflow.com/questions/61132262/typescript-deep-partial
+export type DeepPartial<T> = {
+    [P in keyof T]?: DeepPartial<T[P]>;
 };
 
-export type WaveClearResponse = {
-    ClearRewardInfo: ClearRewardInfo;
-};
-
-export type ClearRewardInfo = {
-    PCRewardList: RewardPC[];
-    ItemRewardList: RewardItem[];
-};
-export type RewardPC = {
-    Grade: number;
-    Level: number;
-    PCKeyString: string;
-};
-export type RewardItem = {
-    ItemKeyString: string;
-};
-export interface FarmingStats {
+export type FarmingStats = {
     latestEnterTime: number | null;
     waveTime: number | null;
     latestLeaveTime: number | null;
@@ -51,4 +34,4 @@ export interface FarmingStats {
         nutrients: number;
         power: number;
     } | null;
-}
+};

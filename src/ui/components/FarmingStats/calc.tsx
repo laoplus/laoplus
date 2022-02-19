@@ -1,6 +1,6 @@
 import { log } from "~/utils";
 import { disassemblingTable } from "~/constants";
-import { FarmingStats } from "~/features/types";
+import { FarmingStats } from "~/types/Status";
 
 // 分解についてのメモ
 // 分解獲得資源上昇（研究「精密分解施設」, 基地「装備分解室」）で増えるのは部品・栄養・電力のみ

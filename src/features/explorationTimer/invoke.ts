@@ -1,5 +1,5 @@
 import { cancel, enter, loginto, reward } from "./functions";
-import { InvokeProps } from "../types";
+import { InvokeProps } from "~/types";
 
 // TODO: 型を用意してanyをキャストする
 export const invoke = ({ res, url }: InvokeProps) => {

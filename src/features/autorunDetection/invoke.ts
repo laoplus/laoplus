@@ -1,5 +1,5 @@
 import { enter } from "./functions";
-import { InvokeProps } from "../types";
+import { InvokeProps } from "~/types";
 
 export const invoke = ({ url }: InvokeProps) => {
     switch (url.pathname) {

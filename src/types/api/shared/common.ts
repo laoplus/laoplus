@@ -21,3 +21,14 @@ export type CurrencyInfo = {
     Power: number;
     FreePower: number;
 };
+
+/**
+ * ユーザーのアクセストークンを使ってはいけない
+ * @package
+ */
+export type AccessToken = never;
+
+/**
+ * @package
+ */
+export type WID = number;

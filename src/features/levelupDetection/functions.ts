@@ -14,7 +14,7 @@ const checkUnitLevel = ({
     list,
     requirement,
 }: {
-    list: wave_clear["PCExpAndLevelupList"];
+    list: wave_clear["res"]["PCExpAndLevelupList"];
     requirement: number;
 }) => {
     const isDone = list.every((unit) => {
@@ -33,7 +33,7 @@ const checkSkillLevel = ({
     list,
     requirement,
 }: {
-    list: wave_clear["SkillExpAndLevelupList"];
+    list: wave_clear["res"]["SkillExpAndLevelupList"];
     requirement: number;
 }) => {
     const isDone = list.every((unit) => {
@@ -53,7 +53,7 @@ const checkSkillLevel = ({
 export const waveClear = ({
     PCExpAndLevelupList,
     SkillExpAndLevelupList,
-}: wave_clear) => {
+}: wave_clear["res"]) => {
     const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
     const webhookInterests =
         unsafeWindow.LAOPLUS.config.config.features.discordNotification

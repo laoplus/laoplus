@@ -1,4 +1,4 @@
-import { CurrencyInfo } from "../common";
+import type { CurrencyInfo } from "~/types/api/shared";
 
 /**
  * @package

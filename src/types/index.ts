@@ -1,7 +1,9 @@
-// https://stackoverflow.com/questions/61132262/typescript-deep-partial
-export type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>;
+export type InvokeProps = {
+    xhr: XMLHttpRequest;
+    res: unknown;
+    url: URL;
 };
+
 export interface TacticsManualUnit {
     uid: string;
     id: number;

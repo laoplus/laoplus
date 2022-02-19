@@ -1,5 +1,5 @@
 import { waveClear } from "./functions";
-import { InvokeProps } from "../types";
+import { InvokeProps } from "~/types";
 import { wave_clear } from "~/types/api";
 
 export const invoke = ({ res, url }: InvokeProps) => {
@@ -9,7 +9,7 @@ export const invoke = ({ res, url }: InvokeProps) => {
 
     switch (url.pathname) {
         case "/wave_clear":
-            waveClear(res as wave_clear);
+            waveClear(res as wave_clear["res"]);
             return;
     }
 };

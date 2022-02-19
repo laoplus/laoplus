@@ -1,4 +1,4 @@
-import { DeepPartial } from "./types";
+import { DeepPartial } from "./types/Status";
 import { log } from "~/utils";
 
 const defaultConfig = {
