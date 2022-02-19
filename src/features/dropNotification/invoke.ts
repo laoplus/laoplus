@@ -1,12 +1,10 @@
 import { itemDropNotification, PcDropNotification } from "./functions";
-import { InvokeProps } from "../types";
+import { InvokeProps } from "~/types";
 
-// TODO: 渡す前にキャストする
-export const invoke = ({ res, url }: InvokeProps) => {
-    switch (url.pathname) {
-        case "/wave_clear":
-            PcDropNotification(res as any);
-            itemDropNotification(res as any);
-            return;
+export const invoke = (props: InvokeProps) => {
+    if (props.pathname === "/wave_clear") {
+        PcDropNotification(props.res);
+        itemDropNotification(props.res);
+        return;
     }
 };

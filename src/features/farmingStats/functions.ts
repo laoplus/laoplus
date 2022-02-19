@@ -1,7 +1,6 @@
 import { defaultStatus } from "~/Status";
-import { battleserver_enter } from "~/types/battleserver_enter";
+import { battleserver_enter, wave_clear } from "~/types/api";
 import { log, gradeToRank, itemKeyToRank } from "~/utils";
-import { WaveClearResponse } from "../types";
 
 export const reset = () => {
     unsafeWindow.LAOPLUS.status.set({
@@ -37,7 +36,7 @@ export const enter = () => {
 /**
  * @package
  */
-export const calcSquadCosts = (res: battleserver_enter) => {
+export const calcSquadCosts = (res: battleserver_enter["res"]) => {
     const status = unsafeWindow.LAOPLUS.status;
     const latestResources = status.status.farmingStats.latestResources;
 
@@ -62,7 +61,7 @@ export const calcSquadCosts = (res: battleserver_enter) => {
             log.warn(
                 "farmingStats",
                 "calcSquadCosts",
-                "currentSquadCostsがマイナスになっていたためresetします",
+                "currentSquadCostsがマイナスになっていたためリセットします",
                 current
             );
             reset();
@@ -113,7 +112,7 @@ export const leave = () => {
 /**
  * @package
  */
-export const incrementDrops = (res: WaveClearResponse) => {
+export const incrementDrops = (res: wave_clear["res"]) => {
     const status = unsafeWindow.LAOPLUS.status;
 
     const units = res.ClearRewardInfo.PCRewardList.reduce((unitDrops, unit) => {

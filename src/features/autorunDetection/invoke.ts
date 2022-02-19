@@ -1,15 +1,13 @@
 import { enter } from "./functions";
-import { InvokeProps } from "../types";
+import { InvokeProps } from "~/types";
 
-export const invoke = ({ url }: InvokeProps) => {
-    switch (url.pathname) {
-        case "/battleserver_enter":
-            if (
-                unsafeWindow.LAOPLUS.config.config.features.autorunDetection
-                    .enabled
-            ) {
-                enter();
-            }
-            return;
+export const invoke = ({ pathname }: InvokeProps) => {
+    if (!unsafeWindow.LAOPLUS.config.config.features.autorunDetection.enabled) {
+        return;
+    }
+
+    if (pathname === "/battleserver_enter") {
+        enter();
+        return;
     }
 };

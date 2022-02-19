@@ -1,5 +1,4 @@
-import { DeepPartial } from "./types";
-import { FarmingStats } from "./features/types";
+import { DeepPartial, FarmingStats } from "./types/Status";
 import { log } from "~/utils";
 
 type statusType = {

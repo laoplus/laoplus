@@ -1,5 +1,5 @@
 import { disassemblingTable, rankColor } from "~/constants";
-import { FarmingStats as TFarmingStats } from "~/features/types";
+import { FarmingStats as TFarmingStats } from "~/types/Status";
 import { reset } from "~/features/farmingStats/functions";
 import { log } from "~/utils";
 import { calcResourcesFromDrops } from "./calc";
