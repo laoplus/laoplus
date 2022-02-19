@@ -4,11 +4,7 @@ import type { ReqBase } from "~/types/api/shared";
  * @package
  */
 type req = ReqBase & {
-    /**
-     * 謎
-     */
-    BonusExpList: [];
-    IsAuto: number;
-    Wave: number;
+    SquadIndex: number;
+    StageKeyString: string;
 };
 export default req;

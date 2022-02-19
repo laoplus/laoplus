@@ -16,5 +16,4 @@ type res = ResBase & {
     CurrChallengeTicket: number;
     UpdateQuestInfoList: QuestInfo[];
 };
-
 export default res;

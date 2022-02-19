@@ -1,4 +1,5 @@
 import { log } from "~/utils";
+import { InvokeProps } from "~/types";
 import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
 import { invoke as invokeDropNotification } from "../dropNotification/invoke";
 import { invoke as invokeAutorunDetection } from "../autorunDetection/invoke";
@@ -30,7 +31,14 @@ const interceptor = (xhr: ExtendedXHR): void => {
         const res = JSON.parse(responseText);
         log.debug("Interceptor", url.pathname, { req, res });
 
-        const invokeProps = { xhr, req, res, url };
+        const invokeProps: InvokeProps = {
+            xhr,
+            req,
+            res,
+            url,
+            // @ts-ignore
+            pathname: url.pathname,
+        };
 
         // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
         invokeExplorationTimer(invokeProps);

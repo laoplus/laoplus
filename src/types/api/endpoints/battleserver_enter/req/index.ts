@@ -21,5 +21,4 @@ type req = ReqBase & {
     SelectedSquadNoList: number[];
     StageKeyString: string;
 };
-
 export default req;

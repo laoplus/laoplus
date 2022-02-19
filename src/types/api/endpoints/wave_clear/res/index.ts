@@ -21,5 +21,4 @@ type res = ResBase & {
     UpdateQuestInfoList: QuestInfo[];
     WaveClearRank: number;
 };
-
 export default res;
