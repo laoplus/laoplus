@@ -64,12 +64,4 @@ declare global {
     initInputObserver();
     initWheelAmplfy();
     initTacticsManual();
-
-    unsafeWindow.LAOPLUS.config.events.on("*", (type, e) => {
-        log.debug("index", "config fired", type, e);
-    });
-
-    unsafeWindow.LAOPLUS.status.events.on("*", (type, e) => {
-        log.debug("index", "status fired", type, e);
-    });
 })();
