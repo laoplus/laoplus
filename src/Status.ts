@@ -15,6 +15,7 @@ export const defaultStatus = {
         latestEnterTime: null,
     },
     farmingStats: {
+        firstEnterTime: null,
         latestEnterTime: null,
         waveTime: null,
         latestLeaveTime: null,

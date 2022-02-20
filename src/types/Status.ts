@@ -4,6 +4,7 @@ export type DeepPartial<T> = {
 };
 
 export type FarmingStats = {
+    firstEnterTime: number | null;
     latestEnterTime: number | null;
     waveTime: number | null;
     latestLeaveTime: number | null;
