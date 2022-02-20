@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645357183-444500fbb46cb22e6dc94c9a63813c4e9862243e
+// @version     1645359793-9196fd4ea39ff130aa7f3aba1bf1a19c70d1f1a5
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1702,29 +1702,43 @@
 
     /**
      * 渡されたユニット一覧の全員が要求レベルを超えているか返す
+     * @returns {[boolean, boolean]} [BeforeLevelがrequirement以上, AfterLevelがrequirement以上]
      */
     const checkUnitLevel = ({ list, requirement, }) => {
-        const isDone = list.every((unit) => {
+        const alreadyDone = list.every((unit) => {
+            if (unit.BeforeLevel >= requirement) {
+                return true;
+            }
+        });
+        const done = list.every((unit) => {
             if (unit.AfterLevel >= requirement) {
                 return true;
             }
         });
-        log.debug("Levelup Detection", "checkUnitLevel", "isDone", isDone);
-        return isDone;
+        log.debug("Levelup Detection", "checkUnitLevel", { alreadyDone, done });
+        return [alreadyDone, done];
     };
     /**
      * 渡されたユニット一覧の全員の全スキルが要求レベルを超えているか返す
+     * @returns {[boolean, boolean]} [BeforeLevelがrequirement以上, AfterLevelがrequirement以上]
      */
     const checkSkillLevel = ({ list, requirement, }) => {
-        const isDone = list.every((unit) => {
+        const alreadyDone = list.every((unit) => {
+            return unit.SkillInfo.every((skill) => {
+                if (skill.BeforeLevel >= requirement) {
+                    return true;
+                }
+            });
+        });
+        const done = list.every((unit) => {
             return unit.SkillInfo.every((skill) => {
                 if (skill.AfterLevel >= requirement) {
                     return true;
                 }
             });
         });
-        log.debug("Levelup Detection", "checkSkillLevel", "isDone", isDone);
-        return isDone;
+        log.debug("Levelup Detection", "checkSkillLevel", { alreadyDone, done });
+        return [alreadyDone, done];
     };
     /**
      * @package
@@ -1734,10 +1748,12 @@
         const webhookInterests = unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests;
         const requirement = Number(config.unitLevelRequirement);
-        const shouldReportUnitLevel = checkUnitLevel({
+        const [noLeechers, shouldReportUnitLevel] = checkUnitLevel({
             list: res.PCExpAndLevelupList,
             requirement,
         });
+        if (noLeechers)
+            return;
         if (shouldReportUnitLevel) {
             if (!webhookInterests.levelUp) {
                 log.log("Levelup Detection", "watchUnitLevel", "通知条件を満たしましたが、Discord通知設定で無効になっているため通知しません");
@@ -1752,14 +1768,6 @@
                 ],
             };
             sendToDiscordWebhook(body);
-            // 通知したらオフにする
-            unsafeWindow.LAOPLUS.config.set({
-                features: {
-                    levelupDetection: {
-                        watchUnitLevel: false,
-                    },
-                },
-            });
         }
     };
     /**
@@ -1770,10 +1778,12 @@
         const webhookInterests = unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests;
         const requirement = Number(config.skillLevelRequirement);
-        const shouldReportSkillLevel = checkSkillLevel({
+        const [noLeechers, shouldReportSkillLevel] = checkSkillLevel({
             list: res.SkillExpAndLevelupList,
             requirement,
         });
+        if (noLeechers)
+            return;
         if (shouldReportSkillLevel) {
             if (!webhookInterests.levelUp) {
                 log.log("Levelup Detection", "watchSkillLevel", "通知条件を満たしましたが、Discord通知設定で無効になっているため通知しません");
@@ -1788,14 +1798,6 @@
                 ],
             };
             sendToDiscordWebhook(body);
-            // 通知したらオフにする
-            unsafeWindow.LAOPLUS.config.set({
-                features: {
-                    levelupDetection: {
-                        watchSkillLevel: false,
-                    },
-                },
-            });
         }
     };
 
