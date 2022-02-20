@@ -5,6 +5,7 @@ import {
     exploration_enter,
     exploration_inginfo,
     exploration_reward,
+    facility_pcchange,
     facility_reward,
     facility_work,
     wave_clear,
@@ -17,6 +18,7 @@ export type {
     exploration_enter,
     exploration_inginfo,
     exploration_reward,
+    facility_pcchange,
     facility_reward,
     facility_work,
     wave_clear,
@@ -57,6 +59,11 @@ export type InvokeProps =
           pathname: "/exploration_reward";
           req: exploration_reward["req"];
           res: exploration_reward["res"];
+      })
+    | (InvokePropsBase & {
+          pathname: "/facility_pcchange";
+          req: facility_pcchange["req"];
+          res: facility_pcchange["res"];
       })
     | (InvokePropsBase & {
           pathname: "/facility_reward";
