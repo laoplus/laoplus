@@ -9,6 +9,7 @@ import {
 
 /**
  * 渡されたユニット一覧の全員が要求レベルを超えているか返す
+ * @returns {[boolean, boolean]} [BeforeLevelがrequirement以上, AfterLevelがrequirement以上]
  */
 const checkUnitLevel = ({
     list,
@@ -16,18 +17,24 @@ const checkUnitLevel = ({
 }: {
     list: wave_clear["res"]["PCExpAndLevelupList"];
     requirement: number;
-}) => {
-    const isDone = list.every((unit) => {
+}): [boolean, boolean] => {
+    const alreadyDone = list.every((unit) => {
+        if (unit.BeforeLevel >= requirement) {
+            return true;
+        }
+    });
+    const done = list.every((unit) => {
         if (unit.AfterLevel >= requirement) {
             return true;
         }
     });
-    log.debug("Levelup Detection", "checkUnitLevel", "isDone", isDone);
-    return isDone;
+    log.debug("Levelup Detection", "checkUnitLevel", { alreadyDone, done });
+    return [alreadyDone, done];
 };
 
 /**
  * 渡されたユニット一覧の全員の全スキルが要求レベルを超えているか返す
+ * @returns {[boolean, boolean]} [BeforeLevelがrequirement以上, AfterLevelがrequirement以上]
  */
 const checkSkillLevel = ({
     list,
@@ -35,16 +42,23 @@ const checkSkillLevel = ({
 }: {
     list: wave_clear["res"]["SkillExpAndLevelupList"];
     requirement: number;
-}) => {
-    const isDone = list.every((unit) => {
+}): [boolean, boolean] => {
+    const alreadyDone = list.every((unit) => {
+        return unit.SkillInfo.every((skill) => {
+            if (skill.BeforeLevel >= requirement) {
+                return true;
+            }
+        });
+    });
+    const done = list.every((unit) => {
         return unit.SkillInfo.every((skill) => {
             if (skill.AfterLevel >= requirement) {
                 return true;
             }
         });
     });
-    log.debug("Levelup Detection", "checkSkillLevel", "isDone", isDone);
-    return isDone;
+    log.debug("Levelup Detection", "checkSkillLevel", { alreadyDone, done });
+    return [alreadyDone, done];
 };
 
 /**
@@ -57,10 +71,11 @@ export const watchUnitLevel = (res: wave_clear["res"]) => {
             .interests;
     const requirement = Number(config.unitLevelRequirement);
 
-    const shouldReportUnitLevel = checkUnitLevel({
+    const [noLeechers, shouldReportUnitLevel] = checkUnitLevel({
         list: res.PCExpAndLevelupList,
         requirement,
     });
+    if (noLeechers) return;
 
     if (shouldReportUnitLevel) {
         if (!webhookInterests.levelUp) {
@@ -103,10 +118,11 @@ export const watchSkillLevel = (res: wave_clear["res"]) => {
             .interests;
     const requirement = Number(config.skillLevelRequirement);
 
-    const shouldReportSkillLevel = checkSkillLevel({
+    const [noLeechers, shouldReportSkillLevel] = checkSkillLevel({
         list: res.SkillExpAndLevelupList,
         requirement,
     });
+    if (noLeechers) return;
 
     if (shouldReportSkillLevel) {
         if (!webhookInterests.levelUp) {
