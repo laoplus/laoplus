@@ -13,6 +13,7 @@ import {
     facility_slot_list,
     facility_unlock,
     facility_upgrade,
+    facility_upgrade_confirm,
     facility_work,
     wave_clear,
 } from "./endpoints";
@@ -32,6 +33,7 @@ export type {
     facility_slot_list,
     facility_unlock,
     facility_upgrade,
+    facility_upgrade_confirm,
     facility_work,
     wave_clear,
 } from "./endpoints";
@@ -111,6 +113,11 @@ export type InvokeProps =
           pathname: "/facility_upgrade";
           req: facility_upgrade["req"];
           res: facility_upgrade["res"];
+      })
+    | (InvokePropsBase & {
+          pathname: "/facility_upgrade_confirm";
+          req: facility_upgrade_confirm["req"];
+          res: facility_upgrade_confirm["res"];
       })
     | (InvokePropsBase & {
           pathname: "/facility_work";
