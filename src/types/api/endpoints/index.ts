@@ -6,5 +6,6 @@ export type { exploration_reward } from "./exploration_reward";
 export type { exploration_enter } from "./exploration_enter";
 export type { facility_pcchange } from "./facility_pcchange";
 export type { facility_reward } from "./facility_reward";
+export type { facility_unlock } from "./facility_unlock";
 export type { facility_work } from "./facility_work";
 export type { wave_clear } from "./wave_clear";
