@@ -11,7 +11,7 @@ export type Reward = {
     AddAccountExp: number;
     CurrAccountExp: number;
     /**
-     * 探索で獲得した資源
+     * 報酬として獲得した資源
      */
     GiveCurrencyInfo: CurrencyInfo;
     AddTraningTicket: number;

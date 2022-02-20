@@ -1,5 +1,5 @@
 import { enter } from "./functions";
-import { InvokeProps } from "~/types";
+import { InvokeProps } from "~/types/api";
 
 export const invoke = ({ pathname }: InvokeProps) => {
     if (!unsafeWindow.LAOPLUS.config.config.features.autorunDetection.enabled) {

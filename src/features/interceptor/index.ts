@@ -1,5 +1,5 @@
 import { log } from "~/utils";
-import { InvokeProps } from "~/types";
+import { InvokeProps } from "~/types/api";
 import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
 import { invoke as invokeDropNotification } from "../dropNotification/invoke";
 import { invoke as invokeAutorunDetection } from "../autorunDetection/invoke";

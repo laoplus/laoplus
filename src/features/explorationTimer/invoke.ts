@@ -1,5 +1,5 @@
 import { cancel, enter, loginto, reward } from "./functions";
-import { InvokeProps } from "~/types";
+import { InvokeProps } from "~/types/api";
 
 export const invoke = (props: InvokeProps) => {
     if (
