@@ -6,6 +6,7 @@ import {
     exploration_inginfo,
     exploration_reward,
     facility_equipin,
+    facility_equipout,
     facility_pcchange,
     facility_reward,
     facility_unlock,
@@ -21,6 +22,7 @@ export type {
     exploration_inginfo,
     exploration_reward,
     facility_equipin,
+    facility_equipout,
     facility_pcchange,
     facility_reward,
     facility_unlock,
@@ -68,6 +70,11 @@ export type InvokeProps =
           pathname: "/facility_equipin";
           req: facility_equipin["req"];
           res: facility_equipin["res"];
+      })
+    | (InvokePropsBase & {
+          pathname: "/facility_equipout";
+          req: facility_equipout["req"];
+          res: facility_equipout["res"];
       })
     | (InvokePropsBase & {
           pathname: "/facility_pcchange";
