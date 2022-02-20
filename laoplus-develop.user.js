@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645348010-acc7220a3c4cc5ce747e00f9012d79fe5aed42e6
+// @version     1645352367-2481ca31ce9e0adee840a8f3d48e24c5ea235f77
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1729,15 +1729,19 @@
     /**
      * @package
      */
-    const waveClear = ({ PCExpAndLevelupList, SkillExpAndLevelupList, }) => {
+    const watchUnitLevel = (res) => {
         const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
         const webhookInterests = unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests;
+        const requirement = Number(config.unitLevelRequirement);
         const shouldReportUnitLevel = checkUnitLevel({
-            list: PCExpAndLevelupList,
-            requirement: Number(config.unitLevelRequirement),
+            list: res.PCExpAndLevelupList,
+            requirement,
         });
-        if (shouldReportUnitLevel && webhookInterests.levelUp) {
+        if (shouldReportUnitLevel) {
+            if (!webhookInterests.levelUp) {
+                log.log("Levelup Detection", "watchUnitLevel", "通知条件を満たしましたが、Discord通知設定で無効になっているため通知しません");
+            }
             const body = {
                 embeds: [
                     {
@@ -1757,11 +1761,23 @@
                 },
             });
         }
+    };
+    /**
+     * @package
+     */
+    const watchSkillLevel = (res) => {
+        const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
+        const webhookInterests = unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests;
+        const requirement = Number(config.skillLevelRequirement);
         const shouldReportSkillLevel = checkSkillLevel({
-            list: SkillExpAndLevelupList,
-            requirement: Number(config.skillLevelRequirement),
+            list: res.SkillExpAndLevelupList,
+            requirement,
         });
-        if (shouldReportSkillLevel && webhookInterests.skillLevelUp) {
+        if (shouldReportSkillLevel) {
+            if (!webhookInterests.levelUp) {
+                log.log("Levelup Detection", "watchSkillLevel", "通知条件を満たしましたが、Discord通知設定で無効になっているため通知しません");
+            }
             const body = {
                 embeds: [
                     {
@@ -1784,11 +1800,17 @@
     };
 
     const invoke = (props) => {
-        if (!unsafeWindow.LAOPLUS.config.config.features.levelupDetection.enabled) {
+        const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
+        if (!config.enabled) {
             return;
         }
         if (props.pathname === "/wave_clear") {
-            waveClear(props.res);
+            if (config.watchUnitLevel) {
+                watchUnitLevel(props.res);
+            }
+            if (config.watchSkillLevel) {
+                watchSkillLevel(props.res);
+            }
             return;
         }
     };
