@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645352367-2481ca31ce9e0adee840a8f3d48e24c5ea235f77
+// @version     1645357183-444500fbb46cb22e6dc94c9a63813c4e9862243e
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1464,11 +1464,11 @@
         const [config] = React.useState(unsafeWindow.LAOPLUS.config.config);
         return (React.createElement(React.Fragment, null,
             React.createElement(BootstrapIcon, null),
+            React.createElement(AutorunStatus, null),
             React.createElement(IconWrapper, null,
                 React.createElement(ConfigModal, null),
                 React.createElement(ToggleAutorun, null),
-                config.features.farmingStats.enabled && React.createElement(FarmingStats, null)),
-            React.createElement(AutorunStatus, null)));
+                config.features.farmingStats.enabled && React.createElement(FarmingStats, null))));
     };
     const initUi = () => {
         const root = document.createElement("div");
