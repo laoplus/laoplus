@@ -96,15 +96,6 @@ export const watchUnitLevel = (res: wave_clear["res"]) => {
             ],
         };
         sendToDiscordWebhook(body);
-
-        // 通知したらオフにする
-        unsafeWindow.LAOPLUS.config.set({
-            features: {
-                levelupDetection: {
-                    watchUnitLevel: false,
-                },
-            },
-        });
     }
 };
 
@@ -143,14 +134,5 @@ export const watchSkillLevel = (res: wave_clear["res"]) => {
             ],
         };
         sendToDiscordWebhook(body);
-
-        // 通知したらオフにする
-        unsafeWindow.LAOPLUS.config.set({
-            features: {
-                levelupDetection: {
-                    watchSkillLevel: false,
-                },
-            },
-        });
     }
 };
