@@ -10,6 +10,7 @@ import {
     facility_list,
     facility_pcchange,
     facility_reward,
+    facility_slot_list,
     facility_unlock,
     facility_work,
     wave_clear,
@@ -27,6 +28,7 @@ export type {
     facility_list,
     facility_pcchange,
     facility_reward,
+    facility_slot_list,
     facility_unlock,
     facility_work,
     wave_clear,
@@ -67,6 +69,11 @@ export type InvokeProps =
           pathname: "/exploration_reward";
           req: exploration_reward["req"];
           res: exploration_reward["res"];
+      })
+    | (InvokePropsBase & {
+          pathname: "/facility_slot_list";
+          req: facility_slot_list["req"];
+          res: facility_slot_list["res"];
       })
     | (InvokePropsBase & {
           pathname: "/facility_equipin";
