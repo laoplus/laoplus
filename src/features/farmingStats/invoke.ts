@@ -5,7 +5,7 @@ import {
     incrementDrops,
     calcSquadCosts,
 } from "./functions";
-import { InvokeProps } from "~/types";
+import { InvokeProps } from "~/types/api";
 
 export const invoke = (props: InvokeProps) => {
     if (props.pathname === "/battleserver_enter") {

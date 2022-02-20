@@ -1,5 +1,5 @@
 import { itemDropNotification, PcDropNotification } from "./functions";
-import { InvokeProps } from "~/types";
+import { InvokeProps } from "~/types/api";
 
 export const invoke = (props: InvokeProps) => {
     if (props.pathname === "/wave_clear") {

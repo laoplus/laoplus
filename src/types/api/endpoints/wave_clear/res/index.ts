@@ -1,10 +1,14 @@
-import type { ResBase, PCInfo, QuestInfo } from "~/types/api/shared";
+import type {
+    ResBase,
+    PCInfo,
+    QuestInfo,
+    UpdateItemInfo,
+} from "~/types/api/shared";
 import type { ClearRewardInfo } from "./ClearRewardInfo";
 import type { PCExpAndLevelup } from "./PCExpAndLevelup";
 import type { SkillExpAndLevelup } from "./SkillExpAndLevelup";
 import type { UpdateAccountExpUp } from "./UpdateAccountExpUp";
 import type { UpdateEternityStageClearInfo } from "./UpdateEternityStageClearInfo";
-import type { UpdateItemInfo } from "./UpdateItemInfo";
 
 /**
  * @package
