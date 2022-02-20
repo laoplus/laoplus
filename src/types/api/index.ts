@@ -12,6 +12,7 @@ import {
     facility_reward,
     facility_slot_list,
     facility_unlock,
+    facility_upgrade,
     facility_work,
     wave_clear,
 } from "./endpoints";
@@ -30,6 +31,7 @@ export type {
     facility_reward,
     facility_slot_list,
     facility_unlock,
+    facility_upgrade,
     facility_work,
     wave_clear,
 } from "./endpoints";
@@ -104,6 +106,11 @@ export type InvokeProps =
           pathname: "/facility_unlock";
           req: facility_unlock["req"];
           res: facility_unlock["res"];
+      })
+    | (InvokePropsBase & {
+          pathname: "/facility_upgrade";
+          req: facility_upgrade["req"];
+          res: facility_upgrade["res"];
       })
     | (InvokePropsBase & {
           pathname: "/facility_work";
