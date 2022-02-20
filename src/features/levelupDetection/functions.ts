@@ -50,20 +50,27 @@ const checkSkillLevel = ({
 /**
  * @package
  */
-export const waveClear = ({
-    PCExpAndLevelupList,
-    SkillExpAndLevelupList,
-}: wave_clear["res"]) => {
+export const watchUnitLevel = (res: wave_clear["res"]) => {
     const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
     const webhookInterests =
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests;
+    const requirement = Number(config.unitLevelRequirement);
 
     const shouldReportUnitLevel = checkUnitLevel({
-        list: PCExpAndLevelupList,
-        requirement: Number(config.unitLevelRequirement),
+        list: res.PCExpAndLevelupList,
+        requirement,
     });
-    if (shouldReportUnitLevel && webhookInterests.levelUp) {
+
+    if (shouldReportUnitLevel) {
+        if (!webhookInterests.levelUp) {
+            log.log(
+                "Levelup Detection",
+                "watchUnitLevel",
+                "通知条件を満たしましたが、Discord通知設定で無効になっているため通知しません"
+            );
+        }
+
         const body: Webhook.input.POST = {
             embeds: [
                 {
@@ -84,13 +91,32 @@ export const waveClear = ({
             },
         });
     }
+};
+
+/**
+ * @package
+ */
+export const watchSkillLevel = (res: wave_clear["res"]) => {
+    const config = unsafeWindow.LAOPLUS.config.config.features.levelupDetection;
+    const webhookInterests =
+        unsafeWindow.LAOPLUS.config.config.features.discordNotification
+            .interests;
+    const requirement = Number(config.skillLevelRequirement);
 
     const shouldReportSkillLevel = checkSkillLevel({
-        list: SkillExpAndLevelupList,
-        requirement: Number(config.skillLevelRequirement),
+        list: res.SkillExpAndLevelupList,
+        requirement,
     });
 
-    if (shouldReportSkillLevel && webhookInterests.skillLevelUp) {
+    if (shouldReportSkillLevel) {
+        if (!webhookInterests.levelUp) {
+            log.log(
+                "Levelup Detection",
+                "watchSkillLevel",
+                "通知条件を満たしましたが、Discord通知設定で無効になっているため通知しません"
+            );
+        }
+
         const body: Webhook.input.POST = {
             embeds: [
                 {
