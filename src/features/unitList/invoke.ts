@@ -1,11 +1,9 @@
 import { collect } from "./functions";
-import { InvokeProps } from "../types";
-import { Response } from "./type";
+import { InvokeProps } from "~/types/api";
 
-export const invoke = ({ url, res }: InvokeProps) => {
-    switch (url.pathname) {
-        case "/pclist":
-            collect(res as Response);
-            return;
+export const invoke = (props: InvokeProps) => {
+    if (props.pathname === "/pclist") {
+        collect(props.res);
+        return;
     }
 };

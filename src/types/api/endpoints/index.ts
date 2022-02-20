@@ -14,4 +14,5 @@ export type { facility_unlock } from "./facility_unlock";
 export type { facility_upgrade } from "./facility_upgrade";
 export type { facility_upgrade_confirm } from "./facility_upgrade_confirm";
 export type { facility_work } from "./facility_work";
+export type { pclist } from "./pclist";
 export type { wave_clear } from "./wave_clear";
