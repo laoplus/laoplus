@@ -1,4 +1,5 @@
-import type {
+import {
+    FarmingStatsContext,
     ResourceDisplayType,
     ShownResourceTypePerDropKinds,
 } from "./Panel";
@@ -33,6 +34,8 @@ export const GainedResourceDisplayHeader: React.VFC<{
         );
     };
 
+    const context = React.useContext(FarmingStatsContext);
+
     return (
         <div className="flex gap-3">
             <h2>
@@ -61,7 +64,7 @@ export const GainedResourceDisplayHeader: React.VFC<{
                         setResourceDisplayType("perHour");
                     }}
                 >
-                    時給
+                    時給{context.elapsedHours < 1 && "（予測）"}
                 </span>
                 <div
                     className="flex h-5 w-10 items-center rounded-full bg-gray-300 px-1"
@@ -79,7 +82,7 @@ export const GainedResourceDisplayHeader: React.VFC<{
                         setResourceDisplayType("sum");
                     }}
                 >
-                    合計
+                    累計
                 </span>
             </div>
         </div>

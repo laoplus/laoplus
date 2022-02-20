@@ -1,5 +1,6 @@
 import { rankColor } from "~/constants";
 import { Icon } from "./Icon";
+import { FarmingStatsContext } from "./Panel";
 const cn = classNames;
 
 type Rarity = "B" | "A" | "S" | "SS";
@@ -30,13 +31,19 @@ export const ResourceCounter: React.VFC<{
     amount: number;
     sign?: boolean;
 }> = ({ type, amount, sign = false }) => {
-    // const resourceDisplayType = React.useContext(ResourceDisplayTypeContext);
-    // const namount =
-    //     resourceDisplayType.mode === "perHour"
-    //         ? resourceDisplayType.elapsedHours === 0
-    //             ? 0
-    //             : Number((amount / resourceDisplayType.elapsedHours).toFixed(2))
-    //         : amount;
+    const context = React.useContext(FarmingStatsContext);
+    const displayAmount = (() => {
+        if (context.resourceDisplayType === "sum") {
+            return amount;
+        }
+        if (context.resourceDisplayType === "perHour") {
+            if (context.elapsedHours === 0) return 0;
+            const v = amount / context.elapsedHours;
+            return Number(v.toFixed(1));
+        }
+        return amount;
+    })();
+
     return (
         <div className="flex items-center gap-2 font-bold text-gray-900">
             {type === "B" || type === "A" || type === "S" || type === "SS" ? (
@@ -49,9 +56,10 @@ export const ResourceCounter: React.VFC<{
 
             <hr className="h-[2px] w-full rounded-full border-0 bg-gray-200" />
 
-            <span className={cn(sign && amount < 0 && "text-red-500")}>
-                {sign && (amount === 0 ? "±" : amount < 0 ? "-" : "+")}
-                {Math.abs(amount).toLocaleString()}
+            <span className={cn(sign && displayAmount < 0 && "text-red-500")}>
+                {sign &&
+                    (displayAmount === 0 ? "±" : displayAmount < 0 ? "-" : "+")}
+                {Math.abs(displayAmount).toLocaleString()}
             </span>
         </div>
     );

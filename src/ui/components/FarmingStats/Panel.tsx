@@ -12,9 +12,24 @@ import { Drops } from "./Drops";
 function jsonEqual(a: unknown, b: unknown) {
     return JSON.stringify(a) === JSON.stringify(b);
 }
-
+/**
+ * @package
+ */
 export type ResourceDisplayType = "perHour" | "sum";
+/**
+ * @package
+ */
 export type ShownResourceTypePerDropKinds = "total" | "units" | "equipments";
+/**
+ * @package
+ */
+export const FarmingStatsContext = React.createContext<{
+    resourceDisplayType: ResourceDisplayType;
+    elapsedHours: number;
+}>({
+    resourceDisplayType: "sum",
+    elapsedHours: 0,
+});
 
 export const Panel: React.VFC = () => {
     const status = unsafeWindow.LAOPLUS.status;
@@ -128,36 +143,40 @@ export const Panel: React.VFC = () => {
 
                 <hr />
 
-                <GainedResourceDisplayHeader
-                    resourceDisplayType={resourceDisplayType}
-                    setResourceDisplayType={setResourceDisplayType}
-                    shownResourceTypePerDropKinds={
-                        shownResourceTypePerDropKinds
-                    }
-                    setShownResourceTypePerDropKinds={
-                        setShownResourceTypePerDropKinds
-                    }
-                />
-                <GainedResourceDisplayTable
-                    resources={
-                        disassembledResource[shownResourceTypePerDropKinds]
-                    }
-                />
+                <FarmingStatsContext.Provider
+                    value={{ resourceDisplayType, elapsedHours }}
+                >
+                    <GainedResourceDisplayHeader
+                        resourceDisplayType={resourceDisplayType}
+                        setResourceDisplayType={setResourceDisplayType}
+                        shownResourceTypePerDropKinds={
+                            shownResourceTypePerDropKinds
+                        }
+                        setShownResourceTypePerDropKinds={
+                            setShownResourceTypePerDropKinds
+                        }
+                    />
+                    <GainedResourceDisplayTable
+                        resources={
+                            disassembledResource[shownResourceTypePerDropKinds]
+                        }
+                    />
 
-                <Profit
-                    currentSquadCosts={stats.currentSquadCosts}
-                    resources={
-                        disassembledResource[shownResourceTypePerDropKinds]
-                    }
-                    lapCount={stats.lapCount}
-                />
+                    <Profit
+                        currentSquadCosts={stats.currentSquadCosts}
+                        resources={
+                            disassembledResource[shownResourceTypePerDropKinds]
+                        }
+                        lapCount={stats.lapCount}
+                    />
 
-                <Drops
-                    drops={stats.drops}
-                    shownResourceTypePerDropKinds={
-                        shownResourceTypePerDropKinds
-                    }
-                />
+                    <Drops
+                        drops={stats.drops}
+                        shownResourceTypePerDropKinds={
+                            shownResourceTypePerDropKinds
+                        }
+                    />
+                </FarmingStatsContext.Provider>
             </main>
         </div>
     );
