@@ -1,5 +1,8 @@
 import { Resource, Module } from "./type";
 
+/**
+ * @package
+ */
 export const Icon: React.VFC<{ type: Resource | Module }> = ({ type }) => {
     const icon = (() => {
         const base = `https://cdn.laoplus.net/ui/`;

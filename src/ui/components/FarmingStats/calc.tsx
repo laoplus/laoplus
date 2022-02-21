@@ -2,6 +2,18 @@ import { log } from "~/utils";
 import { disassemblingTable } from "~/constants";
 import { FarmingStats } from "~/types/Status";
 
+/**
+ * @package
+ */
+export type Resources = {
+    parts: number;
+    nutrients: number;
+    power: number;
+    basic_module: number;
+    advanced_module: number;
+    special_module: number;
+};
+
 // 分解についてのメモ
 // 分解獲得資源上昇（研究「精密分解施設」, 基地「装備分解室」）で増えるのは部品・栄養・電力のみ
 // 計算式: 少数切り捨て(1体から得られる量 * 数 * 倍率)
@@ -47,7 +59,7 @@ export const calcResourcesFromDrops = ({
         | typeof disassemblingTable.equipments;
     type: "units" | "equipments";
 }) => {
-    const sumInitialValue = {
+    const sumInitialValue: Resources = {
         parts: 0,
         nutrients: 0,
         power: 0,
@@ -60,7 +72,7 @@ export const calcResourcesFromDrops = ({
     const ranks = Object.keys(drops) as (keyof typeof drops)[];
 
     // ランクごとに集計・加算して返す
-    const total = ranks.reduce(
+    const total: Resources = ranks.reduce(
         (sum, rank) => {
             const resourceKeys = Object.keys(
                 sumInitialValue

@@ -1,5 +1,6 @@
 import { defaultStatus } from "~/Status";
 import { battleserver_enter, wave_clear } from "~/types/api";
+import { DeepPartial, FarmingStats } from "~/types/Status";
 import { log, gradeToRank, itemKeyToRank } from "~/utils";
 
 export const reset = () => {
@@ -12,25 +13,24 @@ export const reset = () => {
  * @package
  */
 export const enter = () => {
-    const status = unsafeWindow.LAOPLUS.status;
-    const curtime = new Date().getTime();
-    const { latestLeaveTime, totalWaitingTime } = status.status.farmingStats;
+    const currentTime = new Date().getTime();
+    const { latestLeaveTime, totalWaitingTime, firstEnterTime } =
+        unsafeWindow.LAOPLUS.status.status.farmingStats;
+
+    const update: DeepPartial<FarmingStats> = {
+        latestEnterTime: currentTime,
+    };
+
+    if (firstEnterTime === null) {
+        update.firstEnterTime = currentTime;
+    }
 
     if (latestLeaveTime) {
-        const waitTime = (curtime - latestLeaveTime) / 1000;
-        status.set({
-            farmingStats: {
-                latestEnterTime: curtime,
-                totalWaitingTime: totalWaitingTime + waitTime,
-            },
-        });
-    } else {
-        status.set({
-            farmingStats: {
-                latestEnterTime: curtime,
-            },
-        });
+        const waitTime = (currentTime - latestLeaveTime) / 1000;
+        update.totalWaitingTime = totalWaitingTime + waitTime;
     }
+
+    unsafeWindow.LAOPLUS.status.set({ farmingStats: update });
 };
 
 /**
