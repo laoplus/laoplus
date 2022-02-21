@@ -44,6 +44,9 @@ export const ResourceCounter: React.VFC<{
         return amount;
     })();
 
+    // displayAmountの小数部分
+    const dec = String(displayAmount).split(".")[1];
+
     return (
         <div className="flex items-center gap-2 font-bold text-gray-900">
             {type === "B" || type === "A" || type === "S" || type === "SS" ? (
@@ -59,7 +62,12 @@ export const ResourceCounter: React.VFC<{
             <span className={cn(sign && displayAmount < 0 && "text-red-500")}>
                 {sign &&
                     (displayAmount === 0 ? "±" : displayAmount < 0 ? "-" : "+")}
-                {Math.abs(displayAmount).toLocaleString()}
+                {Math.abs(Math.trunc(displayAmount)).toLocaleString()}
+                {dec && (
+                    // 日本や欧米以外では小数点が"."ではない可能性があるが
+                    // Number.prototype.toLocaleString()した結果のロケール定義を取得する方法がわからないため.に固定している
+                    <span className="ml-0.5 text-xs text-gray-500">.{dec}</span>
+                )}
             </span>
         </div>
     );
