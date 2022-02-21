@@ -46,6 +46,7 @@ export const ResourceCounter: React.VFC<{
 
     const nf = new Intl.NumberFormat();
     const parts = nf.formatToParts(displayAmount);
+    const isNegative = parts.some((p) => p.type === "minusSign");
     const integer = parts.find((p) => p.type === "integer")?.value || 0;
     const decimal = parts.find((p) => p.type === "decimal")?.value || ".";
     const fraction = parts.find((p) => p.type === "fraction")?.value;
@@ -62,12 +63,16 @@ export const ResourceCounter: React.VFC<{
 
             <hr className="h-[2px] w-full rounded-full border-0 bg-gray-200" />
 
-            <span className={cn(sign && displayAmount < 0 && "text-red-500")}>
-                {sign &&
-                    (displayAmount === 0 ? "±" : displayAmount < 0 ? "-" : "+")}
+            <span className={cn(sign && isNegative && "text-red-500")}>
+                {sign && (displayAmount === 0 ? "±" : isNegative ? "-" : "+")}
                 {integer}
                 {fraction && (
-                    <span className="ml-0.5 text-xs text-gray-500">
+                    <span
+                        className={cn(
+                            "ml-0.5 text-xs text-gray-500",
+                            sign && isNegative && "!text-red-500"
+                        )}
+                    >
                         {decimal}
                         {fraction}
                     </span>
