@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645470802-d35dcfdd8deb1317aab8d0defa74c8abeeffe1ef
+// @version     1645472413-e47fd33c92949d13a7a61d159b01227c75c76088
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1273,6 +1273,7 @@
         })();
         const nf = new Intl.NumberFormat();
         const parts = nf.formatToParts(displayAmount);
+        const isNegative = parts.some((p) => p.type === "minusSign");
         const integer = parts.find((p) => p.type === "integer")?.value || 0;
         const decimal = parts.find((p) => p.type === "decimal")?.value || ".";
         const fraction = parts.find((p) => p.type === "fraction")?.value;
@@ -1280,11 +1281,10 @@
             type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement(ResourceCounterIcon, { type: type })) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
                 React.createElement(Icon, { type: type }))),
             React.createElement("hr", { className: "h-[2px] w-full rounded-full border-0 bg-gray-200" }),
-            React.createElement("span", { className: cn$2(sign && displayAmount < 0 && "text-red-500") },
-                sign &&
-                    (displayAmount === 0 ? "±" : displayAmount < 0 ? "-" : "+"),
+            React.createElement("span", { className: cn$2(sign && isNegative && "text-red-500") },
+                sign && (displayAmount === 0 ? "±" : isNegative ? "-" : "+"),
                 integer,
-                fraction && (React.createElement("span", { className: "ml-0.5 text-xs text-gray-500" },
+                fraction && (React.createElement("span", { className: cn$2("ml-0.5 text-xs text-gray-500", sign && isNegative && "!text-red-500") },
                     decimal,
                     fraction)))));
     };
