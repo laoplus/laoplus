@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645359793-9196fd4ea39ff130aa7f3aba1bf1a19c70d1f1a5
+// @version     1645414707-a44832b1c9916cc049cd9704d737c01f72f6febf
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -269,6 +269,7 @@
             latestEnterTime: null,
         },
         farmingStats: {
+            firstEnterTime: null,
             latestEnterTime: null,
             waveTime: null,
             latestLeaveTime: null,
@@ -311,19 +312,19 @@
         return (React.createElement("link", { rel: "stylesheet", href: "https://unpkg.com/bootstrap-icons@1.7.1/font/bootstrap-icons.css" }));
     };
 
-    const cn$a = classNames;
+    const cn$c = classNames;
     const ErrorMessage = ({ children, className }) => {
-        return (React.createElement("span", { className: cn$a("text-sm text-red-600", className) }, children));
+        return (React.createElement("span", { className: cn$c("text-sm text-red-600", className) }, children));
     };
 
-    const cn$9 = classNames;
+    const cn$b = classNames;
     const ExplorationList = () => {
         const exploration = unsafeWindow.LAOPLUS.exploration.sort((a, b) => a.EndTime - b.EndTime);
         const list = exploration.map((exp) => {
             const endDate = dayjs(exp.EndTime * 1000);
             const duration = dayjs.duration(endDate.diff(dayjs()));
             const isFinished = endDate.isSameOrBefore(dayjs());
-            return (React.createElement("div", { key: exp.StageKeyString, className: cn$9("flex items-center gap-3 rounded-md bg-white px-2 py-4 text-gray-800 shadow-md transition-spacing md:px-6", { "animate-bounce": isFinished }) },
+            return (React.createElement("div", { key: exp.StageKeyString, className: cn$b("flex items-center gap-3 rounded-md bg-white px-2 py-4 text-gray-800 shadow-md transition-spacing md:px-6", { "animate-bounce": isFinished }) },
                 React.createElement("span", { className: "text-3xl font-bold" }, exp.SquadIndex),
                 React.createElement("div", { className: "flex flex-col" },
                     React.createElement("span", { className: "text-sm" }, humanFriendlyStageKey(exp.StageKeyString)),
@@ -342,7 +343,7 @@
         return React.createElement(React.Fragment, null, list);
     };
 
-    const cn$8 = classNames;
+    const cn$a = classNames;
     /**
      * ラスオリのボタンっぽいボタン
      * variantのプレビュー: https://user-images.githubusercontent.com/3516343/143912908-65956c55-b60d-4028-82d2-143b08414384.png
@@ -389,12 +390,12 @@
             }
         })();
         return (React.createElement("div", { className: "drop-shadow" },
-            React.createElement("button", { type: "submit", className: cn$8("min-w-[6rem] bg-amber-300 p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
+            React.createElement("button", { type: "submit", className: cn$a("min-w-[6rem] bg-amber-300 p-3 font-bold leading-none", { rounded: variant === 1 }, className), style: clipStyle }, children)));
     };
 
-    const cn$7 = classNames;
+    const cn$9 = classNames;
     const FeatureSection = ({ children, hasError }) => {
-        return (React.createElement("details", { className: cn$7("rounded border pl-10 shadow", hasError
+        return (React.createElement("details", { className: cn$9("rounded border pl-10 shadow", hasError
                 ? "border-red-600 shadow-red-300/50"
                 : "border-b-transparent") }, children));
     };
@@ -415,9 +416,9 @@
                 React.createElement("input", { type: "checkbox", className: "h-4 w-4 before:cursor-pointer", ...register }))));
     };
 
-    const cn$6 = classNames;
+    const cn$8 = classNames;
     const FeatureSectionContent = ({ children, enable }) => {
-        return (React.createElement("div", { className: cn$6("flex flex-col gap-2 border-t p-4 pl-0", {
+        return (React.createElement("div", { className: cn$8("flex flex-col gap-2 border-t p-4 pl-0", {
                 "opacity-50": !enable,
             }) }, children));
     };
@@ -531,7 +532,7 @@
         }
     };
 
-    const cn$5 = classNames;
+    const cn$7 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
     element.setAttribute("type", "text/tailwindcss");
@@ -608,7 +609,7 @@
                                                 React.createElement("label", { className: "flex items-center gap-1" },
                                                     React.createElement("input", { type: "checkbox", disabled: !watch("features.discordNotification.enabled"), ...register("features.discordNotification.interests.pcDrop") }),
                                                     "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30C9\u30ED\u30C3\u30D7"),
-                                                React.createElement("div", { className: cn$5("ml-1 flex gap-3 pl-4", {
+                                                React.createElement("div", { className: cn$7("ml-1 flex gap-3 pl-4", {
                                                         "opacity-50": !watch("features.discordNotification.interests.pcDrop"),
                                                     }) },
                                                     React.createElement("label", { className: "flex items-center gap-1" },
@@ -720,7 +721,7 @@
                                         React.createElement("label", { className: "flex items-center gap-1" },
                                             React.createElement("input", { type: "checkbox", disabled: !watch("features.levelupDetection.enabled"), ...register("features.levelupDetection.watchUnitLevel") }),
                                             "\u6226\u95D8\u54E1\u306E\u30EC\u30D9\u30EB\u3092\u76E3\u8996\u3059\u308B"),
-                                        React.createElement("label", { className: cn$5("flex items-center gap-2", {
+                                        React.createElement("label", { className: cn$7("flex items-center gap-2", {
                                                 "opacity-50": !watch("features.levelupDetection.watchUnitLevel"),
                                             }) },
                                             React.createElement("span", { className: "flex-shrink-0" }, "\u90E8\u968A\u306E\u5168\u54E1\u306E\u30EC\u30D9\u30EB\u304C\u4E0A\u56DE\u3063\u305F\u3089\u901A\u77E5\u3059\u308B\u76EE\u6A19\u5024:"),
@@ -739,7 +740,7 @@
                                         React.createElement("label", { className: "flex items-center gap-1" },
                                             React.createElement("input", { type: "checkbox", disabled: !watch("features.levelupDetection.enabled"), ...register("features.levelupDetection.watchSkillLevel") }),
                                             "\u6226\u95D8\u54E1\u306E\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u3092\u76E3\u8996\u3059\u308B"),
-                                        React.createElement("label", { className: cn$5("flex items-center gap-2", {
+                                        React.createElement("label", { className: cn$7("flex items-center gap-2", {
                                                 "opacity-50": !watch("features.levelupDetection.watchSkillLevel"),
                                             }) },
                                             React.createElement("span", { className: "flex-shrink-0" }, "\u90E8\u968A\u306E\u5168\u54E1\u306E\u30B9\u30AD\u30EB\u30EC\u30D9\u30EB\u304C\u4E0A\u56DE\u3063\u305F\u3089\u901A\u77E5\u3059\u308B\u76EE\u6A19\u5024:"),
@@ -788,15 +789,15 @@
                         React.createElement(ExplorationList, null))))));
     };
 
-    const cn$4 = classNames;
+    const cn$6 = classNames;
     /**
      * @package
      */
     const Spinner = ({ className, style }) => {
-        return (React.createElement("i", { className: cn$4("bi bi-arrow-repeat", className), style: style }));
+        return (React.createElement("i", { className: cn$6("bi bi-arrow-repeat", className), style: style }));
     };
 
-    const cn$3 = classNames;
+    const cn$5 = classNames;
     /**
      * @package
      */
@@ -813,12 +814,12 @@
         }, []);
         if (targetDate !== null) {
             const duration = dayjs.duration(dayjs(targetDate).diff(dayjs()));
-            return (React.createElement("div", { className: cn$3("text-[10vh]", className) }, duration.format("mm:ss")));
+            return (React.createElement("div", { className: cn$5("text-[10vh]", className) }, duration.format("mm:ss")));
         }
-        return React.createElement("div", { className: cn$3("text-[6vh]", className) }, "WAITING");
+        return React.createElement("div", { className: cn$5("text-[6vh]", className) }, "WAITING");
     };
 
-    const cn$2 = classNames;
+    const cn$4 = classNames;
     const AutorunStatus = () => {
         const config = unsafeWindow.LAOPLUS.config;
         const status = unsafeWindow.LAOPLUS.status;
@@ -835,7 +836,7 @@
         if (!shown) {
             return React.createElement(React.Fragment, null);
         }
-        return (React.createElement("div", { className: cn$2("pointer-events-none absolute inset-y-0 left-0 flex -translate-x-[50%] select-none items-center text-white drop-shadow-lg", enterDate === null ? "opacity-50" : "opacity-90") },
+        return (React.createElement("div", { className: cn$4("pointer-events-none absolute inset-y-0 left-0 flex -translate-x-[50%] select-none items-center text-white drop-shadow-lg", enterDate === null ? "opacity-50" : "opacity-90") },
             React.createElement(Spinner, { className: "animate-spin text-[70vh] leading-zero", style: { animationDuration: "12s" } }),
             React.createElement("div", { className: "absolute inset-0 flex items-center justify-center pl-[50%]" },
                 React.createElement(Timer, { targetDate: enterDate, className: "rotate-90 pt-[60%]" }))));
@@ -937,25 +938,19 @@
      * @package
      */
     const enter$2 = () => {
-        const status = unsafeWindow.LAOPLUS.status;
-        const curtime = new Date().getTime();
-        const { latestLeaveTime, totalWaitingTime } = status.status.farmingStats;
+        const currentTime = new Date().getTime();
+        const { latestLeaveTime, totalWaitingTime, firstEnterTime } = unsafeWindow.LAOPLUS.status.status.farmingStats;
+        const update = {
+            latestEnterTime: currentTime,
+        };
+        if (firstEnterTime === null) {
+            update.firstEnterTime = currentTime;
+        }
         if (latestLeaveTime) {
-            const waitTime = (curtime - latestLeaveTime) / 1000;
-            status.set({
-                farmingStats: {
-                    latestEnterTime: curtime,
-                    totalWaitingTime: totalWaitingTime + waitTime,
-                },
-            });
+            const waitTime = (currentTime - latestLeaveTime) / 1000;
+            update.totalWaitingTime = totalWaitingTime + waitTime;
         }
-        else {
-            status.set({
-                farmingStats: {
-                    latestEnterTime: curtime,
-                },
-            });
-        }
+        unsafeWindow.LAOPLUS.status.set({ farmingStats: update });
     };
     /**
      * @package
@@ -1138,38 +1133,6 @@
         return total;
     };
 
-    const Icon = ({ type }) => {
-        const icon = (() => {
-            const base = `https://cdn.laoplus.net/ui/`;
-            switch (type) {
-                case "parts":
-                    return { url: base + "/currenncy/metal.png", name: "部品" };
-                case "nutrient":
-                    return { url: base + "/currenncy/nutrient.png", name: "栄養" };
-                case "power":
-                    return { url: base + "/currenncy/power.png", name: "電力" };
-                case "basic_module":
-                    return {
-                        url: base + "/item/module/basic.png",
-                        name: "一般モジュール",
-                    };
-                case "advanced_module":
-                    return {
-                        url: base + "/item/module/advanced.png",
-                        name: "高級モジュール",
-                    };
-                case "special_module":
-                    return {
-                        url: base + "/item/module/special.png",
-                        name: "特殊モジュール",
-                    };
-                case "tuna":
-                    return { url: base + "/currenncy/tuna.png", name: "ツナ缶" };
-            }
-        })();
-        return (React.createElement("img", { className: "h-full w-full object-contain", src: icon.url, title: icon.name }));
-    };
-
     const TimeStat = ({ lapCount, totalWaitingTime, totalRoundTime }) => {
         const [displayTimeType, setDisplayTimeType] = React.useState("lapTime");
         const toggleDisplayTimeType = () => {
@@ -1208,19 +1171,192 @@
         return true;
     });
 
+    const cn$3 = classNames;
+    /**
+     * @package
+     */
+    const GainedResourceDisplayHeader = ({ resourceDisplayType, setResourceDisplayType, shownResourceTypePerDropKinds, setShownResourceTypePerDropKinds, }) => {
+        const toggleResourceDisplayType = () => {
+            setResourceDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
+        };
+        const cycleShownResourceTypePerDropKinds = () => {
+            setShownResourceTypePerDropKinds((v) => v === "total" ? "units" : v === "units" ? "equipments" : "total");
+        };
+        const context = React.useContext(FarmingStatsContext);
+        return (React.createElement("div", { className: "flex gap-3" },
+            React.createElement("h2", null,
+                React.createElement("button", { className: "flex items-center gap-1 font-bold", onClick: cycleShownResourceTypePerDropKinds },
+                    "\u53D6\u5F97\u8CC7\u6E90",
+                    (() => {
+                        switch (shownResourceTypePerDropKinds) {
+                            case "units":
+                                return "（戦闘員）";
+                            case "equipments":
+                                return "（装備）";
+                            default:
+                                return "";
+                        }
+                    })(),
+                    React.createElement("i", { className: "bi bi-chevron-down text-xs before:!align-[inherit]" }))),
+            React.createElement("div", { className: "ml-auto flex cursor-pointer select-none items-center gap-1" },
+                React.createElement("span", { onClick: () => {
+                        setResourceDisplayType("perHour");
+                    } },
+                    "\u6642\u7D66",
+                    context.elapsedHours < 1 && "（予測）"),
+                React.createElement("div", { className: "flex h-5 w-10 items-center rounded-full bg-gray-300 px-1", onClick: toggleResourceDisplayType },
+                    React.createElement("div", { className: cn$3("h-4 w-4 transform rounded-full bg-white shadow-md transition-transform", resourceDisplayType === "sum" && "translate-x-4") })),
+                React.createElement("span", { onClick: () => {
+                        setResourceDisplayType("sum");
+                    } }, "\u7D2F\u8A08"))));
+    };
+
+    /**
+     * @package
+     */
+    const Icon = ({ type }) => {
+        const icon = (() => {
+            const base = `https://cdn.laoplus.net/ui/`;
+            switch (type) {
+                case "parts":
+                    return { url: base + "/currenncy/metal.png", name: "部品" };
+                case "nutrient":
+                    return { url: base + "/currenncy/nutrient.png", name: "栄養" };
+                case "power":
+                    return { url: base + "/currenncy/power.png", name: "電力" };
+                case "basic_module":
+                    return {
+                        url: base + "/item/module/basic.png",
+                        name: "一般モジュール",
+                    };
+                case "advanced_module":
+                    return {
+                        url: base + "/item/module/advanced.png",
+                        name: "高級モジュール",
+                    };
+                case "special_module":
+                    return {
+                        url: base + "/item/module/special.png",
+                        name: "特殊モジュール",
+                    };
+                case "tuna":
+                    return { url: base + "/currenncy/tuna.png", name: "ツナ缶" };
+            }
+        })();
+        return (React.createElement("img", { className: "h-full w-full object-contain", src: icon.url, title: icon.name }));
+    };
+
+    const cn$2 = classNames;
+    /**
+     * 戦闘員・装備をのレアリティを示す文字のアイコン
+     */
+    const ResourceCounterIcon = ({ type }) => {
+        return (React.createElement("div", { className: cn$2("flex-shrink-0 rounded-md px-2 font-bold ring-1 ring-gray-900/5", `bg-[${rankColor[type].hex()}]`, type === "SS" ? "text-black" : "text-white") }, type));
+    };
+    /**
+     * アイコンと数字を表示するコンポーネント
+     * @package
+     */
+    const ResourceCounter = ({ type, amount, sign = false }) => {
+        const context = React.useContext(FarmingStatsContext);
+        const displayAmount = (() => {
+            if (context.resourceDisplayType === "sum") {
+                return amount;
+            }
+            if (context.resourceDisplayType === "perHour") {
+                if (context.elapsedHours === 0)
+                    return 0;
+                const v = amount / context.elapsedHours;
+                return Number(v.toFixed(1));
+            }
+            return amount;
+        })();
+        // displayAmountの小数部分
+        const dec = String(displayAmount).split(".")[1];
+        return (React.createElement("div", { className: "flex items-center gap-2 font-bold text-gray-900" },
+            type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement(ResourceCounterIcon, { type: type })) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
+                React.createElement(Icon, { type: type }))),
+            React.createElement("hr", { className: "h-[2px] w-full rounded-full border-0 bg-gray-200" }),
+            React.createElement("span", { className: cn$2(sign && displayAmount < 0 && "text-red-500") },
+                sign &&
+                    (displayAmount === 0 ? "±" : displayAmount < 0 ? "-" : "+"),
+                Math.abs(Math.trunc(displayAmount)).toLocaleString(),
+                dec && (
+                // 日本や欧米以外では小数点が"."ではない可能性があるが
+                // Number.prototype.toLocaleString()した結果のロケール定義を取得する方法がわからないため.に固定している
+                React.createElement("span", { className: "ml-0.5 text-xs text-gray-500" },
+                    ".",
+                    dec)))));
+    };
+
+    /**
+     * @package
+     */
+    const GainedResourceDisplayTable = ({ resources: r }) => {
+        return (React.createElement("div", { className: "grid grid-cols-3 grid-rows-2 gap-3" },
+            React.createElement(ResourceCounter, { type: "parts", amount: r.parts }),
+            React.createElement(ResourceCounter, { type: "nutrient", amount: r.nutrients }),
+            React.createElement(ResourceCounter, { type: "power", amount: r.power }),
+            React.createElement(ResourceCounter, { type: "basic_module", amount: r.basic_module }),
+            React.createElement(ResourceCounter, { type: "advanced_module", amount: r.advanced_module }),
+            React.createElement(ResourceCounter, { type: "special_module", amount: r.special_module })));
+    };
+
+    const NoData = () => {
+        return (React.createElement("p", { className: "text-sm text-gray-600" },
+            React.createElement("i", { className: "bi bi-info-circle mr-1" }),
+            "\u540C\u3058\u90E8\u968A\u30672\u5468\u4EE5\u4E0A\u51FA\u6483\u3059\u308B\u3068\u3001\u3053\u3053\u306B\u53CE\u652F\u304C\u8868\u793A\u3055\u308C\u307E\u3059"));
+    };
+    /**
+     * @package
+     */
+    const Profit = ({ currentSquadCosts, resources, lapCount }) => {
+        return (React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "flex gap-3" },
+                React.createElement("h2", { className: "font-bold" }, "\u53CE\u652F")),
+            currentSquadCosts === null ? (React.createElement(NoData, null)) : (React.createElement("div", { className: "grid grid-cols-3 gap-3" },
+                React.createElement(ResourceCounter, { type: "parts", sign: true, amount: resources.parts - currentSquadCosts.parts * lapCount }),
+                React.createElement(ResourceCounter, { type: "nutrient", sign: true, amount: resources.nutrients -
+                        currentSquadCosts.nutrients * lapCount }),
+                React.createElement(ResourceCounter, { type: "power", sign: true, amount: resources.power - currentSquadCosts.power * lapCount })))));
+    };
+
     const cn$1 = classNames;
+    /**
+     * @package
+     */
+    const Drops = ({ drops, shownResourceTypePerDropKinds }) => {
+        return (React.createElement(React.Fragment, null,
+            React.createElement("div", { className: "flex gap-3" },
+                React.createElement("h2", { className: "font-bold" }, "\u30C9\u30ED\u30C3\u30D7\u8A73\u7D30")),
+            React.createElement("div", { className: "flex gap-2" },
+                React.createElement("i", { className: "bi bi-person-fill text-xl", title: "\u6226\u95D8\u54E1" }),
+                React.createElement("div", { className: cn$1("grid flex-1 grid-cols-4 gap-3 transition-opacity", shownResourceTypePerDropKinds === "equipments" &&
+                        "opacity-50") },
+                    React.createElement(ResourceCounter, { type: "B", amount: drops.units.B }),
+                    React.createElement(ResourceCounter, { type: "A", amount: drops.units.A }),
+                    React.createElement(ResourceCounter, { type: "S", amount: drops.units.S }),
+                    React.createElement(ResourceCounter, { type: "SS", amount: drops.units.SS }))),
+            React.createElement("div", { className: "flex gap-2" },
+                React.createElement("i", { className: "bi bi-cpu text-xl", title: "\u88C5\u5099" }),
+                React.createElement("div", { className: cn$1("grid flex-1 grid-cols-4 gap-3 transition-opacity", shownResourceTypePerDropKinds === "units" &&
+                        "opacity-50") },
+                    React.createElement(ResourceCounter, { type: "B", amount: drops.equipments.B }),
+                    React.createElement(ResourceCounter, { type: "A", amount: drops.equipments.A }),
+                    React.createElement(ResourceCounter, { type: "S", amount: drops.equipments.S }),
+                    React.createElement(ResourceCounter, { type: "SS", amount: drops.equipments.SS })))));
+    };
+
     function jsonEqual(a, b) {
         return JSON.stringify(a) === JSON.stringify(b);
     }
-    const ResourceCounter = ({ type, amount, sign = false }) => {
-        return (React.createElement("div", { className: "flex items-center gap-2 font-bold text-gray-900" },
-            type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement("div", { className: cn$1("flex-shrink-0 rounded-md px-2 font-bold ring-1 ring-gray-900/5", `bg-[${rankColor[type].hex()}]`, type === "SS" ? "text-black" : "text-white") }, type)) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
-                React.createElement(Icon, { type: type }))),
-            React.createElement("hr", { className: "h-[2px] w-full rounded-full border-0 bg-gray-200" }),
-            React.createElement("span", { className: cn$1(sign && amount < 0 && "text-red-500") },
-                sign && (amount === 0 ? "±" : amount < 0 ? "-" : "+"),
-                Math.abs(amount).toLocaleString())));
-    };
+    /**
+     * @package
+     */
+    const FarmingStatsContext = React.createContext({
+        resourceDisplayType: "sum",
+        elapsedHours: 0,
+    });
     const Panel = () => {
         const status = unsafeWindow.LAOPLUS.status;
         const [stats, setStats] = React.useState({
@@ -1234,14 +1370,17 @@
             });
         });
         const [resourceDisplayType, setResourceDisplayType] = React.useState("sum");
-        const toggleResourceDisplayType = () => {
-            setResourceDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
-        };
         // TODO: 命名なんとかする
         const [shownResourceTypePerDropKinds, setShownResourceTypePerDropKinds] = React.useState("total");
-        const cycleShownResourceTypePerDropKinds = () => {
-            setShownResourceTypePerDropKinds((v) => v === "total" ? "units" : v === "units" ? "equipments" : "total");
-        };
+        const elapsedHours = (() => {
+            if (stats.latestEnterTime !== null && stats.firstEnterTime !== null) {
+                return (stats.latestEnterTime - stats.firstEnterTime) / 1000 / 3600;
+            }
+            return 0;
+        })();
+        /**
+         * 資源換算
+         */
         const disassembledResource = (() => {
             const units = calcResourcesFromDrops({
                 drops: stats.drops.units,
@@ -1294,76 +1433,11 @@
                                 stats.lapCount.toLocaleString(),
                                 React.createElement("span", { className: "ml-0.5 text-xs font-bold text-gray-500" }, "\u56DE"))))),
                 React.createElement("hr", null),
-                React.createElement("div", { className: "flex gap-3" },
-                    React.createElement("h2", null,
-                        React.createElement("button", { className: "flex items-center gap-1 font-bold", onClick: cycleShownResourceTypePerDropKinds },
-                            "\u53D6\u5F97\u8CC7\u6E90",
-                            (() => {
-                                switch (shownResourceTypePerDropKinds) {
-                                    case "units":
-                                        return "（戦闘員）";
-                                    case "equipments":
-                                        return "（装備）";
-                                    default:
-                                        return "";
-                                }
-                            })(),
-                            React.createElement("i", { className: "bi bi-chevron-down text-xs before:!align-[inherit]" }))),
-                    React.createElement("div", { className: "hidden" },
-                        React.createElement("div", { className: "ml-auto flex cursor-pointer select-none items-center gap-1" },
-                            React.createElement("span", { onClick: () => {
-                                    setResourceDisplayType("perHour");
-                                } }, "\u6642\u7D66"),
-                            React.createElement("div", { className: "flex h-5 w-10 items-center rounded-full bg-gray-300 px-1", onClick: toggleResourceDisplayType },
-                                React.createElement("div", { className: cn$1("h-4 w-4 transform rounded-full bg-white shadow-md transition-transform", resourceDisplayType === "sum" &&
-                                        "translate-x-4") })),
-                            React.createElement("span", { onClick: () => {
-                                    setResourceDisplayType("sum");
-                                } }, "\u5408\u8A08")))),
-                React.createElement("div", { className: "grid grid-cols-3 gap-3" },
-                    React.createElement(ResourceCounter, { type: "parts", amount: disassembledResource[shownResourceTypePerDropKinds]
-                            .parts }),
-                    React.createElement(ResourceCounter, { type: "nutrient", amount: disassembledResource[shownResourceTypePerDropKinds]
-                            .nutrients }),
-                    React.createElement(ResourceCounter, { type: "power", amount: disassembledResource[shownResourceTypePerDropKinds]
-                            .power })),
-                React.createElement("div", { className: "grid grid-cols-3 gap-3" },
-                    React.createElement(ResourceCounter, { type: "basic_module", amount: disassembledResource[shownResourceTypePerDropKinds]
-                            .basic_module }),
-                    React.createElement(ResourceCounter, { type: "advanced_module", amount: disassembledResource[shownResourceTypePerDropKinds]
-                            .advanced_module }),
-                    React.createElement(ResourceCounter, { type: "special_module", amount: disassembledResource[shownResourceTypePerDropKinds]
-                            .special_module })),
-                React.createElement("div", { className: "flex gap-3" },
-                    React.createElement("h2", { className: "font-bold" }, "\u53CE\u652F")),
-                stats.currentSquadCosts === null ? (React.createElement("p", { className: "text-sm text-gray-600" },
-                    React.createElement("i", { className: "bi bi-info-circle mr-1" }),
-                    "\u540C\u3058\u90E8\u968A\u30672\u5468\u4EE5\u4E0A\u51FA\u6483\u3059\u308B\u3068\u3001\u3053\u3053\u306B\u53CE\u652F\u304C\u8868\u793A\u3055\u308C\u307E\u3059")) : (React.createElement("div", { className: "grid grid-cols-3 gap-3" },
-                    React.createElement(ResourceCounter, { type: "parts", sign: true, amount: disassembledResource[shownResourceTypePerDropKinds].parts -
-                            stats.currentSquadCosts.parts * stats.lapCount }),
-                    React.createElement(ResourceCounter, { type: "nutrient", sign: true, amount: disassembledResource[shownResourceTypePerDropKinds].nutrients -
-                            stats.currentSquadCosts.nutrients *
-                                stats.lapCount }),
-                    React.createElement(ResourceCounter, { type: "power", sign: true, amount: disassembledResource[shownResourceTypePerDropKinds].power -
-                            stats.currentSquadCosts.power * stats.lapCount }))),
-                React.createElement("div", { className: "flex gap-3" },
-                    React.createElement("h2", { className: "font-bold" }, "\u30C9\u30ED\u30C3\u30D7\u8A73\u7D30")),
-                React.createElement("div", { className: "flex gap-2" },
-                    React.createElement("i", { className: "bi bi-person-fill text-xl", title: "\u6226\u95D8\u54E1" }),
-                    React.createElement("div", { className: cn$1("grid flex-1 grid-cols-4 gap-3 transition-opacity", shownResourceTypePerDropKinds === "equipments" &&
-                            "opacity-50") },
-                        React.createElement(ResourceCounter, { type: "B", amount: stats.drops.units.B }),
-                        React.createElement(ResourceCounter, { type: "A", amount: stats.drops.units.A }),
-                        React.createElement(ResourceCounter, { type: "S", amount: stats.drops.units.S }),
-                        React.createElement(ResourceCounter, { type: "SS", amount: stats.drops.units.SS }))),
-                React.createElement("div", { className: "flex gap-2" },
-                    React.createElement("i", { className: "bi bi-cpu text-xl", title: "\u88C5\u5099" }),
-                    React.createElement("div", { className: cn$1("grid flex-1 grid-cols-4 gap-3 transition-opacity", shownResourceTypePerDropKinds === "units" &&
-                            "opacity-50") },
-                        React.createElement(ResourceCounter, { type: "B", amount: stats.drops.equipments.B }),
-                        React.createElement(ResourceCounter, { type: "A", amount: stats.drops.equipments.A }),
-                        React.createElement(ResourceCounter, { type: "S", amount: stats.drops.equipments.S }),
-                        React.createElement(ResourceCounter, { type: "SS", amount: stats.drops.equipments.SS }))))));
+                React.createElement(FarmingStatsContext.Provider, { value: { resourceDisplayType, elapsedHours } },
+                    React.createElement(GainedResourceDisplayHeader, { resourceDisplayType: resourceDisplayType, setResourceDisplayType: setResourceDisplayType, shownResourceTypePerDropKinds: shownResourceTypePerDropKinds, setShownResourceTypePerDropKinds: setShownResourceTypePerDropKinds }),
+                    React.createElement(GainedResourceDisplayTable, { resources: disassembledResource[shownResourceTypePerDropKinds] }),
+                    React.createElement(Profit, { currentSquadCosts: stats.currentSquadCosts, resources: disassembledResource[shownResourceTypePerDropKinds], lapCount: stats.lapCount }),
+                    React.createElement(Drops, { drops: stats.drops, shownResourceTypePerDropKinds: shownResourceTypePerDropKinds })))));
     };
 
     const FarmingStats = () => {
@@ -2119,12 +2193,6 @@
         initInputObserver();
         initWheelAmplfy();
         initTacticsManual();
-        unsafeWindow.LAOPLUS.config.events.on("*", (type, e) => {
-            log.debug("index", "config fired", type, e);
-        });
-        unsafeWindow.LAOPLUS.status.events.on("*", (type, e) => {
-            log.debug("index", "status fired", type, e);
-        });
     })();
 
 })();
