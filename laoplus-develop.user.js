@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645414707-a44832b1c9916cc049cd9704d737c01f72f6febf
+// @version     1645470802-d35dcfdd8deb1317aab8d0defa74c8abeeffe1ef
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1271,8 +1271,11 @@
             }
             return amount;
         })();
-        // displayAmountの小数部分
-        const dec = String(displayAmount).split(".")[1];
+        const nf = new Intl.NumberFormat();
+        const parts = nf.formatToParts(displayAmount);
+        const integer = parts.find((p) => p.type === "integer")?.value || 0;
+        const decimal = parts.find((p) => p.type === "decimal")?.value || ".";
+        const fraction = parts.find((p) => p.type === "fraction")?.value;
         return (React.createElement("div", { className: "flex items-center gap-2 font-bold text-gray-900" },
             type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement(ResourceCounterIcon, { type: type })) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
                 React.createElement(Icon, { type: type }))),
@@ -1280,13 +1283,10 @@
             React.createElement("span", { className: cn$2(sign && displayAmount < 0 && "text-red-500") },
                 sign &&
                     (displayAmount === 0 ? "±" : displayAmount < 0 ? "-" : "+"),
-                Math.abs(Math.trunc(displayAmount)).toLocaleString(),
-                dec && (
-                // 日本や欧米以外では小数点が"."ではない可能性があるが
-                // Number.prototype.toLocaleString()した結果のロケール定義を取得する方法がわからないため.に固定している
-                React.createElement("span", { className: "ml-0.5 text-xs text-gray-500" },
-                    ".",
-                    dec)))));
+                integer,
+                fraction && (React.createElement("span", { className: "ml-0.5 text-xs text-gray-500" },
+                    decimal,
+                    fraction)))));
     };
 
     /**
