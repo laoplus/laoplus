@@ -11,12 +11,16 @@
 
 **LAOPLUS** は DMM GAMES / FANZA GAMES にて提供されている、ブラウザ版[ラストオリジン](https://www.last-origin.com/)のプレイを支援する Userscript です
 
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Feai04191%2Flaoplus.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Feai04191%2Flaoplus?ref=badge_large)
+
 ## 機能
 
 <details>
 <summary><b>画面サイズの自動調整</b></summary>
 
 ![screenshot](https://user-images.githubusercontent.com/3516343/143431793-af3046de-d181-40ec-9293-aa8f7bbaedfe.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Feai04191%2Flaoplus.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Feai04191%2Flaoplus?ref=badge_shield)
 
 ゲームページを開くとウィンドウいっぱいにゲーム画面が広がるようになります。また、ゲームの解像度を更新するため、拡縮しても文字やキャラが潰れることがありません。
 
