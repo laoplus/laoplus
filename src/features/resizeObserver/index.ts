@@ -1,6 +1,10 @@
 import { log } from "~/utils";
 
-export const initResizeObserver = () => {
+export const initResizeObserver = async () => {
+    const waitFor = (ms: number) =>
+        new Promise((resolve) => setTimeout(resolve, ms));
+    await waitFor(1000);
+
     const game = document.querySelector("canvas");
     if (!game) {
         log.error("ResizeObserver", "Game Canvas Not Found");
