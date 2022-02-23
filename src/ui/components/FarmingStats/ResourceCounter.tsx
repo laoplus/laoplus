@@ -29,8 +29,8 @@ const ResourceCounterIcon: React.VFC<{ type: Rarity }> = ({ type }) => {
 export const ResourceCounter: React.VFC<{
     type: React.ComponentProps<typeof Icon>["type"] | Rarity;
     amount: number;
-    sign?: boolean;
-}> = ({ type, amount, sign = false }) => {
+    showSign?: boolean;
+}> = ({ type, amount, showSign = false }) => {
     const context = React.useContext(FarmingStatsContext);
     const displayAmount = (() => {
         if (context.resourceDisplayType === "sum") {
@@ -44,10 +44,23 @@ export const ResourceCounter: React.VFC<{
         return amount;
     })();
 
-    const nf = new Intl.NumberFormat();
+    const nf = new Intl.NumberFormat(undefined, {
+        // @ts-ignore https://github.com/microsoft/TypeScript/issues/46712
+        signDisplay: showSign ? "exceptZero" : "auto",
+    });
     const parts = nf.formatToParts(displayAmount);
+    const sign = parts.find((p) => p.type.includes("Sign"))?.value || "";
     const isNegative = parts.some((p) => p.type === "minusSign");
-    const integer = parts.find((p) => p.type === "integer")?.value || 0;
+    const integer =
+        parts
+            .filter(
+                (v) =>
+                    v.type !== "decimal" &&
+                    v.type !== "fraction" &&
+                    !v.type.includes("Sign")
+            )
+            .map((v) => v.value)
+            .join("") || "0";
     const decimal = parts.find((p) => p.type === "decimal")?.value || ".";
     const fraction = parts.find((p) => p.type === "fraction")?.value;
 
@@ -63,14 +76,14 @@ export const ResourceCounter: React.VFC<{
 
             <hr className="h-[2px] w-full rounded-full border-0 bg-gray-200" />
 
-            <span className={cn(sign && isNegative && "text-red-500")}>
-                {sign && (displayAmount === 0 ? "±" : isNegative ? "-" : "+")}
+            <span className={cn(isNegative && "text-red-500")}>
+                {sign}
                 {integer}
                 {fraction && (
                     <span
                         className={cn(
                             "ml-0.5 text-xs text-gray-500",
-                            sign && isNegative && "!text-red-500"
+                            isNegative && "!text-red-500"
                         )}
                     >
                         {decimal}

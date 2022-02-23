@@ -30,14 +30,14 @@ export const Profit: React.VFC<{
                 <div className="grid grid-cols-3 gap-3">
                     <ResourceCounter
                         type="parts"
-                        sign
+                        showSign
                         amount={
                             resources.parts - currentSquadCosts.parts * lapCount
                         }
                     />
                     <ResourceCounter
                         type="nutrient"
-                        sign
+                        showSign
                         amount={
                             resources.nutrients -
                             currentSquadCosts.nutrients * lapCount
@@ -45,7 +45,7 @@ export const Profit: React.VFC<{
                     />
                     <ResourceCounter
                         type="power"
-                        sign
+                        showSign
                         amount={
                             resources.power - currentSquadCosts.power * lapCount
                         }
