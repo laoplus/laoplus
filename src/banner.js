@@ -6,7 +6,7 @@
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
 // @supportURL  https://github.com/eai04191/laoplus/issues
-// @run-at      document-idle
+// @run-at      document-end
 // @match       https://pc-play.games.dmm.co.jp/play/lastorigin_r/*
 // @match       https://pc-play.games.dmm.com/play/lastorigin/*
 // @match       https://osapi.dmm.com/gadgets/ifr?synd=dmm&container=dmm&owner=*&viewer=*&aid=616121&*
