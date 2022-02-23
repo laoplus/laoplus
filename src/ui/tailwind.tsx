@@ -19,6 +19,15 @@ export const tailwindConfig: import("tailwindcss/tailwind-config").TailwindConfi
         variants: {
             extend: {},
         },
+        plugins: [
+            // @ts-ignore
+            function ({ addVariant }) {
+                addVariant(
+                    "supports-backdrop-blur",
+                    "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))"
+                );
+            },
+        ],
     };
 
 /**
