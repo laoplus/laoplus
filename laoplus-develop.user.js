@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645472413-e47fd33c92949d13a7a61d159b01227c75c76088
+// @version     1645596477-d33dc1a01d38da2bf7806124718dc59b6e3dc6e2
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1257,7 +1257,7 @@
      * アイコンと数字を表示するコンポーネント
      * @package
      */
-    const ResourceCounter = ({ type, amount, sign = false }) => {
+    const ResourceCounter = ({ type, amount, showSign = false }) => {
         const context = React.useContext(FarmingStatsContext);
         const displayAmount = (() => {
             if (context.resourceDisplayType === "sum") {
@@ -1271,20 +1271,29 @@
             }
             return amount;
         })();
-        const nf = new Intl.NumberFormat();
+        const nf = new Intl.NumberFormat(undefined, {
+            // @ts-ignore https://github.com/microsoft/TypeScript/issues/46712
+            signDisplay: showSign ? "exceptZero" : "auto",
+        });
         const parts = nf.formatToParts(displayAmount);
+        const sign = parts.find((p) => p.type.includes("Sign"))?.value || "";
         const isNegative = parts.some((p) => p.type === "minusSign");
-        const integer = parts.find((p) => p.type === "integer")?.value || 0;
+        const integer = parts
+            .filter((v) => v.type !== "decimal" &&
+            v.type !== "fraction" &&
+            !v.type.includes("Sign"))
+            .map((v) => v.value)
+            .join("") || "0";
         const decimal = parts.find((p) => p.type === "decimal")?.value || ".";
         const fraction = parts.find((p) => p.type === "fraction")?.value;
         return (React.createElement("div", { className: "flex items-center gap-2 font-bold text-gray-900" },
             type === "B" || type === "A" || type === "S" || type === "SS" ? (React.createElement(ResourceCounterIcon, { type: type })) : (React.createElement("div", { className: "h-6 w-6 flex-shrink-0" },
                 React.createElement(Icon, { type: type }))),
             React.createElement("hr", { className: "h-[2px] w-full rounded-full border-0 bg-gray-200" }),
-            React.createElement("span", { className: cn$2(sign && isNegative && "text-red-500") },
-                sign && (displayAmount === 0 ? "±" : isNegative ? "-" : "+"),
+            React.createElement("span", { className: cn$2(isNegative && "text-red-500") },
+                sign,
                 integer,
-                fraction && (React.createElement("span", { className: cn$2("ml-0.5 text-xs text-gray-500", sign && isNegative && "!text-red-500") },
+                fraction && (React.createElement("span", { className: cn$2("ml-0.5 text-xs text-gray-500", isNegative && "!text-red-500") },
                     decimal,
                     fraction)))));
     };
@@ -1315,10 +1324,10 @@
             React.createElement("div", { className: "flex gap-3" },
                 React.createElement("h2", { className: "font-bold" }, "\u53CE\u652F")),
             currentSquadCosts === null ? (React.createElement(NoData, null)) : (React.createElement("div", { className: "grid grid-cols-3 gap-3" },
-                React.createElement(ResourceCounter, { type: "parts", sign: true, amount: resources.parts - currentSquadCosts.parts * lapCount }),
-                React.createElement(ResourceCounter, { type: "nutrient", sign: true, amount: resources.nutrients -
+                React.createElement(ResourceCounter, { type: "parts", showSign: true, amount: resources.parts - currentSquadCosts.parts * lapCount }),
+                React.createElement(ResourceCounter, { type: "nutrient", showSign: true, amount: resources.nutrients -
                         currentSquadCosts.nutrients * lapCount }),
-                React.createElement(ResourceCounter, { type: "power", sign: true, amount: resources.power - currentSquadCosts.power * lapCount })))));
+                React.createElement(ResourceCounter, { type: "power", showSign: true, amount: resources.power - currentSquadCosts.power * lapCount })))));
     };
 
     const cn$1 = classNames;
