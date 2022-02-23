@@ -2,12 +2,12 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645600711-f990859e37c044612aa85512c77852fddd55246e
+// @version     1645610358-aae7626cc8ba0c6218e6aa0a1b533ca756759c16
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
 // @supportURL  https://github.com/eai04191/laoplus/issues
-// @run-at      document-idle
+// @run-at      document-end
 // @match       https://pc-play.games.dmm.co.jp/play/lastorigin_r/*
 // @match       https://pc-play.games.dmm.com/play/lastorigin/*
 // @match       https://osapi.dmm.com/gadgets/ifr?synd=dmm&container=dmm&owner=*&viewer=*&aid=616121&*
@@ -87,6 +87,15 @@
     };
 
     const initDMMInnerPage = () => {
+        // UA偽装
+        if (!navigator.userAgent.includes("Chrome")) {
+            const originalUA = navigator.userAgent;
+            Object.defineProperty(navigator, "userAgent", {
+                value: `Chrome/99.99.99.99 (Spoofed by LAOPLUS) (${originalUA})`,
+                configurable: false,
+            });
+            log.log("Injection", "DMM Inner Page", "UA spoofed", navigator.userAgent);
+        }
         const frame = document.querySelector("#my_frame");
         if (frame === null)
             return;
@@ -1954,7 +1963,9 @@
         };
     };
 
-    const initResizeObserver = () => {
+    const initResizeObserver = async () => {
+        const waitFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        await waitFor(1000);
         const game = document.querySelector("canvas");
         if (!game) {
             log.error("ResizeObserver", "Game Canvas Not Found");
