@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645596477-d33dc1a01d38da2bf7806124718dc59b6e3dc6e2
+// @version     1645600711-f990859e37c044612aa85512c77852fddd55246e
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -578,7 +578,7 @@
                 closeTimeoutMS: 150, isOpen: isOpen, onAfterOpen: () => {
                     // 外部からconfig.setをされてもいいようにdefaultValueを読み直す
                     reset();
-                }, overlayClassName: "backdrop-saturate-[0.75] fixed inset-0 flex items-center justify-center pb-24 backdrop-blur z-10", className: "flex max-h-[90%] min-w-[50%] max-w-[90%] overflow-hidden rounded bg-gray-50 shadow", id: "laoplus-modal" },
+                }, overlayClassName: "fixed inset-0 z-10 flex items-center justify-center bg-gray-800/80 pb-24 backdrop-blur backdrop-saturate-[0.75] supports-backdrop-blur:bg-transparent", className: "flex max-h-[90%] min-w-[50%] max-w-[90%] overflow-hidden rounded bg-gray-50 shadow", id: "laoplus-modal" },
                 React.createElement("form", { onSubmit: handleSubmit(onSubmit), className: "flex w-full flex-col" },
                     React.createElement("div", { className: "divide-y overflow-auto" },
                         React.createElement("header", { className: "flex place-content-between items-center p-4" },
@@ -2027,6 +2027,12 @@
         variants: {
             extend: {},
         },
+        plugins: [
+            // @ts-ignore
+            function ({ addVariant }) {
+                addVariant("supports-backdrop-blur", "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))");
+            },
+        ],
     };
     /**
      * アプリ全体で使いたい大きめのセレクタに関しての設定
