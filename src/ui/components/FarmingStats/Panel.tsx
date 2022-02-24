@@ -1,7 +1,7 @@
 import { disassemblingTable } from "~/constants";
 import { FarmingStats as TFarmingStats } from "~/types/Status";
 import { reset } from "~/features/farmingStats/functions";
-import { log } from "~/utils";
+import { humanFriendlyStageKey, log } from "~/utils";
 import { calcResourcesFromDrops } from "./calc";
 import { MemorizedTimeStat } from "./TimeStat";
 import { GainedResourceDisplayHeader } from "./GainedResourceDisplayHeader";
@@ -113,6 +113,10 @@ export const Panel: React.VFC = () => {
                 <h1 className="mr-auto flex items-center gap-2">
                     <i className="bi bi-info-circle text-lg"></i>
                     周回統計
+                    {stats.latestEnterStageKey &&
+                        ` (${humanFriendlyStageKey(
+                            stats.latestEnterStageKey
+                        )})`}
                 </h1>
                 <div className="flex items-center gap-2">
                     <button

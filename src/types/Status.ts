@@ -11,6 +11,7 @@ export type FarmingStats = {
     totalWaitingTime: number;
     totalRoundTime: number;
     lapCount: number;
+    latestEnterStageKey: string | null;
     drops: {
         units: {
             SS: number;

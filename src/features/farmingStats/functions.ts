@@ -12,13 +12,29 @@ export const reset = () => {
 /**
  * @package
  */
-export const enter = () => {
+export const enter = (req: battleserver_enter["req"]) => {
     const currentTime = new Date().getTime();
-    const { latestLeaveTime, totalWaitingTime, firstEnterTime } =
-        unsafeWindow.LAOPLUS.status.status.farmingStats;
+    const {
+        latestLeaveTime,
+        totalWaitingTime,
+        firstEnterTime,
+        latestEnterStageKey,
+    } = unsafeWindow.LAOPLUS.status.status.farmingStats;
+
+    if (
+        latestEnterStageKey !== null &&
+        latestEnterStageKey !== req.StageKeyString
+    ) {
+        log.log("farmingStats", "enter", "出撃先が変わったためリセットします", {
+            latest: latestEnterStageKey,
+            current: req.StageKeyString,
+        });
+        reset();
+    }
 
     const update: DeepPartial<FarmingStats> = {
         latestEnterTime: currentTime,
+        latestEnterStageKey: req.StageKeyString,
     };
 
     if (firstEnterTime === null) {
