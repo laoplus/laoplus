@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645610358-aae7626cc8ba0c6218e6aa0a1b533ca756759c16
+// @version     1645741774-d23cf75fd62573b85294eb337e0c944062f8be8d
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -725,7 +725,7 @@
                                             errors.features?.farmingStats?.equipmentDisassemblyMultiplier?.type ===
                                                 "validate" && "上昇率は整数で入力してください（%は不要）")))),
                                 React.createElement(FeatureSection, { hasError: !!errors.features?.levelupDetection },
-                                    React.createElement(FeatureSectionSummary, { register: register("features.levelupDetection.enabled"), title: "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5" }),
+                                    React.createElement(FeatureSectionSummary, { register: register("features.levelupDetection.enabled"), title: "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5", helpLink: "https://github.com/eai04191/laoplus/wiki/features-LevelupDetection" }),
                                     React.createElement(FeatureSectionContent, { enable: watch("features.levelupDetection.enabled") },
                                         React.createElement("label", { className: "flex items-center gap-1" },
                                             React.createElement("input", { type: "checkbox", disabled: !watch("features.levelupDetection.enabled"), ...register("features.levelupDetection.watchUnitLevel") }),
