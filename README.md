@@ -95,7 +95,7 @@ PWA としてインストールするとより便利に使えます
 <details>
 <summary><b>周回統計</b></summary>
 
-![image](https://user-images.githubusercontent.com/3516343/155611744-407c3bc4-822a-4209-a4ef-0fa72e1da199.png)
+![image](https://user-images.githubusercontent.com/3516343/155620611-e258029d-83e3-4962-9a96-af8122d2a9b4.png)
 
 現在の周回でドロップした戦闘員・装備の数をカウントして、それを分解した際に得られるであろう資源量を表示する機能です
 
