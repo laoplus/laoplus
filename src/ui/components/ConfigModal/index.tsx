@@ -370,6 +370,7 @@ export const ConfigModal = () => {
                   <FeatureSectionSummary
                     register={register("features.levelupDetection.enabled")}
                     title="レベリング通知"
+                    helpLink="https://github.com/eai04191/laoplus/wiki/features-LevelupDetection"
                   />
                   <FeatureSectionContent enable={watch("features.levelupDetection.enabled")}>
                     <label className="flex items-center gap-1">
