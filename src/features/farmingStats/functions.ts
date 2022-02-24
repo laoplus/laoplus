@@ -19,15 +19,24 @@ export const enter = (req: battleserver_enter["req"]) => {
         totalWaitingTime,
         firstEnterTime,
         latestEnterStageKey,
+        latestEnterSquad,
     } = unsafeWindow.LAOPLUS.status.status.farmingStats;
 
     if (
         latestEnterStageKey !== null &&
         latestEnterStageKey !== req.StageKeyString
     ) {
-        log.log("farmingStats", "enter", "出撃先が変わったためリセットします", {
+        log.log("farmingStats", "enter", "出撃先が変わったためリセット", {
             latest: latestEnterStageKey,
             current: req.StageKeyString,
+        });
+        reset();
+    }
+
+    if (latestEnterSquad !== null && latestEnterSquad !== req.SelectedSquadNo) {
+        log.log("farmingStats", "enter", "出撃部隊が変わったためリセット", {
+            latest: latestEnterSquad,
+            current: req.SelectedSquadNo,
         });
         reset();
     }
