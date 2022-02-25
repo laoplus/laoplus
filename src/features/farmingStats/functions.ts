@@ -12,13 +12,38 @@ export const reset = () => {
 /**
  * @package
  */
-export const enter = () => {
+export const enter = (req: battleserver_enter["req"]) => {
     const currentTime = new Date().getTime();
-    const { latestLeaveTime, totalWaitingTime, firstEnterTime } =
-        unsafeWindow.LAOPLUS.status.status.farmingStats;
+    const {
+        latestLeaveTime,
+        totalWaitingTime,
+        firstEnterTime,
+        latestEnterStageKey,
+        latestEnterSquad,
+    } = unsafeWindow.LAOPLUS.status.status.farmingStats;
+
+    if (
+        latestEnterStageKey !== null &&
+        latestEnterStageKey !== req.StageKeyString
+    ) {
+        log.log("farmingStats", "enter", "出撃先が変わったためリセット", {
+            latest: latestEnterStageKey,
+            current: req.StageKeyString,
+        });
+        reset();
+    }
+
+    if (latestEnterSquad !== null && latestEnterSquad !== req.SelectedSquadNo) {
+        log.log("farmingStats", "enter", "出撃部隊が変わったためリセット", {
+            latest: latestEnterSquad,
+            current: req.SelectedSquadNo,
+        });
+        reset();
+    }
 
     const update: DeepPartial<FarmingStats> = {
         latestEnterTime: currentTime,
+        latestEnterStageKey: req.StageKeyString,
     };
 
     if (firstEnterTime === null) {

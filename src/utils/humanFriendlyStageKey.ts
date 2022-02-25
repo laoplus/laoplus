@@ -9,11 +9,17 @@ export const humanFriendlyStageKey = (StageKey: string) => {
         /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
     const exec = regex.exec(StageKey);
     if (exec && exec.groups) {
-        const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
+        const {
+            chapter: c,
+            event = "",
+            stage: s,
+            side = "",
+            Ex = "",
+        } = exec.groups;
         const isEvent = event !== "";
         const chapter = Number(c);
         const stage = Number(s);
-        return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}`;
+        return `${isEvent && "Ev"}${chapter}-${stage}${side}${Ex}`;
     }
     // うまくパースできなかったらそのまま返す
     return StageKey;

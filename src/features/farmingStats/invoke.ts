@@ -9,7 +9,7 @@ import { InvokeProps } from "~/types/api";
 
 export const invoke = (props: InvokeProps) => {
     if (props.pathname === "/battleserver_enter") {
-        enter();
+        enter(props.req);
         calcSquadCosts(props.res);
         return;
     }

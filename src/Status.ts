@@ -22,6 +22,8 @@ export const defaultStatus = {
         totalWaitingTime: 0,
         totalRoundTime: 0,
         lapCount: 0,
+        latestEnterStageKey: null,
+        latestEnterSquad: null,
         drops: {
             units: {
                 SS: 0,
