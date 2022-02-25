@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645743031-2d847d102a6dc8161f2421b2d4121289710243ec
+// @version     1645783976-a51be31c4f913a8f7e8bfd7123be503f0d782812
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -176,11 +176,11 @@
         const regex = /(Ch(?<chapter>\d{2}))(Ev(?<event>\d+))?(Stage(?<stage>\d+))((?<Ex>Ex)|(?<side>.))?/;
         const exec = regex.exec(StageKey);
         if (exec && exec.groups) {
-            const { chapter: c, event = "", stage: s, side = "" } = exec.groups;
+            const { chapter: c, event = "", stage: s, side = "", Ex = "", } = exec.groups;
             const isEvent = event !== "";
             const chapter = Number(c);
             const stage = Number(s);
-            return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}`;
+            return `${isEvent && "Ev"}${chapter}-${stage}${side}${Ex}`;
         }
         // うまくパースできなかったらそのまま返す
         return StageKey;
@@ -285,6 +285,8 @@
             totalWaitingTime: 0,
             totalRoundTime: 0,
             lapCount: 0,
+            latestEnterStageKey: null,
+            latestEnterSquad: null,
             drops: {
                 units: {
                     SS: 0,
@@ -946,11 +948,27 @@
     /**
      * @package
      */
-    const enter$2 = () => {
+    const enter$2 = (req) => {
         const currentTime = new Date().getTime();
-        const { latestLeaveTime, totalWaitingTime, firstEnterTime } = unsafeWindow.LAOPLUS.status.status.farmingStats;
+        const { latestLeaveTime, totalWaitingTime, firstEnterTime, latestEnterStageKey, latestEnterSquad, } = unsafeWindow.LAOPLUS.status.status.farmingStats;
+        if (latestEnterStageKey !== null &&
+            latestEnterStageKey !== req.StageKeyString) {
+            log.log("farmingStats", "enter", "出撃先が変わったためリセット", {
+                latest: latestEnterStageKey,
+                current: req.StageKeyString,
+            });
+            reset();
+        }
+        if (latestEnterSquad !== null && latestEnterSquad !== req.SelectedSquadNo) {
+            log.log("farmingStats", "enter", "出撃部隊が変わったためリセット", {
+                latest: latestEnterSquad,
+                current: req.SelectedSquadNo,
+            });
+            reset();
+        }
         const update = {
             latestEnterTime: currentTime,
+            latestEnterStageKey: req.StageKeyString,
         };
         if (firstEnterTime === null) {
             update.firstEnterTime = currentTime;
@@ -1436,7 +1454,9 @@
             React.createElement("header", { className: "flex items-center bg-gradient-to-r from-slate-800 to-slate-700 p-2 pl-3 font-bold text-white" },
                 React.createElement("h1", { className: "mr-auto flex items-center gap-2" },
                     React.createElement("i", { className: "bi bi-info-circle text-lg" }),
-                    "\u5468\u56DE\u7D71\u8A08"),
+                    "\u5468\u56DE\u7D71\u8A08",
+                    stats.latestEnterStageKey &&
+                        ` (${humanFriendlyStageKey(stats.latestEnterStageKey)})`),
                 React.createElement("div", { className: "flex items-center gap-2" },
                     React.createElement("button", { className: "flex items-center gap-1 rounded bg-amber-300 px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset ring-amber-900/5", onClick: reset },
                         React.createElement("i", { className: "bi bi-stopwatch-fill inline w-4" }),
@@ -1777,7 +1797,7 @@
 
     const invoke$1 = (props) => {
         if (props.pathname === "/battleserver_enter") {
-            enter$2();
+            enter$2(props.req);
             calcSquadCosts(props.res);
             return;
         }
