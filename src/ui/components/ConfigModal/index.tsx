@@ -11,6 +11,7 @@ import { FooterLink } from "./FooterLink";
 import { WebhookTestButton } from "./WebhookTestButton";
 import "./index.css";
 import { resetLoginInfo } from "~/features/resetLoginInfo";
+import { isFloat, isPositiveFloat, isPositiveInteger } from "./validator";
 
 const cn = classNames;
 ReactModal.defaultStyles = {};
@@ -29,12 +30,6 @@ element.innerText = `
 }
 `;
 document.head.appendChild(element);
-
-const isValidNumber = (value: string) => {
-  if (value.includes(".")) return false;
-  const number = Number(value);
-  return !isNaN(number) && number >= 0;
-};
 
 export const ConfigModal = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -246,10 +241,7 @@ export const ConfigModal = () => {
                         className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                         {...register("features.wheelAmplify.ratio", {
                           required: watch("features.wheelAmplify.enabled"),
-                          validate: (value) =>
-                            // prettier-ignore
-                            typeof Number(value) === "number"
-                                                        && !Number.isNaN(Number(value)),
+                          validate: isFloat,
                         })}
                       />
                     </label>
@@ -289,10 +281,7 @@ export const ConfigModal = () => {
                         className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                         {...register("features.autorunDetection.threshold", {
                           required: watch("features.autorunDetection.enabled"),
-                          validate: (value) =>
-                            // prettier-ignore
-                            typeof Number(value) === "number"
-                                                && !Number.isNaN(Number(value)),
+                          validate: isPositiveFloat,
                         })}
                       />
                     </label>
@@ -328,7 +317,7 @@ export const ConfigModal = () => {
                         className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                         {...register("features.farmingStats.unitDisassemblyMultiplier", {
                           required: watch("features.farmingStats.enabled"),
-                          validate: isValidNumber,
+                          validate: isPositiveFloat,
                         })}
                       />
                     </label>
@@ -338,7 +327,7 @@ export const ConfigModal = () => {
                         {errors.features?.farmingStats.unitDisassemblyMultiplier.type ===
                           "required" && "周回統計を利用するには上昇率の指定が必要です"}
                         {errors.features?.farmingStats?.unitDisassemblyMultiplier?.type ===
-                          "validate" && "上昇率は整数で入力してください（%は不要）"}
+                          "validate" && "上昇率は数字で入力してください（%は不要）"}
                       </ErrorMessage>
                     )}
 
@@ -350,7 +339,7 @@ export const ConfigModal = () => {
                         className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
                         {...register("features.farmingStats.equipmentDisassemblyMultiplier", {
                           required: watch("features.farmingStats.enabled"),
-                          validate: isValidNumber,
+                          validate: isPositiveFloat,
                         })}
                       />
                     </label>
@@ -360,7 +349,7 @@ export const ConfigModal = () => {
                         {errors.features?.farmingStats.equipmentDisassemblyMultiplier.type ===
                           "required" && "周回統計を利用するには上昇率の指定が必要です"}
                         {errors.features?.farmingStats?.equipmentDisassemblyMultiplier?.type ===
-                          "validate" && "上昇率は整数で入力してください（%は不要）"}
+                          "validate" && "上昇率は数字で入力してください（%は不要）"}
                       </ErrorMessage>
                     )}
                   </FeatureSectionContent>
@@ -401,7 +390,7 @@ export const ConfigModal = () => {
                           required:
                             watch("features.levelupDetection.enabled") &&
                             watch("features.levelupDetection.watchUnitLevel"),
-                          validate: isValidNumber,
+                          validate: isPositiveInteger,
                         })}
                       />
                     </label>
@@ -443,7 +432,7 @@ export const ConfigModal = () => {
                           required:
                             watch("features.levelupDetection.enabled") &&
                             watch("features.levelupDetection.watchSkillLevel"),
-                          validate: isValidNumber,
+                          validate: isPositiveInteger,
                         })}
                       />
                     </label>
