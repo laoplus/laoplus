@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645846209-4d27ea5b7c17ec56b486754a5e05b693931875a7
+// @version     1645848850-e8d9318a75240a70a8b8cebd1f1044ffb804d8d1
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -543,6 +543,30 @@
         }
     };
 
+    /**
+     * 与えられた文字列をNumberでパースした際、整数として正しいか
+     */
+    /**
+     * 与えられた文字列をNumberでパースした際、正の整数として正しいか
+     */
+    const isPositiveInteger = (value) => {
+        const num = Number(value);
+        return Number.isSafeInteger(num) && num > 0;
+    };
+    /**
+     * 与えられた文字列をNumberでパースした際、小数として正しいか
+     */
+    const isFloat = (value) => {
+        return Number.isFinite(Number(value));
+    };
+    /**
+     * 与えられた文字列をNumberでパースした際、正の小数として正しいか
+     */
+    const isPositiveFloat = (value) => {
+        const num = Number(value);
+        return Number.isFinite(num) && num > 0;
+    };
+
     const cn$7 = classNames;
     ReactModal.defaultStyles = {};
     const element = document.createElement("style");
@@ -559,12 +583,6 @@
 }
 `;
     document.head.appendChild(element);
-    const isValidNumber = (value) => {
-        if (value.includes("."))
-            return false;
-        const number = Number(value);
-        return !isNaN(number) && number >= 0;
-    };
     const ConfigModal = () => {
         const [isOpen, setIsOpen] = React.useState(false);
         const { register, handleSubmit, watch, formState: { errors }, reset, } = ReactHookForm.useForm({
@@ -664,10 +682,7 @@
                                                 // numberだと値が二重になる
                                                 type: "text", disabled: !watch("features.wheelAmplify.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.wheelAmplify.ratio", {
                                                     required: watch("features.wheelAmplify.enabled"),
-                                                    validate: (value) => 
-                                                    // prettier-ignore
-                                                    typeof Number(value) === "number"
-                                                        && !Number.isNaN(Number(value)),
+                                                    validate: isFloat,
                                                 }) })),
                                         errors.features?.wheelAmplify?.ratio && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                             React.createElement("i", { className: "bi bi-exclamation-triangle" }),
@@ -685,10 +700,7 @@
                                             React.createElement("span", { className: "flex-shrink-0" }, "\u30A4\u30F3\u30BF\u30FC\u30D0\u30EB\u306E\u3057\u304D\u3044\u5024(\u5206):"),
                                             React.createElement("input", { type: "text", disabled: !watch("features.autorunDetection.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.autorunDetection.threshold", {
                                                     required: watch("features.autorunDetection.enabled"),
-                                                    validate: (value) => 
-                                                    // prettier-ignore
-                                                    typeof Number(value) === "number"
-                                                        && !Number.isNaN(Number(value)),
+                                                    validate: isPositiveFloat,
                                                 }) })),
                                         errors.features?.autorunDetection?.threshold && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                             React.createElement("i", { className: "bi bi-exclamation-triangle" }),
@@ -706,26 +718,26 @@
                                             React.createElement("span", { className: "flex-shrink-0" }, "\u6226\u95D8\u54E1 \u5206\u89E3\u7372\u5F97\u8CC7\u6E90\u306E\u4E0A\u6607\u7387:"),
                                             React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.farmingStats.unitDisassemblyMultiplier", {
                                                     required: watch("features.farmingStats.enabled"),
-                                                    validate: isValidNumber,
+                                                    validate: isPositiveFloat,
                                                 }) })),
                                         errors.features?.farmingStats?.unitDisassemblyMultiplier && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                             React.createElement("i", { className: "bi bi-exclamation-triangle" }),
                                             errors.features?.farmingStats.unitDisassemblyMultiplier.type ===
                                                 "required" && "周回統計を利用するには上昇率の指定が必要です",
                                             errors.features?.farmingStats?.unitDisassemblyMultiplier?.type ===
-                                                "validate" && "上昇率は整数で入力してください（%は不要）")),
+                                                "validate" && "上昇率は数字で入力してください（%は不要）")),
                                         React.createElement("label", { className: "flex items-center gap-2" },
                                             React.createElement("span", { className: "flex-shrink-0" }, "\u88C5\u5099 \u5206\u89E3\u7372\u5F97\u8CC7\u6E90\u306E\u4E0A\u6607\u7387:"),
                                             React.createElement("input", { type: "text", disabled: !watch("features.farmingStats.enabled"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.farmingStats.equipmentDisassemblyMultiplier", {
                                                     required: watch("features.farmingStats.enabled"),
-                                                    validate: isValidNumber,
+                                                    validate: isPositiveFloat,
                                                 }) })),
                                         errors.features?.farmingStats?.equipmentDisassemblyMultiplier && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                             React.createElement("i", { className: "bi bi-exclamation-triangle" }),
                                             errors.features?.farmingStats.equipmentDisassemblyMultiplier.type ===
                                                 "required" && "周回統計を利用するには上昇率の指定が必要です",
                                             errors.features?.farmingStats?.equipmentDisassemblyMultiplier?.type ===
-                                                "validate" && "上昇率は整数で入力してください（%は不要）")))),
+                                                "validate" && "上昇率は数字で入力してください（%は不要）")))),
                                 React.createElement(FeatureSection, { hasError: !!errors.features?.levelupDetection },
                                     React.createElement(FeatureSectionSummary, { register: register("features.levelupDetection.enabled"), title: "\u30EC\u30D9\u30EA\u30F3\u30B0\u901A\u77E5", helpLink: "https://github.com/eai04191/laoplus/wiki/features-LevelupDetection" }),
                                     React.createElement(FeatureSectionContent, { enable: watch("features.levelupDetection.enabled") },
@@ -740,7 +752,7 @@
                                                     !watch("features.levelupDetection.watchUnitLevel"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.levelupDetection.unitLevelRequirement", {
                                                     required: watch("features.levelupDetection.enabled") &&
                                                         watch("features.levelupDetection.watchUnitLevel"),
-                                                    validate: isValidNumber,
+                                                    validate: isPositiveInteger,
                                                 }) })),
                                         errors.features?.levelupDetection?.unitLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                             React.createElement("i", { className: "bi bi-exclamation-triangle" }),
@@ -759,7 +771,7 @@
                                                     !watch("features.levelupDetection.watchSkillLevel"), className: "w-16 min-w-[1rem] rounded border border-gray-500 px-1", ...register("features.levelupDetection.skillLevelRequirement", {
                                                     required: watch("features.levelupDetection.enabled") &&
                                                         watch("features.levelupDetection.watchSkillLevel"),
-                                                    validate: isValidNumber,
+                                                    validate: isPositiveInteger,
                                                 }) })),
                                         errors.features?.levelupDetection?.skillLevelRequirement && (React.createElement(ErrorMessage, { className: "flex gap-1" },
                                             React.createElement("i", { className: "bi bi-exclamation-triangle" }),
