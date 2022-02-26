@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645783976-a51be31c4f913a8f7e8bfd7123be503f0d782812
+// @version     1645846209-4d27ea5b7c17ec56b486754a5e05b693931875a7
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -180,7 +180,7 @@
             const isEvent = event !== "";
             const chapter = Number(c);
             const stage = Number(s);
-            return `${isEvent && "Ev"}${chapter}-${stage}${side}${Ex}`;
+            return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}${Ex}`;
         }
         // うまくパースできなかったらそのまま返す
         return StageKey;
