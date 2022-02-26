@@ -1,9 +1,6 @@
 <h1 align="center">LAOPLUS</h1>
 
 <p align="center">
-    <!-- <a href="https://github.com/eai04191/laoplus/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/eai04191/laoplus?style=flat-square" alt="MIT License" />
-    </a> -->
     <a href="https://discord.gg/EGWqTuhjrE">
         <img src="https://img.shields.io/discord/913406465312690217.svg?label=&logo=discord&logoColor=ffffff&color=5865F2&labelColor=5865F2&style=flat-square" alt="Discord" />
     </a>
@@ -18,7 +15,7 @@
 
 ![screenshot](https://user-images.githubusercontent.com/3516343/143431793-af3046de-d181-40ec-9293-aa8f7bbaedfe.png)
 
-ゲームページを開くとウィンドウいっぱいにゲーム画面が広がるようになります。また、ゲームの解像度を更新するため、拡縮しても文字やキャラが潰れることがありません。
+ゲームページ（[DMM](https://pc-play.games.dmm.com/play/lastorigin/) / [FANZA](https://pc-play.games.dmm.co.jp/play/lastorigin_r/)）を開くとウィンドウいっぱいにゲーム画面が広がるようになります。また、ゲームの解像度を更新するため、拡縮しても文字やキャラが潰れることがありません。
 
 PWA としてインストールするとより便利に使えます
 
@@ -48,6 +45,8 @@ PWA としてインストールするとより便利に使えます
 
 ※ キャラクター名やアイテム名での指定は今後実装予定です
 
+[詳細説明](https://github.com/eai04191/laoplus/wiki/features-discordNotification)
+
 ---
 
 </details>
@@ -59,7 +58,7 @@ PWA としてインストールするとより便利に使えます
 
 探索状態の変更を検知して終了時間に Discord にメッセージを送信します
 
-※ 通知には LAOPLUS を導入したブラウザが起動している必要があります
+※ 通知時に LAOPLUS を導入したブラウザが起動している必要があります
 
 ---
 
@@ -72,9 +71,9 @@ PWA としてインストールするとより便利に使えます
 | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: |
 | ![2021-12-06_00-11-31](https://user-images.githubusercontent.com/3516343/144752334-e6a19fe6-766c-4b19-8439-70f366f49086.gif) | ![2021-12-06_00-12-09](https://user-images.githubusercontent.com/3516343/144752331-30587eec-c235-480d-a413-8f0fd0329149.gif) |
 
-デフォルトで 1 スクロールあたりのスクロール量がめちゃくちゃ小さいのをスクロール量を増幅させてなんとかします
+ホイールスクロールの移動量がめちゃくちゃ小さい問題をスクロール量を増幅させて改善します
 
-※ この設定はページ読み込み時のみ反映されるため、設定の変更後はページを再読込する必要があります
+[詳細説明](https://github.com/eai04191/laoplus/wiki/features-wheelAmplify)
 
 ---
 
@@ -87,7 +86,7 @@ PWA としてインストールするとより便利に使えます
 
 戦闘開始を検知してタイマーを作動させます。タイマーが切れるまでに次の戦闘が開始しなければ、何らかの要因で自動周回が止まっているとみなし Disocrd にメッセージを送信します
 
-※ この機能は仮実装です。通信環境などの影響で周回時間が増減する場合正確な判別ができません。本実装の際には戦闘員や装備の状態を把握して正確な判別をできるようにする予定です。
+[詳細説明](https://github.com/eai04191/laoplus/wiki/features-autorunDetection)
 
 ---
 
@@ -96,11 +95,37 @@ PWA としてインストールするとより便利に使えます
 <details>
 <summary><b>周回統計</b></summary>
 
-![image](https://user-images.githubusercontent.com/3516343/153752518-4dfcd7b3-1aa7-4d80-a50f-a885397314a5.png)
+![image](https://user-images.githubusercontent.com/3516343/155620611-e258029d-83e3-4962-9a96-af8122d2a9b4.png)
 
-戦闘での戦闘員・装備品のドロップを検知してそれを分解した際に得られるであろう資源量を表示する機能です
+現在の周回でドロップした戦闘員・装備の数をカウントして、それを分解した際に得られるであろう資源量を表示する機能です
 
-※ 時給・合計の切り替えは後日実装予定です
+[詳細説明](https://github.com/eai04191/laoplus/wiki/features-FarmingStats)
+
+---
+
+</details>
+
+<details>
+<summary><b>レベリング通知</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/155614266-b5dafa33-b254-4b0a-90e4-e2a23ccba7e9.png)
+
+出撃中の部隊メンバーのレベル・スキルレベルを監視して、**全員が**目標を満たしたときに通知する機能です
+
+[詳細説明](https://github.com/eai04191/laoplus/wiki/features-LevelupDetection)
+
+---
+
+</details>
+
+<details>
+<summary><b>Firefox対応</b></summary>
+
+![Firefox](https://user-images.githubusercontent.com/3516343/155614433-a07787be-6fb4-41c3-9ad3-d022e43e5b15.png)
+
+Firefox で動作するように一部処理をパッチします。ゲーム自体に干渉することはありません。
+
+現在のところ Chromium 系列と同じく安定して動くようです。
 
 ---
 
@@ -127,21 +152,22 @@ PWA としてインストールするとより便利に使えます
 -   いつでも所持戦闘員・装備品の一覧を見れる画面
 -   クリア回数やドロップ率などの統計情報を見れる画面
 
+新しい機能に興味があったり、機能の提案などがある方は[Discord](https://discord.gg/EGWqTuhjrE)に入ることをオススメします！
+
 ## 開発ポリシー
 
 このスクリプトは不正をするためのものではありません。
 
-### します
+### このスクリプトがすること
 
--   ラストオリジンのゲームクライアントがサーバーから受信したデータの監視
--   受信データを利用した外部サービスとの連携
+-   ラストオリジンのゲームクライアントがサーバーから送受信したデータの監視
 -   ゲーム関連ページの DOM やスタイルの操作
 
-### しません
+### このスクリプトがしないこと
 
 -   自発的なラストオリジンのゲームサーバーへの通信
 -   自動操作（マクロ）
--   送信・受信内容の改ざん（チート）
+-   送受信内容の改ざん（チート）
 
 ---
 
@@ -157,10 +183,15 @@ LAOPLUS を利用したことによりアカウント BAN などの被害が発�
 <summary><b>インストール手順</b></summary>
 
 1. ブラウザに好きな UserScript マネージャーを導入する
-    - 開発の際は Microsoft Edge に入れた [Violentmonkey](https://violentmonkey.github.io/) で動作確認を行っているため、この組み合わせを推奨します
+    - 確認している組み合わせ:
+        - Microsoft Edge と[Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)（オススメ）
+        - [Mozilla Firefox](https://www.mozilla.org/ja/firefox/new/)と[Violentmonkey](https://addons.mozilla.org/ja/firefox/addon/violentmonkey/)
+    - Google Chrome は動作しますがメモリ使用量の観点から非推奨です
 2. [laoplus.user.js](https://github.com/eai04191/laoplus/raw/dist/laoplus.user.js) を開く
-3. インストールする
+3. 画面の指示に従いインストールする
 4. ゲームのページを開くと反映されているはずです
+
+不明な場合は [Discord](https://discord.gg/EGWqTuhjrE) か[作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
 
 ---
 
@@ -171,9 +202,11 @@ LAOPLUS を利用したことによりアカウント BAN などの被害が発�
 <details>
 <summary><b>Android版でも使えますか</b></summary>
 
-ラストオリジンのブラウザ版ではブラウザでゲームが動いているため、ブラウザに拡張機能を導入することで安易に通信を傍受できますが、Android アプリ版の通信を傍受するには Android の自体の通信に介入する必要があります。これには高度な技術が必要で、私には難しいです。
-
-[某お船のゲームでは既存のソリューションがある](https://github.com/antest1/kcanotify/blob/master/FAQ/FAQ_jp.md) らしいので技術がある人なら可能かもしれません。
+-   1 行でいうと: 無理です
+-   ラストオリジンのブラウザ版ではブラウザでゲームが動いているため、ブラウザに拡張機能を導入することで安易に通信を傍受できますが、Android アプリ版の通信を傍受するには Android の自体の通信に介入する必要があります。
+-   [某お船のゲームでは既存のソリューション](https://github.com/antest1/kcanotify/blob/master/FAQ/FAQ_jp.md) がありますが、某お船のゲームの通信が HTTP であるのに対して、ラストオリジンはすべての通信が HTTPS であるため、VPN のような挙動でも通信の傍受はできないはずです。
+-   （証明書をインストールさせればできるかもしれないが、それをリスクを理解していない非開発者にやらせるはあまりに危険であるためやりたくない）
+-   もしできそうな知見があればぜひご連絡ください。
 
 ---
 
@@ -182,7 +215,8 @@ LAOPLUS を利用したことによりアカウント BAN などの被害が発�
 <details>
 <summary><b>LAOPLUS を使うとBANされますか</b></summary>
 
-少なくとも[私](https://github.com/eai04191)はされていません。私が BAN されたくないので BAN されるような機能を実装するつもりもありません。
+-   少なくとも[私](https://github.com/eai04191)はされていません
+-   私が BAN されたくないので BAN されるような機能を実装するつもりもありません
 
 ---
 
@@ -212,9 +246,9 @@ https://pig.games/ja/terms.html
 <details>
 <summary><b>ぶっちゃけた話</b></summary>
 
-挙動的には広告ブロッカーみたいなもので、広告ブロッカー入れたままゲームしても BAN されないと思う。
+LAOPLUS は挙動的には広告ブロッカーみたいなものです、広告ブロッカー入れたままゲームしても BAN されませんよね？
 
-なんなら広告ブロッカーは通信を書き換えることもあるけど LAOPLUS はそれすらしない。
+なんなら広告ブロッカーは通信を書き換えることもありますが LAOPLUS はそれすらしません。
 
 ---
 
@@ -227,7 +261,7 @@ https://pig.games/ja/terms.html
 <details>
 <summary><b>LAOPLUS を使ったことを運営は知り得ますか</b></summary>
 
-（知ろうと思えば）知り得ます
+-   知ろうと思えば知り得ますが、今の所は知るための細工はしていないようです
 
 ---
 
@@ -236,7 +270,7 @@ https://pig.games/ja/terms.html
 <details>
 <summary><b>使い方がわからない・エラーが出る・その他聞きたいことがある</b></summary>
 
-[Discord](https://discord.gg/EGWqTuhjrE) で聞いてください
+-   [Discord](https://discord.gg/EGWqTuhjrE) か [作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
 
 ---
 
@@ -245,7 +279,7 @@ https://pig.games/ja/terms.html
 <details>
 <summary><b>ヘッチュンヘプチュ。ヘッチュチュンヘッチュ。ムチチムチ?</b></summary>
 
-しらん
+-   しらん
 
 ---
 
@@ -297,8 +331,8 @@ https://pig.games/ja/terms.html
 
 ## Special Thanks
 
--   https://github.com/rinsuki : Rollup と GitHub Actions を用いた userscript 開発ベースとして https://github.com/rinsuki/userscripts を参考にさせていただきました。
--   https://github.com/WolfgangKurz : LAOPLUS にて [滅亡前の戦術教本](https://lo.swaytwig.com/) のデータを用いることをご快諾していただきました。
+-   [@rinsuki](https://github.com/rinsuki) : Rollup と GitHub Actions を用いた userscript 開発ベースとして [rinsuki/userscripts](https://github.com/rinsuki/userscripts) を参考にさせていただきました。
+-   [@WolfgangKurz](https://github.com/WolfgangKurz) : LAOPLUS にて [滅亡前の戦術教本](https://lo.swaytwig.com/) のデータを用いることをご快諾していただきました。
 
 ## License
 

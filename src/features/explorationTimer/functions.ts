@@ -1,4 +1,3 @@
-import { ExplorationSquad } from "types";
 import { sendToDiscordWebhook } from "features/discordNotification";
 import {
     dateToRelativeTime,
@@ -6,6 +5,7 @@ import {
     log,
     numberToEmoji,
 } from "~/utils";
+import { exploration_enter, exploration_inginfo } from "~/types/api";
 
 const sendNotification = (): void => {
     const embedFields: {
@@ -60,9 +60,7 @@ const sendNotification = (): void => {
  */
 export const loginto = ({
     ExplorationList,
-}: {
-    ExplorationList: ExplorationSquad[];
-}): void => {
+}: exploration_inginfo["res"]): void => {
     // 既存のタイマーをすべて破棄する
     unsafeWindow.LAOPLUS.exploration.forEach((ex) => {
         if (ex.timeoutID) {
@@ -76,7 +74,7 @@ export const loginto = ({
             const timeoutID = window.setTimeout(sendNotification, msToFinish);
             return { ...ex, timeoutID };
         } else {
-            return ex;
+            return { ...ex, timeoutID: null };
         }
     });
 
@@ -90,7 +88,7 @@ export const loginto = ({
 /**
  * @package
  */
-export const enter = ({ EnterInfo }: { EnterInfo: ExplorationSquad }): void => {
+export const enter = ({ EnterInfo }: exploration_enter["res"]): void => {
     const msToFinish = EnterInfo.EndTime * 1000 - Date.now();
     const timeoutID = window.setTimeout(sendNotification, msToFinish);
     unsafeWindow.LAOPLUS.exploration.push({ ...EnterInfo, timeoutID });

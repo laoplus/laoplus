@@ -1,5 +1,6 @@
 import { Embed } from "discord-webhook-ts";
 import { rankColor } from "~/constants";
+import { wave_clear } from "~/types/api";
 import { gradeToRank } from "~/utils/gradeToRank";
 import { log } from "~/utils/log";
 import {
@@ -7,27 +8,10 @@ import {
     sendToDiscordWebhook,
 } from "../discordNotification";
 
-type WaveClearResponse = {
-    ClearRewardInfo: ClearRewardInfo;
-};
-
-type ClearRewardInfo = {
-    PCRewardList: RewardPC[];
-    ItemRewardList: RewardItem[];
-};
-type RewardPC = {
-    Grade: number;
-    Level: number;
-    PCKeyString: string;
-};
-type RewardItem = {
-    ItemKeyString: string;
-};
-
 /**
  * @package
  */
-export const PcDropNotification = (res: WaveClearResponse) => {
+export const PcDropNotification = (res: wave_clear["res"]) => {
     const embeds = res.ClearRewardInfo.PCRewardList.reduce(
         (embeds: Embed[], pc) => {
             const {
@@ -91,7 +75,7 @@ export const PcDropNotification = (res: WaveClearResponse) => {
 /**
  * @package
  */
-export const itemDropNotification = (res: WaveClearResponse) => {
+export const itemDropNotification = (res: wave_clear["res"]) => {
     const embeds = res.ClearRewardInfo.ItemRewardList.reduce(
         (embeds: Embed[], item) => {
             // SSのみ

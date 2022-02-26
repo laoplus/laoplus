@@ -1,5 +1,4 @@
-import { DeepPartial } from "./types";
-import { FarmingStats } from "./features/types";
+import { DeepPartial, FarmingStats } from "./types/Status";
 import { log } from "~/utils";
 
 type statusType = {
@@ -16,12 +15,15 @@ export const defaultStatus = {
         latestEnterTime: null,
     },
     farmingStats: {
+        firstEnterTime: null,
         latestEnterTime: null,
         waveTime: null,
         latestLeaveTime: null,
         totalWaitingTime: 0,
         totalRoundTime: 0,
         lapCount: 0,
+        latestEnterStageKey: null,
+        latestEnterSquad: null,
         drops: {
             units: {
                 SS: 0,
@@ -36,6 +38,8 @@ export const defaultStatus = {
                 B: 0,
             },
         },
+        latestResources: null,
+        currentSquadCosts: null,
     },
 } as statusType;
 Object.freeze(defaultStatus);

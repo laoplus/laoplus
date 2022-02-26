@@ -31,16 +31,16 @@ export const AutorunStatus: React.VFC = () => {
     return (
         <div
             className={cn(
-                "-translate-x-[50%] absolute inset-y-0 left-0 flex items-center text-white pointer-events-none select-none drop-shadow-lg",
+                "pointer-events-none absolute inset-y-0 left-0 flex -translate-x-[50%] select-none items-center text-white drop-shadow-lg",
                 enterDate === null ? "opacity-50" : "opacity-90"
             )}
         >
             <Spinner
-                className="text-[70vh] leading-zero animate-spin"
+                className="animate-spin text-[70vh] leading-zero"
                 style={{ animationDuration: "12s" }}
             />
-            <div className="pl-[50%] absolute inset-0 flex items-center justify-center">
-                <Timer targetDate={enterDate} className="pt-[60%] rotate-90" />
+            <div className="absolute inset-0 flex items-center justify-center pl-[50%]">
+                <Timer targetDate={enterDate} className="rotate-90 pt-[60%]" />
             </div>
         </div>
     );

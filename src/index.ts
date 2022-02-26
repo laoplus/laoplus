@@ -5,11 +5,16 @@ import { initUi } from "ui/index";
 import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
 import { initTacticsManual } from "tacticsManual";
-import { TacticsManualUnit, ExplorationSquad } from "./types";
+import { TacticsManualUnit } from "./types";
 import { tailwindConfig, initTailwindCustomStyle } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
 import { initWheelAmplfy } from "./features/wheelAmplify";
 import { log } from "./utils";
+import { exploration_enter } from "./types/api";
+
+type exploration = exploration_enter["res"]["EnterInfo"] & {
+    timeoutID: number | null;
+};
 
 declare global {
     // 露出させるLAOPLUSオブジェクトのinterface
@@ -20,7 +25,7 @@ declare global {
                 locale: { [key: string]: string };
                 unit: TacticsManualUnit[];
             };
-            exploration: ExplorationSquad[];
+            exploration: exploration[];
             status: Status;
         };
     }
@@ -59,12 +64,4 @@ declare global {
     initInputObserver();
     initWheelAmplfy();
     initTacticsManual();
-
-    unsafeWindow.LAOPLUS.config.events.on("*", (type, e) => {
-        log.debug("index", "config fired", type, e);
-    });
-
-    unsafeWindow.LAOPLUS.status.events.on("*", (type, e) => {
-        log.debug("index", "status fired", type, e);
-    });
 })();

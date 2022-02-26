@@ -1,45 +1,35 @@
-import { disassemblingTable, rankColor } from "~/constants";
-import { FarmingStats as TFarmingStats } from "~/features/types";
+import { disassemblingTable } from "~/constants";
+import { FarmingStats as TFarmingStats } from "~/types/Status";
 import { reset } from "~/features/farmingStats/functions";
-import { log } from "~/utils";
+import { humanFriendlyStageKey, log } from "~/utils";
 import { calcResourcesFromDrops } from "./calc";
-import { Icon } from "./Icon";
 import { MemorizedTimeStat } from "./TimeStat";
-const cn = classNames;
+import { GainedResourceDisplayHeader } from "./GainedResourceDisplayHeader";
+import { GainedResourceDisplayTable } from "./GainedResourceDisplayTable";
+import { Profit } from "./Profit";
+import { Drops } from "./Drops";
 
 function jsonEqual(a: unknown, b: unknown) {
     return JSON.stringify(a) === JSON.stringify(b);
 }
-
-const ResourceCounter: React.VFC<{
-    type: React.ComponentProps<typeof Icon>["type"] | "B" | "A" | "S" | "SS";
-    amount: number;
-}> = ({ type, amount }) => {
-    return (
-        <div className="flex gap-2 items-center">
-            {type === "B" || type === "A" || type === "S" || type === "SS" ? (
-                <div
-                    className={cn(
-                        "flex-shrink-0 px-2 rounded-md font-bold ring-1 ring-gray-900/5",
-                        `bg-[${rankColor[type].hex()}]`,
-                        type === "SS" ? "text-black" : "text-white"
-                    )}
-                >
-                    {type}
-                </div>
-            ) : (
-                <div className="flex-shrink-0 w-6 h-6">
-                    <Icon type={type} />
-                </div>
-            )}
-
-            <hr className="h-[2px] w-full bg-gray-200 border-0 rounded-full" />
-            <span className="text-gray-900 font-bold">
-                {amount.toLocaleString()}
-            </span>
-        </div>
-    );
-};
+/**
+ * @package
+ */
+export type ResourceDisplayType = "perHour" | "sum";
+/**
+ * @package
+ */
+export type ShownResourceTypePerDropKinds = "total" | "units" | "equipments";
+/**
+ * @package
+ */
+export const FarmingStatsContext = React.createContext<{
+    resourceDisplayType: ResourceDisplayType;
+    elapsedHours: number;
+}>({
+    resourceDisplayType: "sum",
+    elapsedHours: 0,
+});
 
 export const Panel: React.VFC = () => {
     const status = unsafeWindow.LAOPLUS.status;
@@ -53,22 +43,23 @@ export const Panel: React.VFC = () => {
         });
     });
 
-    const [resourceDisplayType, setResourceDisplayType] = React.useState<
-        "perHour" | "sum"
-    >("sum");
-    const toggleResourceDisplayType = () => {
-        setResourceDisplayType((v) => (v === "sum" ? "perHour" : "sum"));
-    };
+    const [resourceDisplayType, setResourceDisplayType] =
+        React.useState<ResourceDisplayType>("sum");
 
     // TODO: 命名なんとかする
     const [shownResourceTypePerDropKinds, setShownResourceTypePerDropKinds] =
-        React.useState<"total" | "units" | "equipments">("total");
-    const cycleShownResourceTypePerDropKinds = () => {
-        setShownResourceTypePerDropKinds((v) =>
-            v === "total" ? "units" : v === "units" ? "equipments" : "total"
-        );
-    };
+        React.useState<ShownResourceTypePerDropKinds>("total");
 
+    const elapsedHours = (() => {
+        if (stats.latestEnterTime !== null && stats.firstEnterTime !== null) {
+            return (stats.latestEnterTime - stats.firstEnterTime) / 1000 / 3600;
+        }
+        return 0;
+    })();
+
+    /**
+     * 資源換算
+     */
     const disassembledResource = (() => {
         const units = calcResourcesFromDrops({
             drops: stats.drops.units,
@@ -117,15 +108,19 @@ export const Panel: React.VFC = () => {
     })();
 
     return (
-        <div className="w-[420px] ring-gray-900/5 absolute bottom-6 left-0 mb-1 rounded-lg shadow-xl overflow-hidden ring-1">
-            <header className="from-slate-800 to-slate-700 flex items-center p-2 pl-3 text-white font-bold bg-gradient-to-r">
-                <h1 className="flex gap-2 items-center mr-auto">
+        <div className="absolute bottom-6 left-0 mb-1 w-[420px] overflow-hidden rounded-lg shadow-xl ring-1 ring-gray-900/5">
+            <header className="flex items-center bg-gradient-to-r from-slate-800 to-slate-700 p-2 pl-3 font-bold text-white">
+                <h1 className="mr-auto flex items-center gap-2">
                     <i className="bi bi-info-circle text-lg"></i>
                     周回統計
+                    {stats.latestEnterStageKey &&
+                        ` (${humanFriendlyStageKey(
+                            stats.latestEnterStageKey
+                        )})`}
                 </h1>
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                     <button
-                        className="bg-amber-300 ring-amber-900/5 flex gap-1 items-center px-2 py-1 text-gray-900 font-bold rounded shadow ring-1 ring-inset"
+                        className="flex items-center gap-1 rounded bg-amber-300 px-2 py-1 font-bold text-gray-900 shadow ring-1 ring-inset ring-amber-900/5"
                         onClick={reset}
                     >
                         <i className="bi bi-stopwatch-fill inline w-4"></i>
@@ -134,15 +129,15 @@ export const Panel: React.VFC = () => {
                 </div>
             </header>
 
-            <main className="flex flex-col gap-4 px-4 py-5 bg-white">
-                <div className="grid gap-4 grid-cols-2 items-center">
+            <main className="flex flex-col gap-4 bg-white px-4 py-5">
+                <div className="grid grid-cols-2 items-center gap-4">
                     <MemorizedTimeStat {...stats} />
                     <dl className="flex">
                         <dt className="mr-auto">完了した周回数</dt>
                         <dd>
-                            <p className="text-gray-900 font-bold">
+                            <p className="font-bold text-gray-900">
                                 {stats.lapCount.toLocaleString()}
-                                <span className="ml-0.5 text-gray-500 text-xs font-bold">
+                                <span className="ml-0.5 text-xs font-bold text-gray-500">
                                     回
                                 </span>
                             </p>
@@ -152,164 +147,40 @@ export const Panel: React.VFC = () => {
 
                 <hr />
 
-                <div className="flex gap-3">
-                    <h2>
-                        <button
-                            className="flex gap-1 items-center font-bold"
-                            onClick={cycleShownResourceTypePerDropKinds}
-                        >
-                            取得資源
-                            {(() => {
-                                switch (shownResourceTypePerDropKinds) {
-                                    case "units":
-                                        return "（戦闘員）";
-                                    case "equipments":
-                                        return "（装備）";
-                                    default:
-                                        return "";
-                                }
-                            })()}
-                            <i className="bi bi-chevron-down before:!align-[inherit] text-xs"></i>
-                        </button>
-                    </h2>
-                    <div className="hidden">
-                        <div className="flex gap-1 items-center ml-auto cursor-pointer select-none">
-                            <span
-                                onClick={() => {
-                                    setResourceDisplayType("perHour");
-                                }}
-                            >
-                                時給
-                            </span>
-                            <div
-                                className="flex items-center px-1 w-10 h-5 bg-gray-300 rounded-full"
-                                onClick={toggleResourceDisplayType}
-                            >
-                                <div
-                                    className={cn(
-                                        "w-4 h-4 bg-white rounded-full shadow-md transform transition-transform",
-                                        resourceDisplayType === "sum" &&
-                                            "translate-x-4"
-                                    )}
-                                ></div>
-                            </div>
-                            <span
-                                onClick={() => {
-                                    setResourceDisplayType("sum");
-                                }}
-                            >
-                                合計
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <FarmingStatsContext.Provider
+                    value={{ resourceDisplayType, elapsedHours }}
+                >
+                    <GainedResourceDisplayHeader
+                        resourceDisplayType={resourceDisplayType}
+                        setResourceDisplayType={setResourceDisplayType}
+                        shownResourceTypePerDropKinds={
+                            shownResourceTypePerDropKinds
+                        }
+                        setShownResourceTypePerDropKinds={
+                            setShownResourceTypePerDropKinds
+                        }
+                    />
+                    <GainedResourceDisplayTable
+                        resources={
+                            disassembledResource[shownResourceTypePerDropKinds]
+                        }
+                    />
 
-                <div className="grid gap-3 grid-cols-3">
-                    <ResourceCounter
-                        type="parts"
-                        amount={
+                    <Profit
+                        currentSquadCosts={stats.currentSquadCosts}
+                        resources={
                             disassembledResource[shownResourceTypePerDropKinds]
-                                .parts
                         }
+                        lapCount={stats.lapCount}
                     />
-                    <ResourceCounter
-                        type="nutrient"
-                        amount={
-                            disassembledResource[shownResourceTypePerDropKinds]
-                                .nutrients
-                        }
-                    />
-                    <ResourceCounter
-                        type="power"
-                        amount={
-                            disassembledResource[shownResourceTypePerDropKinds]
-                                .power
-                        }
-                    />
-                </div>
-                <div className="grid gap-3 grid-cols-3">
-                    <ResourceCounter
-                        type="basic_module"
-                        amount={
-                            disassembledResource[shownResourceTypePerDropKinds]
-                                .basic_module
-                        }
-                    />
-                    <ResourceCounter
-                        type="advanced_module"
-                        amount={
-                            disassembledResource[shownResourceTypePerDropKinds]
-                                .advanced_module
-                        }
-                    />
-                    <ResourceCounter
-                        type="special_module"
-                        amount={
-                            disassembledResource[shownResourceTypePerDropKinds]
-                                .special_module
-                        }
-                    />
-                </div>
 
-                <div className="flex gap-3">
-                    <h2 className="font-bold">ドロップ詳細</h2>
-                </div>
-
-                <div className="flex gap-2">
-                    <i className="bi bi-person-fill text-xl" title="戦闘員"></i>
-                    <div
-                        className={cn(
-                            "grid gap-3 grid-cols-4 flex-1 transition-opacity",
-                            shownResourceTypePerDropKinds === "equipments" &&
-                                "opacity-50"
-                        )}
-                    >
-                        <ResourceCounter
-                            type="B"
-                            amount={stats.drops.units.B}
-                        />
-                        <ResourceCounter
-                            type="A"
-                            amount={stats.drops.units.A}
-                        />
-                        <ResourceCounter
-                            type="S"
-                            amount={stats.drops.units.S}
-                        />
-                        <ResourceCounter
-                            type="SS"
-                            amount={stats.drops.units.SS}
-                        />
-                    </div>
-                </div>
-
-                <div className="flex gap-2">
-                    <i className="bi bi-cpu text-xl" title="装備"></i>
-                    <div
-                        className={cn(
-                            "grid gap-3 grid-cols-4 flex-1 transition-opacity",
-                            shownResourceTypePerDropKinds === "units" &&
-                                "opacity-50"
-                        )}
-                    >
-                        <ResourceCounter
-                            type="B"
-                            amount={stats.drops.equipments.B}
-                        />
-                        <ResourceCounter
-                            type="A"
-                            amount={stats.drops.equipments.A}
-                        />
-                        <ResourceCounter
-                            type="S"
-                            amount={stats.drops.equipments.S}
-                        />
-                        <ResourceCounter
-                            type="SS"
-                            amount={stats.drops.equipments.SS}
-                        />
-                    </div>
-                </div>
+                    <Drops
+                        drops={stats.drops}
+                        shownResourceTypePerDropKinds={
+                            shownResourceTypePerDropKinds
+                        }
+                    />
+                </FarmingStatsContext.Provider>
             </main>
         </div>
     );

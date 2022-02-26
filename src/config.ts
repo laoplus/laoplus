@@ -1,4 +1,4 @@
-import { DeepPartial } from "./types";
+import { DeepPartial } from "./types/Status";
 import { log } from "~/utils";
 
 const defaultConfig = {
@@ -17,6 +17,8 @@ const defaultConfig = {
                 itemDrop: true,
                 exploration: true,
                 autorunStop: true,
+                levelUp: true,
+                skillLevelUp: true,
             },
         },
         wheelAmplify: {
@@ -32,6 +34,13 @@ const defaultConfig = {
             enabled: true,
             unitDisassemblyMultiplier: "0",
             equipmentDisassemblyMultiplier: "0",
+        },
+        levelupDetection: {
+            enabled: false,
+            watchSkillLevel: true,
+            skillLevelRequirement: "10",
+            watchUnitLevel: true,
+            unitLevelRequirement: "90",
         },
     },
 };

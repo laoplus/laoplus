@@ -18,12 +18,12 @@ const App: React.VFC = () => {
     return (
         <>
             <BootstrapIcon />
+            <AutorunStatus />
             <IconWrapper>
                 <ConfigModal />
                 <ToggleAutorun />
                 {config.features.farmingStats.enabled && <FarmingStats />}
             </IconWrapper>
-            <AutorunStatus />
         </>
     );
 };

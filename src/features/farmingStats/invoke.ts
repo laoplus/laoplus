@@ -1,17 +1,25 @@
-import { enter, leave, updateTimeStatus, incrementDrops } from "./functions";
-import { InvokeProps, WaveClearResponse } from "../types";
+import {
+    enter,
+    leave,
+    updateTimeStatus,
+    incrementDrops,
+    calcSquadCosts,
+} from "./functions";
+import { InvokeProps } from "~/types/api";
 
-export const invoke = ({ res, url }: InvokeProps) => {
-    switch (url.pathname) {
-        case "/battleserver_enter":
-            enter();
-            return;
-        case "/battleserver_leave":
-            leave();
-            return;
-        case "/wave_clear":
-            incrementDrops(res as WaveClearResponse);
-            updateTimeStatus();
-            return;
+export const invoke = (props: InvokeProps) => {
+    if (props.pathname === "/battleserver_enter") {
+        enter(props.req);
+        calcSquadCosts(props.res);
+        return;
+    }
+    if (props.pathname === "/battleserver_leave") {
+        leave();
+        return;
+    }
+    if (props.pathname === "/wave_clear") {
+        incrementDrops(props.res);
+        updateTimeStatus();
+        return;
     }
 };

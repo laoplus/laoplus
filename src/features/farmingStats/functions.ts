@@ -1,6 +1,7 @@
 import { defaultStatus } from "~/Status";
-import { gradeToRank, itemKeyToRank } from "~/utils";
-import { WaveClearResponse } from "../types";
+import { battleserver_enter, wave_clear } from "~/types/api";
+import { DeepPartial, FarmingStats } from "~/types/Status";
+import { log, gradeToRank, itemKeyToRank } from "~/utils";
 
 export const reset = () => {
     unsafeWindow.LAOPLUS.status.set({
@@ -11,26 +12,99 @@ export const reset = () => {
 /**
  * @package
  */
-export const enter = () => {
-    const status = unsafeWindow.LAOPLUS.status;
-    const curtime = new Date().getTime();
-    const { latestLeaveTime, totalWaitingTime } = status.status.farmingStats;
+export const enter = (req: battleserver_enter["req"]) => {
+    const currentTime = new Date().getTime();
+    const {
+        latestLeaveTime,
+        totalWaitingTime,
+        firstEnterTime,
+        latestEnterStageKey,
+        latestEnterSquad,
+    } = unsafeWindow.LAOPLUS.status.status.farmingStats;
+
+    if (
+        latestEnterStageKey !== null &&
+        latestEnterStageKey !== req.StageKeyString
+    ) {
+        log.log("farmingStats", "enter", "出撃先が変わったためリセット", {
+            latest: latestEnterStageKey,
+            current: req.StageKeyString,
+        });
+        reset();
+    }
+
+    if (latestEnterSquad !== null && latestEnterSquad !== req.SelectedSquadNo) {
+        log.log("farmingStats", "enter", "出撃部隊が変わったためリセット", {
+            latest: latestEnterSquad,
+            current: req.SelectedSquadNo,
+        });
+        reset();
+    }
+
+    const update: DeepPartial<FarmingStats> = {
+        latestEnterTime: currentTime,
+        latestEnterStageKey: req.StageKeyString,
+    };
+
+    if (firstEnterTime === null) {
+        update.firstEnterTime = currentTime;
+    }
 
     if (latestLeaveTime) {
-        const waitTime = (curtime - latestLeaveTime) / 1000;
-        status.set({
-            farmingStats: {
-                latestEnterTime: curtime,
-                totalWaitingTime: totalWaitingTime + waitTime,
-            },
-        });
-    } else {
-        status.set({
-            farmingStats: {
-                latestEnterTime: curtime,
-            },
-        });
+        const waitTime = (currentTime - latestLeaveTime) / 1000;
+        update.totalWaitingTime = totalWaitingTime + waitTime;
     }
+
+    unsafeWindow.LAOPLUS.status.set({ farmingStats: update });
+};
+
+/**
+ * @package
+ */
+export const calcSquadCosts = (res: battleserver_enter["res"]) => {
+    const status = unsafeWindow.LAOPLUS.status;
+    const latestResources = status.status.farmingStats.latestResources;
+
+    const currentResources = {
+        parts: res.CurrencyInfo.Metal + res.CurrencyInfo.FreeMetal,
+        nutrients: res.CurrencyInfo.Nutrient + res.CurrencyInfo.FreeNutrient,
+        power: res.CurrencyInfo.Power + res.CurrencyInfo.FreePower,
+    };
+
+    const currentSquadCosts = (() => {
+        if (latestResources === null) {
+            return null;
+        }
+        const current = {
+            parts: latestResources.parts - currentResources.parts,
+            nutrients: latestResources.nutrients - currentResources.nutrients,
+            power: latestResources.power - currentResources.power,
+        };
+
+        // どれか一つでもマイナスになってたらなにかが変わったのでresetしてnullを返す
+        if (Object.values(current).some((n) => n < 0)) {
+            log.warn(
+                "farmingStats",
+                "calcSquadCosts",
+                "currentSquadCostsがマイナスになっていたためリセットします",
+                current
+            );
+            reset();
+            return null;
+        }
+        return current;
+    })();
+
+    status.set({
+        farmingStats: {
+            latestResources: {
+                parts: currentResources.parts,
+                nutrients: currentResources.nutrients,
+                power: currentResources.power,
+            },
+            currentSquadCosts,
+        },
+    });
 };
 
 /**
@@ -63,7 +137,7 @@ export const leave = () => {
 /**
  * @package
  */
-export const incrementDrops = (res: WaveClearResponse) => {
+export const incrementDrops = (res: wave_clear["res"]) => {
     const status = unsafeWindow.LAOPLUS.status;
 
     const units = res.ClearRewardInfo.PCRewardList.reduce((unitDrops, unit) => {

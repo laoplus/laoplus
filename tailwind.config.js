@@ -24,5 +24,13 @@ module.exports = {
     variants: {
         extend: {},
     },
-    plugins: [require("@tailwindcss/forms")],
+    plugins: [
+        require("@tailwindcss/forms"),
+        function ({ addVariant }) {
+            addVariant(
+                "supports-backdrop-blur",
+                "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))"
+            );
+        },
+    ],
 };
