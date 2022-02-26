@@ -19,7 +19,7 @@ export const humanFriendlyStageKey = (StageKey: string) => {
         const isEvent = event !== "";
         const chapter = Number(c);
         const stage = Number(s);
-        return `${isEvent && "Ev"}${chapter}-${stage}${side}${Ex}`;
+        return `${isEvent ? "Ev" : ""}${chapter}-${stage}${side}${Ex}`;
     }
     // うまくパースできなかったらそのまま返す
     return StageKey;
