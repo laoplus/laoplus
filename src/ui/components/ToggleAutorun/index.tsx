@@ -19,19 +19,21 @@ export const ToggleAutorun: React.VFC = () => {
     };
 
     return (
-        <button
-            onClick={handleClick}
-            title={`自動周回停止判定を${enabled ? "オフ" : "オン"}にする`}
-            className={cn(
-                "h-6 text-white drop-shadow-featureIcon",
-                enabled && "animate-spin"
-            )}
-            style={{
-                animationDuration: "2s",
-                animationTimingFunction: "ease-in-out",
-            }}
-        >
-            <i className="bi bi-arrow-repeat"></i>
-        </button>
+        <div className="relative">
+            <button
+                onClick={handleClick}
+                title={`自動周回停止判定を${enabled ? "オフ" : "オン"}にする`}
+                className={cn(
+                    "js-feature-button p-1 leading-none text-white drop-shadow-featureIcon",
+                    enabled && "animate-spin"
+                )}
+                style={{
+                    animationDuration: "2s",
+                    animationTimingFunction: "ease-in-out",
+                }}
+            >
+                <i className="bi bi-arrow-repeat"></i>
+            </button>
+        </div>
     );
 };

@@ -54,14 +54,15 @@ export const ConfigModal = () => {
   }
 
   return (
-    <>
+    <div className="relative leading-none">
       <button
         onClick={() => {
           setIsOpen(true);
         }}
         title={`${GM_info.script.name}の設定画面を開く`}
+        className="js-feature-button h-6 w-6 leading-[0px] text-white drop-shadow-featureIcon"
       >
-        ➕
+        <i className="bi bi-plus-lg text-[0] before:text-[20px]"></i>
       </button>
 
       <ReactModal
@@ -534,6 +535,6 @@ export const ConfigModal = () => {
           </div>
         </div>
       </ReactModal>
-    </>
+    </div>
   );
 };

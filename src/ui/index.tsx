@@ -3,15 +3,41 @@ import { ConfigModal } from "ui/components/ConfigModal";
 import { AutorunStatus } from "./components/AutorunStatus";
 import { FarmingStats } from "./components/FarmingStats";
 import { ToggleAutorun } from "./components/ToggleAutorun";
-import { log } from "~/utils";
+
+const element = document.createElement("style");
+element.setAttribute("type", "text/tailwindcss");
+element.innerText = `
+.icon-wrapper > div > button {
+    @apply transition-opacity duration-150;
+    opacity: var(--menu-button-opacity);
+}
+.icon-wrapper.hovered > div > button {
+    @apply opacity-100;
+}
+`;
+document.head.appendChild(element);
 
 const IconWrapper: React.VFC<{
     children: React.ReactNode;
     style: React.HTMLAttributes<HTMLDivElement>["style"];
 }> = ({ children, ...props }) => {
+    const [isHovered, setIsHovered] = React.useState(false);
     return (
         <div
-            className="absolute bottom-0 left-0 flex gap-1 transition-opacity hover:!opacity-100"
+            className={classNames(
+                "absolute bottom-0 left-0 flex transition-opacity",
+                "icon-wrapper",
+                isHovered && "hovered"
+            )}
+            onMouseEnter={(e) => {
+                const target = e.target as HTMLElement;
+                if (target.classList.contains("js-feature-button")) {
+                    setIsHovered(true);
+                }
+            }}
+            onMouseLeave={() => {
+                setIsHovered(false);
+            }}
             {...props}
         >
             {children}
@@ -39,7 +65,13 @@ const App: React.VFC = () => {
         <>
             <BootstrapIcon />
             <AutorunStatus />
-            <IconWrapper style={{ opacity: menuOpacity }}>
+            <IconWrapper
+                style={
+                    {
+                        "--menu-button-opacity": menuOpacity,
+                    } as React.CSSProperties
+                }
+            >
                 <ConfigModal />
                 <ToggleAutorun />
                 {showFarmStats && <FarmingStats />}

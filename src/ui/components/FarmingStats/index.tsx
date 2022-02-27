@@ -11,7 +11,7 @@ export const FarmingStats: React.VFC = () => {
             <button
                 onClick={handleButtonClick}
                 title="周回情報パネルを表示する"
-                className="h-6 text-white drop-shadow-featureIcon"
+                className="js-feature-button p-1 leading-none text-white drop-shadow-featureIcon"
             >
                 <i className="bi bi-recycle"></i>
             </button>
