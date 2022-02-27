@@ -42,6 +42,9 @@ const defaultConfig = {
             watchUnitLevel: true,
             unitLevelRequirement: "90",
         },
+        ui: {
+            menuInactivityOpaicty: "0.7",
+        },
     },
 };
 Object.freeze(defaultConfig);

@@ -304,11 +304,6 @@ export const ConfigModal = () => {
                     helpLink="https://github.com/eai04191/laoplus/wiki/features-FarmingStats"
                   />
                   <FeatureSectionContent enable={watch("features.farmingStats.enabled")}>
-                    <span className="flex gap-1 text-sm text-gray-600">
-                      <i className="bi bi-info-circle"></i>
-                      ページ読み込み後に周回統計を有効化した場合、表示するにはページの再読み込みが必要です
-                    </span>
-
                     <label className="flex items-center gap-2">
                       <span className="flex-shrink-0">戦闘員 分解獲得資源の上昇率:</span>
                       <input
@@ -443,6 +438,31 @@ export const ConfigModal = () => {
                           "required" && "レベリング通知を利用するには目標値の指定が必要です"}
                         {errors.features?.levelupDetection?.skillLevelRequirement?.type ===
                           "validate" && "目標値は整数で入力してください"}
+                      </ErrorMessage>
+                    )}
+                  </FeatureSectionContent>
+                </FeatureSection>
+
+                <FeatureSection hasError={!!errors.features?.ui}>
+                  <FeatureSectionSummary title="UI" />
+                  <FeatureSectionContent>
+                    <label className={cn("flex items-center gap-2")}>
+                      <span className="flex-shrink-0">
+                        下部メニュー 非アクティブ時の不透明度 (0.0 ~ 1.0):
+                      </span>
+                      <input
+                        type="text"
+                        className="w-16 min-w-[1rem] rounded border border-gray-500 px-1"
+                        {...register("features.ui.menuInactivityOpaicty", {
+                          validate: isPositiveFloat,
+                        })}
+                      />
+                    </label>
+                    {errors.features?.ui?.menuInactivityOpaicty && (
+                      <ErrorMessage className="flex gap-1">
+                        <i className="bi bi-exclamation-triangle"></i>
+                        {errors.features?.ui?.menuInactivityOpaicty?.type === "validate" &&
+                          "不透明度は数字で入力してください"}
                       </ErrorMessage>
                     )}
                   </FeatureSectionContent>

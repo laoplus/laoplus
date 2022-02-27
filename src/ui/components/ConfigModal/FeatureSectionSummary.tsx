@@ -2,7 +2,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 import { HelpIcon } from "./HelpIcon";
 
 export const FeatureSectionSummary: React.VFC<{
-    register: UseFormRegisterReturn;
+    register?: UseFormRegisterReturn;
     title: string;
     helpLink?: string;
 }> = ({ register, title, helpLink }) => {
@@ -17,11 +17,13 @@ export const FeatureSectionSummary: React.VFC<{
                 <i className="bi bi-chevron-down"></i>
             </div>
             <label className="absolute left-0 top-0 -ml-10 flex h-full w-10 cursor-pointer items-center justify-center">
-                <input
-                    type="checkbox"
-                    className="h-4 w-4 before:cursor-pointer"
-                    {...register}
-                />
+                {register && (
+                    <input
+                        type="checkbox"
+                        className="h-4 w-4 before:cursor-pointer"
+                        {...register}
+                    />
+                )}
             </label>
         </summary>
     );
