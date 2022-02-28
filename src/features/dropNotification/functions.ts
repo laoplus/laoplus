@@ -62,7 +62,7 @@ export const PcDropNotification = (res: wave_clear["res"]) => {
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.pcDrop
     ) {
-        sendToDiscordWebhook(body);
+        void sendToDiscordWebhook(body);
     } else {
         log.debug(
             "Drop Notification",
@@ -106,7 +106,7 @@ export const itemDropNotification = (res: wave_clear["res"]) => {
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.itemDrop
     ) {
-        sendToDiscordWebhook(body);
+        void sendToDiscordWebhook(body);
     } else {
         log.debug(
             "Drop Notification",

@@ -7,5 +7,6 @@ export const numberToEmoji = (number: number) => {
     if (String(number).length !== 1) {
         throw new Error("1桁以外の数字を処理することはできません");
     }
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     return number + "\uFE0F\u20E3";
 };

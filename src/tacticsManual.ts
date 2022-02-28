@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { log } from "~/utils";
 import { TacticsManualUnit } from "./types";
 

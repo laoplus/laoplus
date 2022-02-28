@@ -22,6 +22,7 @@ export const tailwindConfig: import("tailwindcss/tailwind-config").TailwindConfi
         plugins: [
             // @ts-ignore
             function ({ addVariant }) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 addVariant(
                     "supports-backdrop-blur",
                     "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))"

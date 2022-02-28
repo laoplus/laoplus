@@ -18,6 +18,7 @@ const getCursorPosition = (element: HTMLInputElement) => {
 
 // https://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-onchange-event-in-react-js#46012210
 const getNativeInputValueSetter = () => {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
         window.HTMLInputElement.prototype,
         "value"
