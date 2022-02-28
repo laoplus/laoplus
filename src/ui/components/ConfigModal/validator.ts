@@ -6,11 +6,11 @@ export const isInteger = (value: string): boolean => {
 };
 
 /**
- * 与えられた文字列をNumberでパースした際、正の整数として正しいか
+ * 与えられた文字列をNumberでパースした際、0を含む正の整数として正しいか
  */
 export const isPositiveInteger = (value: string): boolean => {
     const num = Number(value);
-    return Number.isSafeInteger(num) && num > 0;
+    return Number.isSafeInteger(num) && num >= 0;
 };
 
 /**
@@ -21,9 +21,9 @@ export const isFloat = (value: string): boolean => {
 };
 
 /**
- * 与えられた文字列をNumberでパースした際、正の小数として正しいか
+ * 与えられた文字列をNumberでパースした際、0を含む正の小数として正しいか
  */
 export const isPositiveFloat = (value: string): boolean => {
     const num = Number(value);
-    return Number.isFinite(num) && num > 0;
+    return Number.isFinite(num) && num >= 0;
 };
