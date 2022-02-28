@@ -9,7 +9,6 @@ import { TacticsManualUnit } from "./types";
 import { tailwindConfig, initTailwindCustomStyle } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
 import { initWheelAmplfy } from "./features/wheelAmplify";
-import { log } from "./utils";
 import { exploration_enter } from "./types/api";
 
 type exploration = exploration_enter["res"]["EnterInfo"] & {
