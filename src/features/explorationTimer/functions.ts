@@ -45,7 +45,7 @@ const sendNotification = (): void => {
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.exploration
     ) {
-        sendToDiscordWebhook(body);
+        void sendToDiscordWebhook(body);
     } else {
         log.debug(
             "Exploration Timer",

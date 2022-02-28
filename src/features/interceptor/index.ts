@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { log } from "~/utils";
 import { InvokeProps } from "~/types/api";
 import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
@@ -53,6 +55,7 @@ const interceptor = (xhr: ExtendedXHR): void => {
 
 export const initInterceptor = () => {
     // オリジナルのメソッド
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const { open, send } = XMLHttpRequest.prototype;
 
     (XMLHttpRequest.prototype as ExtendedXHR).open = function (method, url) {

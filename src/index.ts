@@ -51,6 +51,7 @@ declare global {
     };
 
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     tailwind.config = tailwindConfig;
     initTailwindCustomStyle();
 
@@ -60,7 +61,7 @@ declare global {
 
     initUi();
     initInterceptor();
-    initResizeObserver();
+    void initResizeObserver();
     initInputObserver();
     initWheelAmplfy();
     initTacticsManual();
