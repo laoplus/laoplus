@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1645849549-a886e74680e460a7e23f09e94c323f47461c78a6
+// @version     1646043740-7bfd7c1fa87a4bb6f448c044addb22741817833b
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -547,11 +547,11 @@
      * 与えられた文字列をNumberでパースした際、整数として正しいか
      */
     /**
-     * 与えられた文字列をNumberでパースした際、正の整数として正しいか
+     * 与えられた文字列をNumberでパースした際、0を含む正の整数として正しいか
      */
     const isPositiveInteger = (value) => {
         const num = Number(value);
-        return Number.isSafeInteger(num) && num > 0;
+        return Number.isSafeInteger(num) && num >= 0;
     };
     /**
      * 与えられた文字列をNumberでパースした際、小数として正しいか
@@ -560,11 +560,11 @@
         return Number.isFinite(Number(value));
     };
     /**
-     * 与えられた文字列をNumberでパースした際、正の小数として正しいか
+     * 与えられた文字列をNumberでパースした際、0を含む正の小数として正しいか
      */
     const isPositiveFloat = (value) => {
         const num = Number(value);
-        return Number.isFinite(num) && num > 0;
+        return Number.isFinite(num) && num >= 0;
     };
 
     const cn$7 = classNames;
