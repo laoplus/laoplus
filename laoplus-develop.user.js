@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1646043790-eb565215ef5b6832ab80fed99844e29113a1d300
+// @version     1646068552-dc88fe770b6609f8ac2c1080e6835349fdf7914c
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -195,6 +195,7 @@
         if (String(number).length !== 1) {
             throw new Error("1桁以外の数字を処理することはできません");
         }
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         return number + "\uFE0F\u20E3";
     };
 
@@ -518,6 +519,10 @@
     var css_248z = "details[open] .details-chevron {\n    transform: rotate(180deg);\n}\n";
     styleInject(css_248z);
 
+    /* eslint-disable @typescript-eslint/no-unsafe-return */
+    /* eslint-disable @typescript-eslint/no-unsafe-call */
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
     const resetLoginInfo = () => {
         const ok = confirm("ログイン情報を削除します。よろしいですか？");
         if (!ok)
@@ -1514,7 +1519,7 @@
         };
         if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.autorunStop) {
-            sendToDiscordWebhook(body);
+            void sendToDiscordWebhook(body);
         }
         else {
             log.debug("Autorun Detection", "設定が無効のため、Discord通知を送信しませんでした", body);
@@ -1632,7 +1637,7 @@
         };
         if (unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.exploration) {
-            sendToDiscordWebhook(body);
+            void sendToDiscordWebhook(body);
         }
         else {
             log.debug("Exploration Timer", "設定が無効のため、Discord通知を送信しませんでした", body);
@@ -1751,7 +1756,7 @@
         if (embeds.length !== 0 &&
             unsafeWindow.LAOPLUS.config.config.features.discordNotification
                 .interests.pcDrop) {
-            sendToDiscordWebhook(body);
+            void sendToDiscordWebhook(body);
         }
         else {
             log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
@@ -1782,7 +1787,7 @@
         if (embeds.length !== 0 &&
             unsafeWindow.LAOPLUS.config.config.features.discordNotification
                 .interests.itemDrop) {
-            sendToDiscordWebhook(body);
+            void sendToDiscordWebhook(body);
         }
         else {
             log.debug("Drop Notification", "送信する項目がないか、設定が無効のため、Discord通知を送信しませんでした", body);
@@ -1891,7 +1896,7 @@
                     },
                 ],
             };
-            sendToDiscordWebhook(body);
+            void sendToDiscordWebhook(body);
         }
     };
     /**
@@ -1921,7 +1926,7 @@
                     },
                 ],
             };
-            sendToDiscordWebhook(body);
+            void sendToDiscordWebhook(body);
         }
     };
 
@@ -1941,6 +1946,7 @@
         }
     };
 
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment */
     const interceptor = (xhr) => {
         if (!xhr.responseURL)
             return;
@@ -1976,6 +1982,7 @@
     };
     const initInterceptor = () => {
         // オリジナルのメソッド
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         const { open, send } = XMLHttpRequest.prototype;
         XMLHttpRequest.prototype.open = function (method, url) {
             this._method = method;
@@ -2022,6 +2029,7 @@
         log.log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
     };
 
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment */
     const initTacticsManual = () => {
         GM_xmlhttpRequest({
             url: "https://lo.swaytwig.com/json/locale/JP.json",
@@ -2073,6 +2081,7 @@
         plugins: [
             // @ts-ignore
             function ({ addVariant }) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 addVariant("supports-backdrop-blur", "@supports (backdrop-filter: blur(0)) or (-webkit-backdrop-filter: blur(0))");
             },
         ],
@@ -2125,6 +2134,7 @@
     };
     // https://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-onchange-event-in-react-js#46012210
     const getNativeInputValueSetter = () => {
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
         if (!nativeInputValueSetter) {
             throw new Error("nativeInputValueSetter is not found");
@@ -2240,6 +2250,7 @@
             status: status,
         };
         // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         tailwind.config = tailwindConfig;
         initTailwindCustomStyle();
         dayjs.extend(dayjs_plugin_relativeTime);
@@ -2247,7 +2258,7 @@
         dayjs.extend(dayjs_plugin_duration);
         initUi();
         initInterceptor();
-        initResizeObserver();
+        void initResizeObserver();
         initInputObserver();
         initWheelAmplfy();
         initTacticsManual();
