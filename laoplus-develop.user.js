@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1649241539-2b7e72a04519d645207cde1a3a05af76bbd21585
+// @version     1649242416-549d79bd05558df7b3726cb9c625218897413be0
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -305,6 +305,7 @@
             latestResources: null,
             currentSquadCosts: null,
         },
+        units: new Map(),
     };
     Object.freeze(defaultStatus);
     class Status {
@@ -1697,7 +1698,7 @@
         log.log("Exploration Timer", "Remove Exploration", unsafeWindow.LAOPLUS.exploration);
     };
 
-    const invoke$4 = (props) => {
+    const invoke$5 = (props) => {
         if (!unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.exploration) {
             return;
@@ -1798,7 +1799,7 @@
         }
     };
 
-    const invoke$3 = (props) => {
+    const invoke$4 = (props) => {
         if (props.pathname === "/wave_clear") {
             PcDropNotification(props.res);
             itemDropNotification(props.res);
@@ -1806,7 +1807,7 @@
         }
     };
 
-    const invoke$2 = ({ pathname }) => {
+    const invoke$3 = ({ pathname }) => {
         if (!unsafeWindow.LAOPLUS.config.config.features.autorunDetection.enabled) {
             return;
         }
@@ -1816,7 +1817,7 @@
         }
     };
 
-    const invoke$1 = (props) => {
+    const invoke$2 = (props) => {
         if (props.pathname === "/battleserver_enter") {
             enter$2(props.req);
             calcSquadCosts(props.res);
@@ -1829,6 +1830,23 @@
         if (props.pathname === "/wave_clear") {
             incrementDrops(props.res);
             updateTimeStatus();
+            return;
+        }
+    };
+
+    /**
+     * @package
+     */
+    const collect = (res) => {
+        res.Result.forEach((unit) => {
+            unsafeWindow.LAOPLUS.units.set(unit.PCId, unit);
+        });
+        return;
+    };
+
+    const invoke$1 = (props) => {
+        if (props.pathname === "/pclist") {
+            collect(props.res);
             return;
         }
     };
@@ -1974,11 +1992,12 @@
                 pathname: url.pathname,
             };
             // TODO: このような処理をここに書くのではなく、各種機能がここを購読しに来るように分離したい
+            invoke$5(invokeProps);
             invoke$4(invokeProps);
             invoke$3(invokeProps);
             invoke$2(invokeProps);
-            invoke$1(invokeProps);
             invoke(invokeProps);
+            invoke$1(invokeProps);
         }
         catch (error) {
             log.error("Interceptor", "Error", error);
@@ -2252,6 +2271,7 @@
             },
             exploration: [],
             status: status,
+            units: new Map(),
         };
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
