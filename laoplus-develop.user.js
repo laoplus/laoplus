@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1649242416-549d79bd05558df7b3726cb9c625218897413be0
+// @version     1649246095-4c30d4f0845d79bd299ddedceba97af15ba669be
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -28,13 +28,10 @@
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/isSameOrBefore.js
 // @require     https://unpkg.com/dayjs@1.10.7/plugin/duration.js
 // @require     https://unpkg.com/mitt@3.0.0/dist/mitt.umd.js
-// @resource    TacticsManualIcon https://lo.swaytwig.com/assets/icon.png
 // @grant       GM_addStyle
-// @grant       GM_getResourceURL
 // @grant       GM_getValue
 // @grant       GM_info
 // @grant       GM_setValue
-// @grant       GM_xmlhttpRequest
 // ==/UserScript==
 
 (function () {
@@ -785,15 +782,6 @@
                                                 "required" && "レベリング通知を利用するには目標値の指定が必要です",
                                             errors.features?.levelupDetection?.skillLevelRequirement?.type ===
                                                 "validate" && "目標値は整数で入力してください")))))),
-                        React.createElement("div", { className: "flex flex-col items-center gap-2 p-4" },
-                            React.createElement("span", { className: "text-sm text-gray-600" },
-                                GM_info.script.name,
-                                "\u306F\u4EE5\u4E0B\u306E\u30B5\u30FC\u30D3\u30B9\u304C\u63D0\u4F9B\u3059\u308B\u30B2\u30FC\u30E0\u30C7\u30FC\u30BF\u3092\u4F7F\u7528\u3057\u3066\u3044\u307E\u3059"),
-                            React.createElement("a", { title: "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C", href: "https://lo.swaytwig.com/", target: "_blank", rel: "noopener", className: "flex items-center gap-1 rounded bg-white p-2 px-3 shadow" },
-                                React.createElement("img", { src: GM_getResourceURL("TacticsManualIcon"), className: "w-12" }),
-                                React.createElement("div", { className: "flex flex-col" },
-                                    React.createElement("span", { className: "text-lg font-semibold" }, "\u6EC5\u4EA1\u524D\u306E\u6226\u8853\u6559\u672C"),
-                                    React.createElement("span", { className: "text-sm text-gray-400" }, "by WolfgangKurz")))),
                         React.createElement("div", { className: "p-4" },
                             React.createElement("details", { className: "flex flex-col gap-4" },
                                 React.createElement("summary", null, "\u5371\u967A\u30A8\u30EA\u30A2"),
@@ -1737,7 +1725,7 @@
             if (pc.Grade === 5 && notifyRankSS === false)
                 return embeds;
             const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
-            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+            const name = unsafeWindow.LAOPLUS.locale[`UNIT_${id}`];
             const rank = gradeToRank(pc.Grade);
             // クラゲ
             if (id.startsWith("Core"))
@@ -1750,9 +1738,8 @@
                 color: rank !== ""
                     ? colorHexToInteger(rankColor[rank].hex())
                     : undefined,
-                url: `https://lo.swaytwig.com/units/${id}`,
                 thumbnail: {
-                    url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
+                    url: `https://cdn.laoplus.net/unit/tbar/TbarIcon_${id}_N.png`,
                 },
             });
             return embeds;
@@ -1776,14 +1763,12 @@
             if (!item.ItemKeyString.includes("T4"))
                 return embeds;
             const localeKey = item.ItemKeyString.replace(/^Equip_/, "EQUIP_");
-            const id = item.ItemKeyString.replace(/^Equip_/, "");
-            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[localeKey];
+            const name = unsafeWindow.LAOPLUS.locale[localeKey];
             embeds.push({
                 title: name || localeKey,
                 color: colorHexToInteger(rankColor["SS"].hex()),
-                url: `https://lo.swaytwig.com/equips/${id}`,
                 thumbnail: {
-                    url: `https://lo.swaytwig.com/assets/webp/item/UI_Icon_${item.ItemKeyString}.webp`,
+                    url: `https://cdn.laoplus.net/item/UI_Icon_${item.ItemKeyString}.png`,
                 },
             });
             return embeds;
@@ -2052,36 +2037,6 @@
         log.log("CanvasAttributeObserver", "CanvasAttributeObserver Started.");
     };
 
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-    const initTacticsManual = () => {
-        GM_xmlhttpRequest({
-            url: "https://lo.swaytwig.com/json/locale/JP.json",
-            onload: ({ responseText }) => {
-                try {
-                    const parsedJson = JSON.parse(responseText);
-                    log.log("TacticsManual", "Locale", "Loaded");
-                    unsafeWindow.LAOPLUS.tacticsManual.locale = parsedJson;
-                }
-                catch (error) {
-                    log.error("Tactics Manual", "Locale", "Error", error);
-                }
-            },
-        });
-        GM_xmlhttpRequest({
-            url: "https://lo.swaytwig.com/json/korea/filterable.unit.json",
-            onload: ({ responseText }) => {
-                try {
-                    const parsedJson = JSON.parse(responseText);
-                    log.log("TacticsManual", "Unit", "Loaded");
-                    unsafeWindow.LAOPLUS.tacticsManual.unit = parsedJson;
-                }
-                catch (error) {
-                    log.error("Tactics Manual", "Unit", "Error", error);
-                }
-            },
-        });
-    };
-
     // tailwindcssの拡張機能で補完を使うために、このファイルを編集する際は tailwind.config.js も同じように編集すること
     const tailwindConfig = {
         darkMode: "media",
@@ -2255,6 +2210,1167 @@
         });
     };
 
+    var UNIT_Core_Normal = "代用コア";
+    var UNIT_Core_Special = "特殊代用コア";
+    var UNIT_3P_Labiata = "ラビアタプロトタイプ";
+    var UNIT_3P_ConstantiaS2 = "コンスタンツァS2";
+    var UNIT_3P_Alice = "セラピアス・アリス";
+    var UNIT_3P_Vanilla = "バニラA1";
+    var UNIT_3P_Rhea = "オベロニア・レア";
+    var UNIT_3P_ScissorsLise = "シザーズリーゼ";
+    var UNIT_3P_Daphne = "ダフネ";
+    var UNIT_3P_Aqua = "アクア";
+    var UNIT_3P_Titania = "ティタニア・フロスト";
+    var UNIT_3P_Alexandra = "共振のアレクサンドラ";
+    var UNIT_3P_Sowan = "ソワン";
+    var UNIT_3P_Annie = "アイアンアニー";
+    var UNIT_3P_Maria = "贖罪のマリア";
+    var UNIT_3P_Fotia = "炉端のポルティーヤ";
+    var UNIT_3P_BlackLilith = "ブラックリリス";
+    var UNIT_3P_CSPerrault = "CSペロ";
+    var UNIT_3P_Hachiko = "城壁のハチコ";
+    var UNIT_3P_Fenrir = "フェンリル";
+    var UNIT_BR_Marie = "不屈のマリー";
+    var UNIT_BR_Efreeti = "M-5イフリート";
+    var UNIT_BR_Leprechaun = "T-3レプリコン";
+    var UNIT_BR_Impet = "AA-7インペット";
+    var UNIT_BR_Brownie = "T-2ブラウニー";
+    var UNIT_BR_PXSilky = "T-50PXシルキー";
+    var UNIT_BR_Phoenix = "GS-130フェニックス";
+    var UNIT_BR_Gnome = "T-20Sノーム";
+    var UNIT_BR_RedHood = "C-77レッドフード";
+    var UNIT_BR_Habetrot = "C-79Gハベトロット";
+    var UNIT_BR_Leona = "鉄血のレオナ";
+    var UNIT_BR_Valkyrie = "T-8Wヴァルキリー";
+    var UNIT_BR_Nymph = "T-10ニンフ";
+    var UNIT_BR_Gremlin = "T-9グレムリン";
+    var UNIT_BR_SandMan = "GS-10サンドガール";
+    var UNIT_BR_Bheur = "T-12カリアフ・ベラ";
+    var UNIT_BR_Alvis = "T-13アルヴィス";
+    var UNIT_BR_Khan = "迅速のカーン";
+    var UNIT_BR_QuickCamel = "クイックキャメル";
+    var UNIT_BR_WarWolf = "T-75ウェアウルフ";
+    var UNIT_BR_TalonFeather = "E-16タロンフェザー";
+    var UNIT_3P_Frigga = "フリガ";
+    var UNIT_BR_May = "滅亡のメイ";
+    var UNIT_BR_NightAngel = "B-11ナイトエンジェル";
+    var UNIT_BR_Daika = "37式ダイカ";
+    var UNIT_BR_Djinnia = "P-2000ジニヤー";
+    var UNIT_BR_Sylphid = "P-18シルフィード";
+    var UNIT_BR_Banshee = "A-87バンシー";
+    var UNIT_BR_StratoAngel = "B-7ストラトエンジェル";
+    var UNIT_BR_RoyalArsenal = "ロイヤル・アーセナル";
+    var UNIT_BR_BloodyPanther = "A-1ブラッディパンサー";
+    var UNIT_BR_Calista = "A-54カリスタ";
+    var UNIT_BR_Io = "A-6イオ";
+    var UNIT_BR_Spriggan = "A-14Bスプリガン";
+    var UNIT_BR_BeastHunter = "AT-100ビーストハンター";
+    var UNIT_BR_Emily = "X-05エミリー";
+    var UNIT_BR_Pani = "AT-4パニ";
+    var UNIT_BR_Raven = "AO-2レイヴン";
+    var UNIT_BR_Neodym = "ネオディム";
+    var UNIT_AGS_Shade = "S12シェード";
+    var UNIT_BR_Phantom = "ALファントム";
+    var UNIT_BR_Echidna = "エキドナ";
+    var UNIT_BR_Wraithy = "レイシー";
+    var UNIT_BR_DrM = "ドクター";
+    var UNIT_BR_Amy = "エイミーレイザー";
+    var UNIT_BR_Tomoe = "トモ";
+    var UNIT_BR_Shirayuri = "シラユリ";
+    var UNIT_BR_HongRyun = "C-77紅蓮";
+    var UNIT_BR_AS12TurtleDragon = "AS-12スチールドラコ";
+    var UNIT_BR_Miho = "T-14ミホ";
+    var UNIT_BR_PoniesAnger = "P-24ピント";
+    var UNIT_BR_Bulgasari = "T-60ブルガサリ";
+    var UNIT_BR_InvDragon = "無敵の龍";
+    var UNIT_BR_Nereid = "AG-1ネレイド";
+    var UNIT_BR_Undine = "P-3Mウンディーネ";
+    var UNIT_BR_Sirene = "AG-2Cセイレーン";
+    var UNIT_BR_Thetis = "MH-4テティス";
+    var UNIT_BR_Sleipnir = "P-49スレイプニール";
+    var UNIT_BR_PA00EL = "P/A-00グリフォン";
+    var UNIT_BR_Harpy = "P-22ハルピュイア";
+    var UNIT_BR_Blackhound = "P/A-8ブラックハウンド";
+    var UNIT_BR_Lindwurm = "P-29リントヴルム";
+    var UNIT_AGS_Aeda = "エイダーType-G";
+    var UNIT_PECS_CoCoWhiteShell = "ココ･イン･ホワイトシェル";
+    var UNIT_PECS_Stinger = "CM67スティンガー";
+    var UNIT_PECS_Spartoia = "スパトイア";
+    var UNIT_PECS_Audrey = "オードリードリームウィーバー";
+    var UNIT_PECS_TommyWalker = "トミーウォーカー";
+    var UNIT_PECS_DutchGirl = "ダッチガール";
+    var UNIT_PECS_Triaina = "トリアイナ";
+    var UNIT_PECS_Drone = "ドローン08";
+    var UNIT_PECS_Serpent = "フロストサーペント";
+    var UNIT_PECS_MissSafety = "Miss Safety";
+    var UNIT_PECS_Cerberus = "ケルベロス";
+    var UNIT_AGS_Rampart = "CT66ランパート";
+    var UNIT_PECS_PuppHead = "SD3Mポップヘッド";
+    var UNIT_PECS_Express76 = "エクスプレス76";
+    var UNIT_PECS_Fortune = "フォーチュン";
+    var UNIT_PECS_LRL = "LRL";
+    var UNIT_PECS_MightyR = "マイティR";
+    var UNIT_PECS_Tiequan = "ティエ･チュァン";
+    var UNIT_DS_Johanna = "プレスターヨアンナ";
+    var UNIT_BR_Scathy = "スカディー";
+    var UNIT_DS_MoMo = "魔法少女マジカルモモ";
+    var UNIT_DS_Atalanta = "疾走するアタランテ";
+    var UNIT_DS_Charlotte = "シャーロット";
+    var UNIT_DS_Azazel = "アザゼル";
+    var UNIT_DS_Baekto = "魔法少女マジカル白兎";
+    var UNIT_AGS_Goltarion = "ゴルタリオンXIII世";
+    var UNIT_DS_Arman = "アルマン枢機卿";
+    var UNIT_DS_BunnySlayer = "二バー";
+    var UNIT_PECS_Carolina = "キャロルライナ";
+    var UNIT_PECS_BS = "コネクターユミ";
+    var UNIT_PECS_ElvenForestmaker = "エルブン･フォレストメーカー";
+    var UNIT_PECS_Ignis = "イグニス";
+    var UNIT_PECS_DarkElf = "ダークエルブンフォレストレンジャー";
+    var UNIT_PECS_Circe = "キルケー";
+    var UNIT_PECS_Babariana = "バーバリアナ";
+    var UNIT_PECS_Veronica = "ヴェロニカ";
+    var UNIT_DS_Saraqael = "サラカエル";
+    var UNIT_DS_Angel = "エンジェル";
+    var UNIT_PECS_Draculina = "ドラキュリナ";
+    var UNIT_3P_Ran = "金蘭S7";
+    var UNIT_3P_Hirume = "天香のヒルメ";
+    var UNIT_ST_Tiamat = "X-00ティアマト";
+    var UNIT_ST_Mercury = "프랭스터 머큐리";
+    var UNIT_ST_Lancer = "ランサーミナ";
+    var UNIT_ST_Ullr = "X-02 ウル";
+    var UNIT_BR_JangHwa = "ザンファ";
+    var UNIT_BR_Cheona = "チョンア";
+    var UNIT_PECS_Empress = "エンプレス";
+    var UNIT_PECS_Saetti = "セティ";
+    var UNIT_3P_Aurora = "アウローラ";
+    var UNIT_PECS_Sunny = "アクロバティック・サニー";
+    var UNIT_DS_Faucre = "ポックル大魔王";
+    var UNIT_PECS_Lumberjane = "ランバージェーン";
+    var UNIT_3P_BlackWyrm = "ブラックワームS9";
+    var UNIT_DS_KunoichiZero = "クノイチ・ゼロ";
+    var UNIT_3P_SnowFeather = "スノーフェザー";
+    var UNIT_PECS_HighElven = "生命のセレスティア";
+    var UNIT_BR_Andvari = "C-33アンドバリ";
+    var UNIT_3P_Dryad = "ドリアード";
+    var UNIT_PECS_Sadius = "懲罰のサディアス";
+    var UNIT_DS_KunoichiKaen = "クノイチ・カエン";
+    var UNIT_BR_Hraesvelgr = "EB-48Gフレースヴェルグ";
+    var UNIT_BR_ALWraith = "ALレイス";
+    var UNIT_3P_Poi = "ポイ";
+    var UNIT_PECS_Leanne = "慈悲深きリアン";
+    var UNIT_3P_Eternity = "エタニティ";
+    var UNIT_PECS_Azaz = "解体者アザズ";
+    var UNIT_PECS_LemonadeAlpha = "レモネードアルファ";
+    var UNIT_PECS_Ella = "天空のエラ";
+    var UNIT_PECS_Rena = "レナ・ザ・チャンピオン";
+    var UNIT_PECS_Mery = "メリー";
+    var UNIT_PECS_Machina = "マキナ";
+    var UNIT_BR_Salamander = "A-15サラマンダー";
+    var UNIT_BR_Scarabya = "C-11 스카라비아";
+    var UNIT_BR_Hyena = "T-40ハイエナ";
+    var UNIT_PECS_Triton = "トリトン";
+    var UNIT_AGS_Albatross = "HQ1アルバトロス";
+    var UNIT_AGS_Seljuq = "K180セルジューク";
+    var UNIT_AGS_Gigantes = "S5ギガンテス";
+    var UNIT_AGS_Fallen = "CT2199Wフォールン";
+    var UNIT_SJ_Orellia = "オーレリア";
+    var UNIT_SJ_Tachi = "タチ";
+    var UNIT_PECS_Muse = "ミューズ";
+    var UNIT_PECS_Boryeon = "宝蓮";
+    var UNIT_PECS_Orangeade = "オレンジエード";
+    var UNIT_AGS_SpartanC = "S25スパルタン・キャプテン";
+    var UNIT_AGS_SpartanA = "S25Aスパルタン・アサルト";
+    var UNIT_AGS_SpartanB = "S25Bスパルタン・ブーマー";
+    var UNIT_AGS_Roc = "RF87ロク";
+    var UNIT_AGS_Fortress = "CT103フォトレス";
+    var UNIT_AGS_Tyrant = "タイラント";
+    var UNIT_AGS_RheinRitter = "AT72ラインリッター";
+    var UNIT_AGS_MrAlfred2 = "Mr.アルフレッド";
+    var UNIT_AGS_Watcher = "ウォッチャーMQ-20";
+    var UNIT_AGS_Stronghold = "ストロングホールド";
+    var UNIT_PECS_Sonia = "유린의 소니아";
+    var UNIT_BR_Ellie = "エリー・クイックハンド";
+    var UNIT_BR_NickyTracy = "ニッキー・トレイシー";
+    var UNIT_PECS_Glacias = "グラシアス";
+    var UNIT_PECS_QueenMane = "クイーンオブメイン";
+    var UNIT_PECS_Mnemosyne = "ムネモシュネ";
+    var UNIT_PECS_Hussar = "AC-6ユサール";
+    var UNIT_DS_Ramiel = "ラミエル";
+    var UNIT_AGS_Arachne = "N2E-888アラクネー";
+    var UNIT_PECS_Sekhmet = "死滅のセクメト";
+    var UNIT_PECS_Peregrinus = "ペレグリヌス";
+    var UNIT_PECS_CyclopsePrincess = "サイクロプス・プリンセス";
+    var UNIT_3P_Melite = "멜리테";
+    var UNIT_3P_Amphitrite = "アムピトリーテー";
+    var UNIT_3P_Salacia = "サラシア";
+    var EQUIP_Chip_Atk_T1 = "出力強化回路RE";
+    var EQUIP_Chip_Atk_T2 = "出力強化回路MP";
+    var EQUIP_Chip_Atk_T3 = "出力強化回路SP";
+    var EQUIP_Chip_Atk_T4 = "出力強化回路EX";
+    var EQUIP_Chip_Acc_T1 = "演算強化回路RE";
+    var EQUIP_Chip_Acc_T2 = "演算強化回路MP";
+    var EQUIP_Chip_Acc_T3 = "演算強化回路SP";
+    var EQUIP_Chip_Acc_T4 = "演算強化回路EX";
+    var EQUIP_Chip_Def_T1 = "耐衝撃回路RE";
+    var EQUIP_Chip_Def_T2 = "耐衝撃回路MP";
+    var EQUIP_Chip_Def_T3 = "耐衝撃回路SP";
+    var EQUIP_Chip_Def_T4 = "耐衝撃回路EX";
+    var EQUIP_Chip_Ev_T1 = "反応強化回路RE";
+    var EQUIP_Chip_Ev_T2 = "反応強化回路MP";
+    var EQUIP_Chip_Ev_T3 = "反応強化回路SP";
+    var EQUIP_Chip_Ev_T4 = "反応強化回路EX";
+    var EQUIP_Chip_Cri_T1 = "分析回路RE";
+    var EQUIP_Chip_Cri_T2 = "分析回路MP";
+    var EQUIP_Chip_Cri_T3 = "分析回路SP";
+    var EQUIP_Chip_Cri_T4 = "分析回路EX";
+    var EQUIP_Chip_Hp_T1 = "回路耐久強化RE";
+    var EQUIP_Chip_Hp_T2 = "回路耐久強化MP";
+    var EQUIP_Chip_Hp_T3 = "回路耐久強化SP";
+    var EQUIP_Chip_Hp_T4 = "回路耐久強化EX";
+    var EQUIP_Chip_Debuff_Res_T1 = "ワクチン処理RE";
+    var EQUIP_Chip_Debuff_Res_T2 = "ワクチン処理MP";
+    var EQUIP_Chip_Debuff_Res_T3 = "ワクチン処理SP";
+    var EQUIP_Chip_Debuff_Res_T4 = "ワクチン処理EX";
+    var EQUIP_Chip_Spd_T1 = "回路最適化RE";
+    var EQUIP_Chip_Spd_T2 = "回路最適化MP";
+    var EQUIP_Chip_Spd_T3 = "回路最適化SP";
+    var EQUIP_Chip_Spd_T4 = "回路最適化EX";
+    var EQUIP_System_Normal_T1 = "標準型戦闘システムRE";
+    var EQUIP_System_Normal_T2 = "標準型戦闘システムMP";
+    var EQUIP_System_Normal_T3 = "標準型戦闘システムSP";
+    var EQUIP_System_Normal_T4 = "標準型戦闘システムEX";
+    var EQUIP_System_Assault_T1 = "突撃型戦闘システムRE";
+    var EQUIP_System_Assault_T2 = "突撃型戦闘システムMP";
+    var EQUIP_System_Assault_T3 = "突撃型戦闘システムSP";
+    var EQUIP_System_Assault_T4 = "突撃型戦闘システムEX";
+    var EQUIP_System_Defense_T1 = "防御型戦闘システムRE";
+    var EQUIP_System_Defense_T2 = "防御型戦闘システムMP";
+    var EQUIP_System_Defense_T3 = "防御型戦闘システムSP";
+    var EQUIP_System_Defense_T4 = "防御型戦闘システムEX";
+    var EQUIP_System_Sniper_T1 = "対応型戦闘システムRE";
+    var EQUIP_System_Sniper_T2 = "対応型戦闘システムMP";
+    var EQUIP_System_Sniper_T3 = "対応型戦闘システムSP";
+    var EQUIP_System_Sniper_T4 = "対応型戦闘システムEX";
+    var EQUIP_System_Highspd_T1 = "強襲型戦闘システムRE";
+    var EQUIP_System_Highspd_T2 = "強襲型戦闘システムMP";
+    var EQUIP_System_Highspd_T3 = "強襲型戦闘システムSP";
+    var EQUIP_System_Highspd_T4 = "強襲型戦闘システムEX";
+    var EQUIP_System_Maneuver_T1 = "精密型戦闘システムRE";
+    var EQUIP_System_Maneuver_T2 = "精密型戦闘システムMP";
+    var EQUIP_System_Maneuver_T3 = "精密型戦闘システムSP";
+    var EQUIP_System_Maneuver_T4 = "精密型戦闘システムEX";
+    var EQUIP_System_AntiAir_T1 = "対機動型戦闘システムRE";
+    var EQUIP_System_AntiAir_T2 = "対機動型戦闘システムMP";
+    var EQUIP_System_AntiAir_T3 = "対機動型戦闘システムSP";
+    var EQUIP_System_AntiAir_T4 = "対機動型戦闘システムEX";
+    var EQUIP_System_AntiTrooper_T1 = "対軽装型戦闘システムRE";
+    var EQUIP_System_AntiTrooper_T2 = "対軽装型戦闘システムMP";
+    var EQUIP_System_AntiTrooper_T3 = "対軽装型戦闘システムSP";
+    var EQUIP_System_AntiTrooper_T4 = "対軽装型戦闘システムEX";
+    var EQUIP_System_AntiArmor_T1 = "対重装型戦闘システムRE";
+    var EQUIP_System_AntiArmor_T2 = "対重装型戦闘システムMP";
+    var EQUIP_System_AntiArmor_T3 = "対重装型戦闘システムSP";
+    var EQUIP_System_AntiArmor_T4 = "対重装型戦闘システムEX";
+    var EQUIP_System_Exp_T1 = "高速学習システムRE";
+    var EQUIP_System_Exp_T2 = "高速学習システムMP";
+    var EQUIP_System_Exp_T3 = "高速学習システムSP";
+    var EQUIP_System_Exp_T4 = "高速学習システムEX";
+    var EQUIP_Sub_EnergyPack_T1 = "補助エネルギーパックRE";
+    var EQUIP_Sub_EnergyPack_T2 = "補助エネルギーパックMP";
+    var EQUIP_Sub_EnergyPack_T3 = "補助エネルギーパックSP";
+    var EQUIP_Sub_EnergyPack_T4 = "補助エネルギーパックEX";
+    var EQUIP_Sub_Observer_T1 = "観測装備RE";
+    var EQUIP_Sub_Observer_T2 = "観測装備MP";
+    var EQUIP_Sub_Observer_T3 = "観測装備SP";
+    var EQUIP_Sub_Observer_T4 = "観測装備EX";
+    var EQUIP_Sub_SpaceArmor_T1 = "空間装甲RE";
+    var EQUIP_Sub_SpaceArmor_T2 = "空間装甲MP";
+    var EQUIP_Sub_SpaceArmor_T3 = "空間装甲SP";
+    var EQUIP_Sub_SpaceArmor_T4 = "空間装甲EX";
+    var EQUIP_Sub_SubBooster_T1 = "補助ブースターユニットRE";
+    var EQUIP_Sub_SubBooster_T2 = "補助ブースターユニットMP";
+    var EQUIP_Sub_SubBooster_T3 = "補助ブースターユニットSP";
+    var EQUIP_Sub_SubBooster_T4 = "補助ブースターユニットEX";
+    var EQUIP_Sub_SpSight_T1 = "超精密照準器RE";
+    var EQUIP_Sub_SpSight_T2 = "超精密照準器MP";
+    var EQUIP_Sub_SpSight_T3 = "超精密照準器SP";
+    var EQUIP_Sub_SpSight_T4 = "超精密照準器EX";
+    var EQUIP_Sub_ArmorPierce_T1 = "対装甲装備RE";
+    var EQUIP_Sub_ArmorPierce_T2 = "対装甲装備MP";
+    var EQUIP_Sub_ArmorPierce_T3 = "対装甲装備SP";
+    var EQUIP_Sub_ArmorPierce_T4 = "対装甲装備EX";
+    var EQUIP_Sub_AntiBarrier_T1 = "エネルギー変換機RE";
+    var EQUIP_Sub_AntiBarrier_T2 = "エネルギー変換機MP";
+    var EQUIP_Sub_AntiBarrier_T3 = "エネルギー変換機SP";
+    var EQUIP_Sub_AntiBarrier_T4 = "エネルギー変換機EX";
+    var EQUIP_Sub_Barrier_T1 = "防御力場RE";
+    var EQUIP_Sub_Barrier_T2 = "防御力場MP";
+    var EQUIP_Sub_Barrier_T3 = "防御力場SP";
+    var EQUIP_Sub_Barrier_T4 = "防御力場EX";
+    var EQUIP_Sub_SpyDrone_T1 = "小型偵察ドローンRE";
+    var EQUIP_Sub_SpyDrone_T2 = "小型偵察ドローンMP";
+    var EQUIP_Sub_SpyDrone_T3 = "小型偵察ドローンSP";
+    var EQUIP_Sub_SpyDrone_T4 = "小型偵察ドローンEX";
+    var EQUIP_Sub_ExamKit_T1 = "重火器用照準器RE";
+    var EQUIP_Sub_ExamKit_T2 = "重火器用照準器MP";
+    var EQUIP_Sub_ExamKit_T3 = "重火器用照準器SP";
+    var EQUIP_Sub_ExamKit_T4 = "重火器用照準器EX";
+    var EQUIP_Sub_AdvRadar_T1 = "望遠照準装置RE";
+    var EQUIP_Sub_AdvRadar_T2 = "望遠照準装置MP";
+    var EQUIP_Sub_AdvRadar_T3 = "望遠照準装置SP";
+    var EQUIP_Sub_AdvRadar_T4 = "望遠照準装置EX";
+    var EQUIP_Sub_Stimulant_T1 = "戦闘刺激剤RE";
+    var EQUIP_Sub_Stimulant_T2 = "戦闘刺激剤MP";
+    var EQUIP_Sub_Stimulant_T3 = "戦闘刺激剤SP";
+    var EQUIP_Sub_Stimulant_T4 = "戦闘刺激剤EX";
+    var EQUIP_Sub_Hologram_T1 = "ダミーホログラムRE";
+    var EQUIP_Sub_Hologram_T2 = "ダミーホログラムMP";
+    var EQUIP_Sub_Hologram_T3 = "ダミーホログラムSP";
+    var EQUIP_Sub_Hologram_T4 = "ダミーホログラムEX";
+    var EQUIP_Sub_SpRifleBullet_T4 = "特殊コーティングライフル弾";
+    var EQUIP_Sub_AMRAAMPod_T4 = "拡張AMRAAMポッド";
+    var EQUIP_Sub_SpAlloyArmor_T4 = "超合金プレートアーマー";
+    var EQUIP_Sub_MarkOfDS_T4 = "龍殺者の証";
+    var EQUIP_Sub_AntiFire_T1 = "耐熱コーティングRE";
+    var EQUIP_Sub_AntiFire_T2 = "耐熱コーティングMP";
+    var EQUIP_Sub_AntiFire_T3 = "耐熱コーティングSP";
+    var EQUIP_Sub_AntiFire_T4 = "耐熱コーティングEX";
+    var EQUIP_Sub_AntiCold_T1 = "耐寒コーティングRE";
+    var EQUIP_Sub_AntiCold_T2 = "耐寒コーティングMP";
+    var EQUIP_Sub_AntiCold_T3 = "耐寒コーティングSP";
+    var EQUIP_Sub_AntiCold_T4 = "耐寒コーティングEX";
+    var EQUIP_Sub_AntiLightning_T1 = "耐電コーティングRE";
+    var EQUIP_Sub_AntiLightning_T2 = "耐電コーティングMP";
+    var EQUIP_Sub_AntiLightning_T3 = "耐電コーティングSP";
+    var EQUIP_Sub_AntiLightning_T4 = "耐電コーティングEX";
+    var EQUIP_Chip_Enchant_T1 = "装備改良用チップセットRE";
+    var EQUIP_Chip_Enchant_T2 = "装備改良用チップセットMP";
+    var EQUIP_Chip_Enchant_T3 = "装備改良用チップセットSP";
+    var EQUIP_Chip_Enchant_T4 = "装備改良用チップセットEX";
+    var EQUIP_Chip_AimHack_T4 = "自動照準回路";
+    var EQUIP_Sub_T60ExtArmor_T4 = "テロ鎮圧用アーマー";
+    var EQUIP_Sub_40mmDUBullet_T4 = "40mmDU弾";
+    var EQUIP_Chip_ATFLIR_T4 = "ATFLIR強化回路";
+    var EQUIP_Sub_CM67SpaceBooster_T4 = "宇宙用拡張ブースター";
+    var EQUIP_Sub_MG80MODKit_T4 = "MG80用改造キット";
+    var EQUIP_Sub_STEROID_T4 = "あやしいサプリメント";
+    var EQUIP_Sub_SK14MODKit_T4 = "SK-14 P.C.C";
+    var EQUIP_Sub_LunchBox_T4 = "ソワンの手作り弁当EX";
+    var EQUIP_Sub_Bombard_T4 = "戦略爆撃装備EX";
+    var EQUIP_Chip_SpAtk_T1 = "出力増幅回路RE";
+    var EQUIP_Chip_SpAtk_T2 = "出力増幅回路MP";
+    var EQUIP_Chip_SpAtk_T3 = "出力増幅回路SP";
+    var EQUIP_Chip_SpAtk_T4 = "出力増幅回路EX";
+    var EQUIP_System_EyesOfBeholderD_T4 = "シーカーの眼D型OS EX";
+    var EQUIP_Chip_AtkCri_T1 = "出力安定回路RE";
+    var EQUIP_Chip_AtkCri_T2 = "出力安定回路MP";
+    var EQUIP_Chip_AtkCri_T3 = "出力安定回路SP";
+    var EQUIP_Chip_AtkCri_T4 = "出力安定回路EX";
+    var EQUIP_Chip_KillExp_T1 = "戦闘記録回路RE";
+    var EQUIP_Chip_KillExp_T2 = "戦闘記録回路MP";
+    var EQUIP_Chip_KillExp_T3 = "戦闘記録回路SP";
+    var EQUIP_Chip_KillExp_T4 = "戦闘記録回路EX";
+    var EQUIP_Sub_AquaModule_T1 = "アクアモジュールRE";
+    var EQUIP_Sub_AquaModule_T2 = "アクアモジュールMP";
+    var EQUIP_Sub_AquaModule_T3 = "アクアモジュールSP";
+    var EQUIP_Sub_AquaModule_T4 = "アクアモジュールEX";
+    var EQUIP_Sub_Overclock_T1 = "出力制限解除装置RE";
+    var EQUIP_Sub_Overclock_T2 = "出力制限解除装置MP";
+    var EQUIP_Sub_Overclock_T3 = "出力制限解除装置SP";
+    var EQUIP_Sub_Overclock_T4 = "出力制限解除装置EX";
+    var EQUIP_System_HManeuver_T1 = "高機動マニューバシステムRE";
+    var EQUIP_System_HManeuver_T2 = "高機動マニューバシステムMP";
+    var EQUIP_System_HManeuver_T3 = "高機動マニューバシステムSP";
+    var EQUIP_System_HManeuver_T4 = "高機動マニューバシステムEX";
+    var EQUIP_System_EXAM_T1 = "戦況分析システムRE";
+    var EQUIP_System_EXAM_T2 = "戦況分析システムMP";
+    var EQUIP_System_EXAM_T3 = "戦況分析システムSP";
+    var EQUIP_System_EXAM_T4 = "戦況分析システムEX";
+    var EQUIP_Sub_IcePack_T4 = "冷却パックEX";
+    var EQUIP_Sub_SunCream_T4 = "日焼け止めクリームEX";
+    var EQUIP_Sub_ASN6G_T4 = "ASN-6G";
+    var EQUIP_Sub_HornOfBADK_T4 = "ポックル大魔王の角EX";
+    var EQUIP_Sub_MoonCake_T4 = "月の魔力が封印された月見餅EX";
+    var EQUIP_Sub_Interceptor_T4 = "改良型観測装備EX";
+    var EQUIP_Sub_AntiShield_T4 = "バリア中和装備EX";
+    var EQUIP_Chip_AtkSpd_T4 = "改良型出力強化回路EX";
+    var EQUIP_Sub_FortuneOrb_T4 = "運命の水晶玉EX";
+    var EQUIP_Sub_ElectroGenerator_T1 = "高出力ジェネレーターRE";
+    var EQUIP_Sub_ElectroGenerator_T2 = "高出力ジェネレーターMP";
+    var EQUIP_Sub_ElectroGenerator_T3 = "高出力ジェネレーターSP";
+    var EQUIP_Sub_ElectroGenerator_T4 = "高出力ジェネレーターEX";
+    var EQUIP_Sub_Recycler_T1 = "リサイクルモジュールRE";
+    var EQUIP_Sub_Recycler_T2 = "リサイクルモジュールMP";
+    var EQUIP_Sub_Recycler_T3 = "リサイクルモジュールSP";
+    var EQUIP_Sub_Recycler_T4 = "リサイクルモジュールEX";
+    var EQUIP_Chip_LTWT_T1 = "軽量化回路RE";
+    var EQUIP_Chip_LTWT_T2 = "軽量化回路MP";
+    var EQUIP_Chip_LTWT_T3 = "軽量化回路SP";
+    var EQUIP_Chip_LTWT_T4 = "軽量化回路EX";
+    var EQUIP_Chip_CriAccEx_T4 = "改良型分析回路EX";
+    var EQUIP_Sub_NitroEx3000_T4 = "ニトロEX3000";
+    var EQUIP_Sub_MiniPerrault_T4 = "ミニペロ";
+    var EQUIP_Sub_MiniHachiko_T4 = "ミニハチコ";
+    var EQUIP_Sub_MiniLilith_T4 = "ミニブラックリリス";
+    var EQUIP_System_Advanced_T4 = "改良型戦闘システムEX";
+    var EQUIP_Sub_GrandCruChocolate_T4 = "グランクリュ・チョコレート";
+    var EQUIP_Chip_AtkControl_T1 = "出力制御回路RE";
+    var EQUIP_Chip_AtkControl_T2 = "出力制御回路MP";
+    var EQUIP_Chip_AtkControl_T3 = "出力制御回路SP";
+    var EQUIP_Chip_AtkControl_T4 = "出力制御回路EX";
+    var EQUIP_Sub_ExoSkeleton_T1 = "補助外骨格RE";
+    var EQUIP_Sub_ExoSkeleton_T2 = "補助外骨格MP";
+    var EQUIP_Sub_ExoSkeleton_T3 = "補助外骨格SP";
+    var EQUIP_Sub_ExoSkeleton_T4 = "補助外骨格EX";
+    var EQUIP_Sub_Odamplifier_T1 = "O.D増幅器RE";
+    var EQUIP_Sub_Odamplifier_T2 = "O.D増幅器MP";
+    var EQUIP_Sub_Odamplifier_T3 = "O.D増幅器SP";
+    var EQUIP_Sub_Odamplifier_T4 = "O.D増幅器EX";
+    var EQUIP_Sub_CMIIShield_T4 = "チョップメーカーⅡ";
+    var EQUIP_Sub_VerminEliminator_T4 = "害虫破砕機";
+    var EQUIP_Sub_GigantesArmor_T4 = "改良型複合装甲";
+    var EQUIP_Sub_QMObserver_T4 = "戦闘観測フレーム";
+    var EQUIP_Chip_AtkTypeB_T1 = "出力強化回路ベータRE";
+    var EQUIP_Chip_AtkTypeB_T2 = "出力強化回路ベータMP";
+    var EQUIP_Chip_AtkTypeB_T3 = "出力強化回路ベータSP";
+    var EQUIP_Chip_AtkTypeB_T4 = "出力強化回路ベータEX";
+    var EQUIP_Chip_AccTypeB_T1 = "演算強化回路ベータRE";
+    var EQUIP_Chip_AccTypeB_T2 = "演算強化回路ベータMP";
+    var EQUIP_Chip_AccTypeB_T3 = "演算強化回路ベータSP";
+    var EQUIP_Chip_AccTypeB_T4 = "演算強化回路ベータEX";
+    var EQUIP_Chip_DefTypeB_T1 = "耐衝撃回路ベータRE";
+    var EQUIP_Chip_DefTypeB_T2 = "耐衝撃回路ベータMP";
+    var EQUIP_Chip_DefTypeB_T3 = "耐衝撃回路ベータSP";
+    var EQUIP_Chip_DefTypeB_T4 = "耐衝撃回路ベータEX";
+    var EQUIP_Chip_EvTypeB_T1 = "反応強化回路ベータRE";
+    var EQUIP_Chip_EvTypeB_T2 = "反応強化回路ベータMP";
+    var EQUIP_Chip_EvTypeB_T3 = "反応強化回路ベータSP";
+    var EQUIP_Chip_EvTypeB_T4 = "反応強化回路ベータEX";
+    var EQUIP_Chip_CriTypeB_T1 = "分析回路ベータRE";
+    var EQUIP_Chip_CriTypeB_T2 = "分析回路ベータMP";
+    var EQUIP_Chip_CriTypeB_T3 = "分析回路ベータSP";
+    var EQUIP_Chip_CriTypeB_T4 = "分析回路ベータEX";
+    var EQUIP_Chip_HpTypeB_T1 = "回路耐久強化ベータRE";
+    var EQUIP_Chip_HpTypeB_T2 = "回路耐久強化ベータMP";
+    var EQUIP_Chip_HpTypeB_T3 = "回路耐久強化ベータSP";
+    var EQUIP_Chip_HpTypeB_T4 = "回路耐久強化ベータEX";
+    var EQUIP_Chip_SpdTypeB_T1 = "回路最適化ベータRE";
+    var EQUIP_Chip_SpdTypeB_T2 = "回路最適化ベータMP";
+    var EQUIP_Chip_SpdTypeB_T3 = "回路最適化ベータSP";
+    var EQUIP_Chip_SpdTypeB_T4 = "回路最適化ベータEX";
+    var EQUIP_System_AntiAirTypeB_T1 = "対機動型戦闘システムベータRE";
+    var EQUIP_System_AntiAirTypeB_T2 = "対機動型戦闘システムベータMP";
+    var EQUIP_System_AntiAirTypeB_T3 = "対機動型戦闘システムベータSP";
+    var EQUIP_System_AntiAirTypeB_T4 = "対機動型戦闘システムベータEX";
+    var EQUIP_System_AntiTrooperTypeB_T1 = "対軽装型戦闘システムベータRE";
+    var EQUIP_System_AntiTrooperTypeB_T2 = "対軽装型戦闘システムベータMP";
+    var EQUIP_System_AntiTrooperTypeB_T3 = "対軽装型戦闘システムベータSP";
+    var EQUIP_System_AntiTrooperTypeB_T4 = "対軽装型戦闘システムベータEX";
+    var EQUIP_System_AntiArmorTypeB_T1 = "対重装型戦闘システムベータRE";
+    var EQUIP_System_AntiArmorTypeB_T2 = "対重装型戦闘システムベータMP";
+    var EQUIP_System_AntiArmorTypeB_T3 = "対重装型戦闘システムベータSP";
+    var EQUIP_System_AntiArmorTypeB_T4 = "対重装型戦闘システムベータEX";
+    var EQUIP_Sub_Precision_T4 = "精密型観測装備EX";
+    var EQUIP_Sub_RangerSet_T4 = "レンジャー用戦闘装備セット";
+    var EQUIP_Sub_UnevenTerrain_T4 = "険地用特殊フレーム";
+    var EQUIP_Sub_ThornNecklace_T4 = "特殊隊員用棘首輪";
+    var EQUIP_System_OverFlow_T4 = "暴走誘導システムOS";
+    var EQUIP_Sub_FCS_T4 = "F.C.S";
+    var EQUIP_Sub_ImSpSight_T4 = "改良型超精密照準器EX";
+    var EQUIP_System_AntiTrooperAir_T1 = "対軽装型/機動型戦闘システムRE";
+    var EQUIP_System_AntiTrooperAir_T2 = "対軽装型/機動型戦闘システムMP";
+    var EQUIP_System_AntiTrooperAir_T3 = "対軽装型/機動型戦闘システムSP";
+    var EQUIP_System_AntiTrooperAir_T4 = "対軽装型/機動型戦闘システムEX";
+    var EQUIP_System_AntiAirArmor_T1 = "対機動型/重装型戦闘システムRE";
+    var EQUIP_System_AntiAirArmor_T2 = "対機動型/重装型戦闘システムMP";
+    var EQUIP_System_AntiAirArmor_T3 = "対機動型/重装型戦闘システムSP";
+    var EQUIP_System_AntiAirArmor_T4 = "対機動型/重装型戦闘システムEX";
+    var EQUIP_System_AntiArmorTrooper_T1 = "対重装型/軽装型戦闘システムRE";
+    var EQUIP_System_AntiArmorTrooper_T2 = "対重装型/軽装型戦闘システムMP";
+    var EQUIP_System_AntiArmorTrooper_T3 = "対重装型/軽装型戦闘システムSP";
+    var EQUIP_System_AntiArmorTrooper_T4 = "対重装型/軽装型戦闘システムEX";
+    var EQUIP_System_ImExp_T4 = "改良型高速学習システムEX";
+    var EQUIP_System_ImExp_T4_T4 = "改良型高速学習システムEX";
+    var EQUIP_Sub_ParticleAcceleratorATK_T4 = "粒子加速器[力]EX";
+    var EQUIP_Sub_ImNitroEx3500_T4 = "改良型ニトロEX3500";
+    var EQUIP_Sub_ImBarrier_T4 = "改良型防御力場";
+    var EQUIP_Sub_AngelLegs_T4 = "ダストストーム";
+    var EQUIP_Sub_LRCannon_T4 = "L.R.C弾丸";
+    var EQUIP_System_RogTrooperNukerATK_T1 = "軽装型攻撃最適化システム";
+    var EQUIP_System_RogTrooperNukerATK_T2 = "軽装型攻撃最適化システム";
+    var EQUIP_System_RogTrooperNukerATK_T3 = "軽装型攻撃最適化システム";
+    var EQUIP_System_RogTrooperNukerATK_T4 = "軽装型攻撃最適化システム";
+    var EQUIP_System_RogTrooperNukerATK_T5 = "軽装型攻撃最適化システム";
+    var EQUIP_System_RogMobilityNukerATK_T1 = "機動型攻撃最適化システム";
+    var EQUIP_System_RogMobilityNukerATK_T2 = "機動型攻撃最適化システム";
+    var EQUIP_System_RogMobilityNukerATK_T3 = "機動型攻撃最適化システム";
+    var EQUIP_System_RogMobilityNukerATK_T4 = "機動型攻撃最適化システム";
+    var EQUIP_System_RogMobilityNukerATK_T5 = "機動型攻撃最適化システム";
+    var EQUIP_System_RogArmoredNukerATK_T1 = "重装型攻撃最適化システム";
+    var EQUIP_System_RogArmoredNukerATK_T2 = "重装型攻撃最適化システム";
+    var EQUIP_System_RogArmoredNukerATK_T3 = "重装型攻撃最適化システム";
+    var EQUIP_System_RogArmoredNukerATK_T4 = "重装型攻撃最適化システム";
+    var EQUIP_System_RogArmoredNukerATK_T5 = "重装型攻撃最適化システム";
+    var EQUIP_System_RogTrooperTankerDEF_T1 = "軽装型保護最適化システム";
+    var EQUIP_System_RogTrooperTankerDEF_T2 = "軽装型保護最適化システム";
+    var EQUIP_System_RogTrooperTankerDEF_T3 = "軽装型保護最適化システム";
+    var EQUIP_System_RogTrooperTankerDEF_T4 = "軽装型保護最適化システム";
+    var EQUIP_System_RogTrooperTankerDEF_T5 = "軽装型保護最適化システム";
+    var EQUIP_System_RogMobilityTankerEVA_T1 = "機動型保護最適化システム";
+    var EQUIP_System_RogMobilityTankerEVA_T2 = "機動型保護最適化システム";
+    var EQUIP_System_RogMobilityTankerEVA_T3 = "機動型保護最適化システム";
+    var EQUIP_System_RogMobilityTankerEVA_T4 = "機動型保護最適化システム";
+    var EQUIP_System_RogMobilityTankerEVA_T5 = "機動型保護最適化システム";
+    var EQUIP_System_RogArmoredTankerDEF_T1 = "重装型保護最適化システム";
+    var EQUIP_System_RogArmoredTankerDEF_T2 = "重装型保護最適化システム";
+    var EQUIP_System_RogArmoredTankerDEF_T3 = "重装型保護最適化システム";
+    var EQUIP_System_RogArmoredTankerDEF_T4 = "重装型保護最適化システム";
+    var EQUIP_System_RogArmoredTankerDEF_T5 = "重装型保護最適化システム";
+    var EQUIP_System_RogTrooperSupporterSPd_T1 = "軽装型支援最適化システム";
+    var EQUIP_System_RogTrooperSupporterSPd_T2 = "軽装型支援最適化システム";
+    var EQUIP_System_RogTrooperSupporterSPd_T3 = "軽装型支援最適化システム";
+    var EQUIP_System_RogTrooperSupporterSPd_T4 = "軽装型支援最適化システム";
+    var EQUIP_System_RogTrooperSupporterSPd_T5 = "軽装型支援最適化システム";
+    var EQUIP_System_RogMobilitySupporterSPd_T1 = "機動型支援最適化システム";
+    var EQUIP_System_RogMobilitySupporterSPd_T2 = "機動型支援最適化システム";
+    var EQUIP_System_RogMobilitySupporterSPd_T3 = "機動型支援最適化システム";
+    var EQUIP_System_RogMobilitySupporterSPd_T4 = "機動型支援最適化システム";
+    var EQUIP_System_RogMobilitySupporterSPd_T5 = "機動型支援最適化システム";
+    var EQUIP_System_RogArmoredSupporterSPd_T1 = "重装型支援最適化システム";
+    var EQUIP_System_RogArmoredSupporterSPd_T2 = "重装型支援最適化システム";
+    var EQUIP_System_RogArmoredSupporterSPd_T3 = "重装型支援最適化システム";
+    var EQUIP_System_RogArmoredSupporterSPd_T4 = "重装型支援最適化システム";
+    var EQUIP_System_RogArmoredSupporterSPd_T5 = "重装型支援最適化システム";
+    var EQUIP_Sub_ParticleAcceleratorHP_T4 = "粒子加速器[量]EX";
+    var EQUIP_System_ImHighspd_T4 = "改良強襲型戦闘システム";
+    var EQUIP_Sub_FlameStone_T4 = "投炎石EX";
+    var EQUIP_Sub_FrostStone_T4 = "水魔石EX";
+    var EQUIP_Sub_ThunderStone_T4 = "造為石EX";
+    var EQUIP_System_LRAD_T4 = "LRAD強化システム";
+    var EQUIP_Chip_S42Adlib_T4 = "S#.42 ad-lib回路";
+    var EQUIP_Sub_AESARadar_T4 = "能動形航空レーダー";
+    var EQUIP_Sub_MKEngine_T4 = "改良型MKエンジン";
+    var EQUIP_Sub_BulgasariPileBunker_T4 = "電撃型パイルバンカー";
+    var EQUIP_Sub_ImOverclock_T4 = "改良型出力制限解除装置";
+    var EQUIP_System_HQ1Commander_T4 = "HQ1コマンダーシステム";
+    var EQUIP_Sub_TuinOrellia_T4 = "元素の心臓(火炎)EX";
+    var EQUIP_Sub_SumaOrellia_T4 = "元素の心臓(冷気)EX";
+    var EQUIP_Sub_ZoweOrellia_T4 = "元素の心臓(電気)EX";
+    var EQUIP_Sub_LWLoader_T1 = "軽火器用装填機";
+    var EQUIP_Sub_LWLoader_T2 = "軽火器用装填機";
+    var EQUIP_Sub_LWLoader_T3 = "軽火器用装填機";
+    var EQUIP_Sub_LWLoader_T4 = "軽火器用装填機";
+    var EQUIP_Sub_AWThruster_T1 = "空中火器用推進機";
+    var EQUIP_Sub_AWThruster_T2 = "空中火器用推進機";
+    var EQUIP_Sub_AWThruster_T3 = "空中火器用推進機";
+    var EQUIP_Sub_AWThruster_T4 = "空中火器用推進機";
+    var EQUIP_Sub_CMDProtocol_T4 = "応用指揮プロトコル";
+    var EQUIP_Sub_ImAdvRada_T4 = "試作型望遠照準装置";
+    var EQUIP_Sub_BattleASST_T4 = "강행 전투 보조장치";
+    var EQUIP_Sub_SpikeShield_T4 = "스파이크 실드";
+    var EQUIP_System_Backstab_T4 = "암습형 전투 시스템";
+    var EQUIP_System_RebootAlpha_T4 = "전장 리부트 시스템 알파";
+    var EQUIP_System_RebootBeta_T4 = "전장 리부트 시스템 베타";
+    var EQUIP_System_RebootGamma_T4 = "전장 리부트 시스템 감마";
+    var EQUIP_System_Circulation_T4 = "W.R.I.I 시스템";
+    var EQUIP_Sub_HotPack_T4 = "핫팩";
+    var EQUIP_Sub_SEyepatch_T4 = "핏빛안대 -혈화요란-";
+    var EQUIP_Chip_AtkTypeB_T5 = "출력 강화 회로 베타";
+    var EQUIP_Chip_AccTypeB_T5 = "연산 강화 회로 베타";
+    var EQUIP_Chip_DefTypeB_T5 = "내 충격 회로 베타";
+    var EQUIP_Chip_EvTypeB_T5 = "반응 강화 회로 베타";
+    var EQUIP_Chip_CriTypeB_T5 = "분석 회로 베타";
+    var EQUIP_Chip_HpTypeB_T5 = "회로 내구 강화 베타";
+    var EQUIP_Chip_SpdTypeB_T5 = "회로 최적화 베타";
+    var EQUIP_Sub_SHCA_T4 = "초중량 복합장갑";
+    var EQUIP_Sub_MiniFenrir_T4 = "미니 펜리르";
+    var EQUIP_Sub_MiniSnowFeather_T4 = "미니 스노우 페더 ";
+    var EQUIP_Sub_MiniPoi_T4 = "미니 포이 ";
+    var EQUIP_Sub_MiniFrigga_T4 = "미니 프리가 ";
+    var EQUIP_Sub_MiniHirume_T4 = "미니 히루메 ";
+    var EQUIP_Sub_MiniBlackWyrm_T4 = "미니 블랙 웜 ";
+    var locale = {
+    	UNIT_Core_Normal: UNIT_Core_Normal,
+    	UNIT_Core_Special: UNIT_Core_Special,
+    	UNIT_3P_Labiata: UNIT_3P_Labiata,
+    	UNIT_3P_ConstantiaS2: UNIT_3P_ConstantiaS2,
+    	UNIT_3P_Alice: UNIT_3P_Alice,
+    	UNIT_3P_Vanilla: UNIT_3P_Vanilla,
+    	UNIT_3P_Rhea: UNIT_3P_Rhea,
+    	UNIT_3P_ScissorsLise: UNIT_3P_ScissorsLise,
+    	UNIT_3P_Daphne: UNIT_3P_Daphne,
+    	UNIT_3P_Aqua: UNIT_3P_Aqua,
+    	UNIT_3P_Titania: UNIT_3P_Titania,
+    	UNIT_3P_Alexandra: UNIT_3P_Alexandra,
+    	UNIT_3P_Sowan: UNIT_3P_Sowan,
+    	UNIT_3P_Annie: UNIT_3P_Annie,
+    	UNIT_3P_Maria: UNIT_3P_Maria,
+    	UNIT_3P_Fotia: UNIT_3P_Fotia,
+    	UNIT_3P_BlackLilith: UNIT_3P_BlackLilith,
+    	UNIT_3P_CSPerrault: UNIT_3P_CSPerrault,
+    	UNIT_3P_Hachiko: UNIT_3P_Hachiko,
+    	UNIT_3P_Fenrir: UNIT_3P_Fenrir,
+    	UNIT_BR_Marie: UNIT_BR_Marie,
+    	UNIT_BR_Efreeti: UNIT_BR_Efreeti,
+    	UNIT_BR_Leprechaun: UNIT_BR_Leprechaun,
+    	UNIT_BR_Impet: UNIT_BR_Impet,
+    	UNIT_BR_Brownie: UNIT_BR_Brownie,
+    	UNIT_BR_PXSilky: UNIT_BR_PXSilky,
+    	UNIT_BR_Phoenix: UNIT_BR_Phoenix,
+    	UNIT_BR_Gnome: UNIT_BR_Gnome,
+    	UNIT_BR_RedHood: UNIT_BR_RedHood,
+    	UNIT_BR_Habetrot: UNIT_BR_Habetrot,
+    	UNIT_BR_Leona: UNIT_BR_Leona,
+    	UNIT_BR_Valkyrie: UNIT_BR_Valkyrie,
+    	UNIT_BR_Nymph: UNIT_BR_Nymph,
+    	UNIT_BR_Gremlin: UNIT_BR_Gremlin,
+    	UNIT_BR_SandMan: UNIT_BR_SandMan,
+    	UNIT_BR_Bheur: UNIT_BR_Bheur,
+    	UNIT_BR_Alvis: UNIT_BR_Alvis,
+    	UNIT_BR_Khan: UNIT_BR_Khan,
+    	UNIT_BR_QuickCamel: UNIT_BR_QuickCamel,
+    	UNIT_BR_WarWolf: UNIT_BR_WarWolf,
+    	UNIT_BR_TalonFeather: UNIT_BR_TalonFeather,
+    	UNIT_3P_Frigga: UNIT_3P_Frigga,
+    	UNIT_BR_May: UNIT_BR_May,
+    	UNIT_BR_NightAngel: UNIT_BR_NightAngel,
+    	UNIT_BR_Daika: UNIT_BR_Daika,
+    	UNIT_BR_Djinnia: UNIT_BR_Djinnia,
+    	UNIT_BR_Sylphid: UNIT_BR_Sylphid,
+    	UNIT_BR_Banshee: UNIT_BR_Banshee,
+    	UNIT_BR_StratoAngel: UNIT_BR_StratoAngel,
+    	UNIT_BR_RoyalArsenal: UNIT_BR_RoyalArsenal,
+    	UNIT_BR_BloodyPanther: UNIT_BR_BloodyPanther,
+    	UNIT_BR_Calista: UNIT_BR_Calista,
+    	UNIT_BR_Io: UNIT_BR_Io,
+    	UNIT_BR_Spriggan: UNIT_BR_Spriggan,
+    	UNIT_BR_BeastHunter: UNIT_BR_BeastHunter,
+    	UNIT_BR_Emily: UNIT_BR_Emily,
+    	UNIT_BR_Pani: UNIT_BR_Pani,
+    	UNIT_BR_Raven: UNIT_BR_Raven,
+    	UNIT_BR_Neodym: UNIT_BR_Neodym,
+    	UNIT_AGS_Shade: UNIT_AGS_Shade,
+    	UNIT_BR_Phantom: UNIT_BR_Phantom,
+    	UNIT_BR_Echidna: UNIT_BR_Echidna,
+    	UNIT_BR_Wraithy: UNIT_BR_Wraithy,
+    	UNIT_BR_DrM: UNIT_BR_DrM,
+    	UNIT_BR_Amy: UNIT_BR_Amy,
+    	UNIT_BR_Tomoe: UNIT_BR_Tomoe,
+    	UNIT_BR_Shirayuri: UNIT_BR_Shirayuri,
+    	UNIT_BR_HongRyun: UNIT_BR_HongRyun,
+    	UNIT_BR_AS12TurtleDragon: UNIT_BR_AS12TurtleDragon,
+    	UNIT_BR_Miho: UNIT_BR_Miho,
+    	UNIT_BR_PoniesAnger: UNIT_BR_PoniesAnger,
+    	UNIT_BR_Bulgasari: UNIT_BR_Bulgasari,
+    	UNIT_BR_InvDragon: UNIT_BR_InvDragon,
+    	UNIT_BR_Nereid: UNIT_BR_Nereid,
+    	UNIT_BR_Undine: UNIT_BR_Undine,
+    	UNIT_BR_Sirene: UNIT_BR_Sirene,
+    	UNIT_BR_Thetis: UNIT_BR_Thetis,
+    	UNIT_BR_Sleipnir: UNIT_BR_Sleipnir,
+    	UNIT_BR_PA00EL: UNIT_BR_PA00EL,
+    	UNIT_BR_Harpy: UNIT_BR_Harpy,
+    	UNIT_BR_Blackhound: UNIT_BR_Blackhound,
+    	UNIT_BR_Lindwurm: UNIT_BR_Lindwurm,
+    	UNIT_AGS_Aeda: UNIT_AGS_Aeda,
+    	UNIT_PECS_CoCoWhiteShell: UNIT_PECS_CoCoWhiteShell,
+    	UNIT_PECS_Stinger: UNIT_PECS_Stinger,
+    	UNIT_PECS_Spartoia: UNIT_PECS_Spartoia,
+    	UNIT_PECS_Audrey: UNIT_PECS_Audrey,
+    	UNIT_PECS_TommyWalker: UNIT_PECS_TommyWalker,
+    	UNIT_PECS_DutchGirl: UNIT_PECS_DutchGirl,
+    	UNIT_PECS_Triaina: UNIT_PECS_Triaina,
+    	UNIT_PECS_Drone: UNIT_PECS_Drone,
+    	UNIT_PECS_Serpent: UNIT_PECS_Serpent,
+    	UNIT_PECS_MissSafety: UNIT_PECS_MissSafety,
+    	UNIT_PECS_Cerberus: UNIT_PECS_Cerberus,
+    	UNIT_AGS_Rampart: UNIT_AGS_Rampart,
+    	UNIT_PECS_PuppHead: UNIT_PECS_PuppHead,
+    	UNIT_PECS_Express76: UNIT_PECS_Express76,
+    	UNIT_PECS_Fortune: UNIT_PECS_Fortune,
+    	UNIT_PECS_LRL: UNIT_PECS_LRL,
+    	UNIT_PECS_MightyR: UNIT_PECS_MightyR,
+    	UNIT_PECS_Tiequan: UNIT_PECS_Tiequan,
+    	UNIT_DS_Johanna: UNIT_DS_Johanna,
+    	UNIT_BR_Scathy: UNIT_BR_Scathy,
+    	UNIT_DS_MoMo: UNIT_DS_MoMo,
+    	UNIT_DS_Atalanta: UNIT_DS_Atalanta,
+    	UNIT_DS_Charlotte: UNIT_DS_Charlotte,
+    	UNIT_DS_Azazel: UNIT_DS_Azazel,
+    	UNIT_DS_Baekto: UNIT_DS_Baekto,
+    	UNIT_AGS_Goltarion: UNIT_AGS_Goltarion,
+    	UNIT_DS_Arman: UNIT_DS_Arman,
+    	UNIT_DS_BunnySlayer: UNIT_DS_BunnySlayer,
+    	UNIT_PECS_Carolina: UNIT_PECS_Carolina,
+    	UNIT_PECS_BS: UNIT_PECS_BS,
+    	UNIT_PECS_ElvenForestmaker: UNIT_PECS_ElvenForestmaker,
+    	UNIT_PECS_Ignis: UNIT_PECS_Ignis,
+    	UNIT_PECS_DarkElf: UNIT_PECS_DarkElf,
+    	UNIT_PECS_Circe: UNIT_PECS_Circe,
+    	UNIT_PECS_Babariana: UNIT_PECS_Babariana,
+    	UNIT_PECS_Veronica: UNIT_PECS_Veronica,
+    	UNIT_DS_Saraqael: UNIT_DS_Saraqael,
+    	UNIT_DS_Angel: UNIT_DS_Angel,
+    	UNIT_PECS_Draculina: UNIT_PECS_Draculina,
+    	UNIT_3P_Ran: UNIT_3P_Ran,
+    	UNIT_3P_Hirume: UNIT_3P_Hirume,
+    	UNIT_ST_Tiamat: UNIT_ST_Tiamat,
+    	UNIT_ST_Mercury: UNIT_ST_Mercury,
+    	UNIT_ST_Lancer: UNIT_ST_Lancer,
+    	UNIT_ST_Ullr: UNIT_ST_Ullr,
+    	UNIT_BR_JangHwa: UNIT_BR_JangHwa,
+    	UNIT_BR_Cheona: UNIT_BR_Cheona,
+    	UNIT_PECS_Empress: UNIT_PECS_Empress,
+    	UNIT_PECS_Saetti: UNIT_PECS_Saetti,
+    	UNIT_3P_Aurora: UNIT_3P_Aurora,
+    	UNIT_PECS_Sunny: UNIT_PECS_Sunny,
+    	UNIT_DS_Faucre: UNIT_DS_Faucre,
+    	UNIT_PECS_Lumberjane: UNIT_PECS_Lumberjane,
+    	UNIT_3P_BlackWyrm: UNIT_3P_BlackWyrm,
+    	UNIT_DS_KunoichiZero: UNIT_DS_KunoichiZero,
+    	UNIT_3P_SnowFeather: UNIT_3P_SnowFeather,
+    	UNIT_PECS_HighElven: UNIT_PECS_HighElven,
+    	UNIT_BR_Andvari: UNIT_BR_Andvari,
+    	UNIT_3P_Dryad: UNIT_3P_Dryad,
+    	UNIT_PECS_Sadius: UNIT_PECS_Sadius,
+    	UNIT_DS_KunoichiKaen: UNIT_DS_KunoichiKaen,
+    	UNIT_BR_Hraesvelgr: UNIT_BR_Hraesvelgr,
+    	UNIT_BR_ALWraith: UNIT_BR_ALWraith,
+    	UNIT_3P_Poi: UNIT_3P_Poi,
+    	UNIT_PECS_Leanne: UNIT_PECS_Leanne,
+    	UNIT_3P_Eternity: UNIT_3P_Eternity,
+    	UNIT_PECS_Azaz: UNIT_PECS_Azaz,
+    	UNIT_PECS_LemonadeAlpha: UNIT_PECS_LemonadeAlpha,
+    	UNIT_PECS_Ella: UNIT_PECS_Ella,
+    	UNIT_PECS_Rena: UNIT_PECS_Rena,
+    	UNIT_PECS_Mery: UNIT_PECS_Mery,
+    	UNIT_PECS_Machina: UNIT_PECS_Machina,
+    	UNIT_BR_Salamander: UNIT_BR_Salamander,
+    	UNIT_BR_Scarabya: UNIT_BR_Scarabya,
+    	UNIT_BR_Hyena: UNIT_BR_Hyena,
+    	UNIT_PECS_Triton: UNIT_PECS_Triton,
+    	UNIT_AGS_Albatross: UNIT_AGS_Albatross,
+    	UNIT_AGS_Seljuq: UNIT_AGS_Seljuq,
+    	UNIT_AGS_Gigantes: UNIT_AGS_Gigantes,
+    	UNIT_AGS_Fallen: UNIT_AGS_Fallen,
+    	UNIT_SJ_Orellia: UNIT_SJ_Orellia,
+    	UNIT_SJ_Tachi: UNIT_SJ_Tachi,
+    	UNIT_PECS_Muse: UNIT_PECS_Muse,
+    	UNIT_PECS_Boryeon: UNIT_PECS_Boryeon,
+    	UNIT_PECS_Orangeade: UNIT_PECS_Orangeade,
+    	UNIT_AGS_SpartanC: UNIT_AGS_SpartanC,
+    	UNIT_AGS_SpartanA: UNIT_AGS_SpartanA,
+    	UNIT_AGS_SpartanB: UNIT_AGS_SpartanB,
+    	UNIT_AGS_Roc: UNIT_AGS_Roc,
+    	UNIT_AGS_Fortress: UNIT_AGS_Fortress,
+    	UNIT_AGS_Tyrant: UNIT_AGS_Tyrant,
+    	UNIT_AGS_RheinRitter: UNIT_AGS_RheinRitter,
+    	UNIT_AGS_MrAlfred2: UNIT_AGS_MrAlfred2,
+    	UNIT_AGS_Watcher: UNIT_AGS_Watcher,
+    	UNIT_AGS_Stronghold: UNIT_AGS_Stronghold,
+    	UNIT_PECS_Sonia: UNIT_PECS_Sonia,
+    	UNIT_BR_Ellie: UNIT_BR_Ellie,
+    	UNIT_BR_NickyTracy: UNIT_BR_NickyTracy,
+    	UNIT_PECS_Glacias: UNIT_PECS_Glacias,
+    	UNIT_PECS_QueenMane: UNIT_PECS_QueenMane,
+    	UNIT_PECS_Mnemosyne: UNIT_PECS_Mnemosyne,
+    	UNIT_PECS_Hussar: UNIT_PECS_Hussar,
+    	UNIT_DS_Ramiel: UNIT_DS_Ramiel,
+    	UNIT_AGS_Arachne: UNIT_AGS_Arachne,
+    	UNIT_PECS_Sekhmet: UNIT_PECS_Sekhmet,
+    	UNIT_PECS_Peregrinus: UNIT_PECS_Peregrinus,
+    	UNIT_PECS_CyclopsePrincess: UNIT_PECS_CyclopsePrincess,
+    	UNIT_3P_Melite: UNIT_3P_Melite,
+    	UNIT_3P_Amphitrite: UNIT_3P_Amphitrite,
+    	UNIT_3P_Salacia: UNIT_3P_Salacia,
+    	EQUIP_Chip_Atk_T1: EQUIP_Chip_Atk_T1,
+    	EQUIP_Chip_Atk_T2: EQUIP_Chip_Atk_T2,
+    	EQUIP_Chip_Atk_T3: EQUIP_Chip_Atk_T3,
+    	EQUIP_Chip_Atk_T4: EQUIP_Chip_Atk_T4,
+    	EQUIP_Chip_Acc_T1: EQUIP_Chip_Acc_T1,
+    	EQUIP_Chip_Acc_T2: EQUIP_Chip_Acc_T2,
+    	EQUIP_Chip_Acc_T3: EQUIP_Chip_Acc_T3,
+    	EQUIP_Chip_Acc_T4: EQUIP_Chip_Acc_T4,
+    	EQUIP_Chip_Def_T1: EQUIP_Chip_Def_T1,
+    	EQUIP_Chip_Def_T2: EQUIP_Chip_Def_T2,
+    	EQUIP_Chip_Def_T3: EQUIP_Chip_Def_T3,
+    	EQUIP_Chip_Def_T4: EQUIP_Chip_Def_T4,
+    	EQUIP_Chip_Ev_T1: EQUIP_Chip_Ev_T1,
+    	EQUIP_Chip_Ev_T2: EQUIP_Chip_Ev_T2,
+    	EQUIP_Chip_Ev_T3: EQUIP_Chip_Ev_T3,
+    	EQUIP_Chip_Ev_T4: EQUIP_Chip_Ev_T4,
+    	EQUIP_Chip_Cri_T1: EQUIP_Chip_Cri_T1,
+    	EQUIP_Chip_Cri_T2: EQUIP_Chip_Cri_T2,
+    	EQUIP_Chip_Cri_T3: EQUIP_Chip_Cri_T3,
+    	EQUIP_Chip_Cri_T4: EQUIP_Chip_Cri_T4,
+    	EQUIP_Chip_Hp_T1: EQUIP_Chip_Hp_T1,
+    	EQUIP_Chip_Hp_T2: EQUIP_Chip_Hp_T2,
+    	EQUIP_Chip_Hp_T3: EQUIP_Chip_Hp_T3,
+    	EQUIP_Chip_Hp_T4: EQUIP_Chip_Hp_T4,
+    	EQUIP_Chip_Debuff_Res_T1: EQUIP_Chip_Debuff_Res_T1,
+    	EQUIP_Chip_Debuff_Res_T2: EQUIP_Chip_Debuff_Res_T2,
+    	EQUIP_Chip_Debuff_Res_T3: EQUIP_Chip_Debuff_Res_T3,
+    	EQUIP_Chip_Debuff_Res_T4: EQUIP_Chip_Debuff_Res_T4,
+    	EQUIP_Chip_Spd_T1: EQUIP_Chip_Spd_T1,
+    	EQUIP_Chip_Spd_T2: EQUIP_Chip_Spd_T2,
+    	EQUIP_Chip_Spd_T3: EQUIP_Chip_Spd_T3,
+    	EQUIP_Chip_Spd_T4: EQUIP_Chip_Spd_T4,
+    	EQUIP_System_Normal_T1: EQUIP_System_Normal_T1,
+    	EQUIP_System_Normal_T2: EQUIP_System_Normal_T2,
+    	EQUIP_System_Normal_T3: EQUIP_System_Normal_T3,
+    	EQUIP_System_Normal_T4: EQUIP_System_Normal_T4,
+    	EQUIP_System_Assault_T1: EQUIP_System_Assault_T1,
+    	EQUIP_System_Assault_T2: EQUIP_System_Assault_T2,
+    	EQUIP_System_Assault_T3: EQUIP_System_Assault_T3,
+    	EQUIP_System_Assault_T4: EQUIP_System_Assault_T4,
+    	EQUIP_System_Defense_T1: EQUIP_System_Defense_T1,
+    	EQUIP_System_Defense_T2: EQUIP_System_Defense_T2,
+    	EQUIP_System_Defense_T3: EQUIP_System_Defense_T3,
+    	EQUIP_System_Defense_T4: EQUIP_System_Defense_T4,
+    	EQUIP_System_Sniper_T1: EQUIP_System_Sniper_T1,
+    	EQUIP_System_Sniper_T2: EQUIP_System_Sniper_T2,
+    	EQUIP_System_Sniper_T3: EQUIP_System_Sniper_T3,
+    	EQUIP_System_Sniper_T4: EQUIP_System_Sniper_T4,
+    	EQUIP_System_Highspd_T1: EQUIP_System_Highspd_T1,
+    	EQUIP_System_Highspd_T2: EQUIP_System_Highspd_T2,
+    	EQUIP_System_Highspd_T3: EQUIP_System_Highspd_T3,
+    	EQUIP_System_Highspd_T4: EQUIP_System_Highspd_T4,
+    	EQUIP_System_Maneuver_T1: EQUIP_System_Maneuver_T1,
+    	EQUIP_System_Maneuver_T2: EQUIP_System_Maneuver_T2,
+    	EQUIP_System_Maneuver_T3: EQUIP_System_Maneuver_T3,
+    	EQUIP_System_Maneuver_T4: EQUIP_System_Maneuver_T4,
+    	EQUIP_System_AntiAir_T1: EQUIP_System_AntiAir_T1,
+    	EQUIP_System_AntiAir_T2: EQUIP_System_AntiAir_T2,
+    	EQUIP_System_AntiAir_T3: EQUIP_System_AntiAir_T3,
+    	EQUIP_System_AntiAir_T4: EQUIP_System_AntiAir_T4,
+    	EQUIP_System_AntiTrooper_T1: EQUIP_System_AntiTrooper_T1,
+    	EQUIP_System_AntiTrooper_T2: EQUIP_System_AntiTrooper_T2,
+    	EQUIP_System_AntiTrooper_T3: EQUIP_System_AntiTrooper_T3,
+    	EQUIP_System_AntiTrooper_T4: EQUIP_System_AntiTrooper_T4,
+    	EQUIP_System_AntiArmor_T1: EQUIP_System_AntiArmor_T1,
+    	EQUIP_System_AntiArmor_T2: EQUIP_System_AntiArmor_T2,
+    	EQUIP_System_AntiArmor_T3: EQUIP_System_AntiArmor_T3,
+    	EQUIP_System_AntiArmor_T4: EQUIP_System_AntiArmor_T4,
+    	EQUIP_System_Exp_T1: EQUIP_System_Exp_T1,
+    	EQUIP_System_Exp_T2: EQUIP_System_Exp_T2,
+    	EQUIP_System_Exp_T3: EQUIP_System_Exp_T3,
+    	EQUIP_System_Exp_T4: EQUIP_System_Exp_T4,
+    	EQUIP_Sub_EnergyPack_T1: EQUIP_Sub_EnergyPack_T1,
+    	EQUIP_Sub_EnergyPack_T2: EQUIP_Sub_EnergyPack_T2,
+    	EQUIP_Sub_EnergyPack_T3: EQUIP_Sub_EnergyPack_T3,
+    	EQUIP_Sub_EnergyPack_T4: EQUIP_Sub_EnergyPack_T4,
+    	EQUIP_Sub_Observer_T1: EQUIP_Sub_Observer_T1,
+    	EQUIP_Sub_Observer_T2: EQUIP_Sub_Observer_T2,
+    	EQUIP_Sub_Observer_T3: EQUIP_Sub_Observer_T3,
+    	EQUIP_Sub_Observer_T4: EQUIP_Sub_Observer_T4,
+    	EQUIP_Sub_SpaceArmor_T1: EQUIP_Sub_SpaceArmor_T1,
+    	EQUIP_Sub_SpaceArmor_T2: EQUIP_Sub_SpaceArmor_T2,
+    	EQUIP_Sub_SpaceArmor_T3: EQUIP_Sub_SpaceArmor_T3,
+    	EQUIP_Sub_SpaceArmor_T4: EQUIP_Sub_SpaceArmor_T4,
+    	EQUIP_Sub_SubBooster_T1: EQUIP_Sub_SubBooster_T1,
+    	EQUIP_Sub_SubBooster_T2: EQUIP_Sub_SubBooster_T2,
+    	EQUIP_Sub_SubBooster_T3: EQUIP_Sub_SubBooster_T3,
+    	EQUIP_Sub_SubBooster_T4: EQUIP_Sub_SubBooster_T4,
+    	EQUIP_Sub_SpSight_T1: EQUIP_Sub_SpSight_T1,
+    	EQUIP_Sub_SpSight_T2: EQUIP_Sub_SpSight_T2,
+    	EQUIP_Sub_SpSight_T3: EQUIP_Sub_SpSight_T3,
+    	EQUIP_Sub_SpSight_T4: EQUIP_Sub_SpSight_T4,
+    	EQUIP_Sub_ArmorPierce_T1: EQUIP_Sub_ArmorPierce_T1,
+    	EQUIP_Sub_ArmorPierce_T2: EQUIP_Sub_ArmorPierce_T2,
+    	EQUIP_Sub_ArmorPierce_T3: EQUIP_Sub_ArmorPierce_T3,
+    	EQUIP_Sub_ArmorPierce_T4: EQUIP_Sub_ArmorPierce_T4,
+    	EQUIP_Sub_AntiBarrier_T1: EQUIP_Sub_AntiBarrier_T1,
+    	EQUIP_Sub_AntiBarrier_T2: EQUIP_Sub_AntiBarrier_T2,
+    	EQUIP_Sub_AntiBarrier_T3: EQUIP_Sub_AntiBarrier_T3,
+    	EQUIP_Sub_AntiBarrier_T4: EQUIP_Sub_AntiBarrier_T4,
+    	EQUIP_Sub_Barrier_T1: EQUIP_Sub_Barrier_T1,
+    	EQUIP_Sub_Barrier_T2: EQUIP_Sub_Barrier_T2,
+    	EQUIP_Sub_Barrier_T3: EQUIP_Sub_Barrier_T3,
+    	EQUIP_Sub_Barrier_T4: EQUIP_Sub_Barrier_T4,
+    	EQUIP_Sub_SpyDrone_T1: EQUIP_Sub_SpyDrone_T1,
+    	EQUIP_Sub_SpyDrone_T2: EQUIP_Sub_SpyDrone_T2,
+    	EQUIP_Sub_SpyDrone_T3: EQUIP_Sub_SpyDrone_T3,
+    	EQUIP_Sub_SpyDrone_T4: EQUIP_Sub_SpyDrone_T4,
+    	EQUIP_Sub_ExamKit_T1: EQUIP_Sub_ExamKit_T1,
+    	EQUIP_Sub_ExamKit_T2: EQUIP_Sub_ExamKit_T2,
+    	EQUIP_Sub_ExamKit_T3: EQUIP_Sub_ExamKit_T3,
+    	EQUIP_Sub_ExamKit_T4: EQUIP_Sub_ExamKit_T4,
+    	EQUIP_Sub_AdvRadar_T1: EQUIP_Sub_AdvRadar_T1,
+    	EQUIP_Sub_AdvRadar_T2: EQUIP_Sub_AdvRadar_T2,
+    	EQUIP_Sub_AdvRadar_T3: EQUIP_Sub_AdvRadar_T3,
+    	EQUIP_Sub_AdvRadar_T4: EQUIP_Sub_AdvRadar_T4,
+    	EQUIP_Sub_Stimulant_T1: EQUIP_Sub_Stimulant_T1,
+    	EQUIP_Sub_Stimulant_T2: EQUIP_Sub_Stimulant_T2,
+    	EQUIP_Sub_Stimulant_T3: EQUIP_Sub_Stimulant_T3,
+    	EQUIP_Sub_Stimulant_T4: EQUIP_Sub_Stimulant_T4,
+    	EQUIP_Sub_Hologram_T1: EQUIP_Sub_Hologram_T1,
+    	EQUIP_Sub_Hologram_T2: EQUIP_Sub_Hologram_T2,
+    	EQUIP_Sub_Hologram_T3: EQUIP_Sub_Hologram_T3,
+    	EQUIP_Sub_Hologram_T4: EQUIP_Sub_Hologram_T4,
+    	EQUIP_Sub_SpRifleBullet_T4: EQUIP_Sub_SpRifleBullet_T4,
+    	EQUIP_Sub_AMRAAMPod_T4: EQUIP_Sub_AMRAAMPod_T4,
+    	EQUIP_Sub_SpAlloyArmor_T4: EQUIP_Sub_SpAlloyArmor_T4,
+    	EQUIP_Sub_MarkOfDS_T4: EQUIP_Sub_MarkOfDS_T4,
+    	EQUIP_Sub_AntiFire_T1: EQUIP_Sub_AntiFire_T1,
+    	EQUIP_Sub_AntiFire_T2: EQUIP_Sub_AntiFire_T2,
+    	EQUIP_Sub_AntiFire_T3: EQUIP_Sub_AntiFire_T3,
+    	EQUIP_Sub_AntiFire_T4: EQUIP_Sub_AntiFire_T4,
+    	EQUIP_Sub_AntiCold_T1: EQUIP_Sub_AntiCold_T1,
+    	EQUIP_Sub_AntiCold_T2: EQUIP_Sub_AntiCold_T2,
+    	EQUIP_Sub_AntiCold_T3: EQUIP_Sub_AntiCold_T3,
+    	EQUIP_Sub_AntiCold_T4: EQUIP_Sub_AntiCold_T4,
+    	EQUIP_Sub_AntiLightning_T1: EQUIP_Sub_AntiLightning_T1,
+    	EQUIP_Sub_AntiLightning_T2: EQUIP_Sub_AntiLightning_T2,
+    	EQUIP_Sub_AntiLightning_T3: EQUIP_Sub_AntiLightning_T3,
+    	EQUIP_Sub_AntiLightning_T4: EQUIP_Sub_AntiLightning_T4,
+    	EQUIP_Chip_Enchant_T1: EQUIP_Chip_Enchant_T1,
+    	EQUIP_Chip_Enchant_T2: EQUIP_Chip_Enchant_T2,
+    	EQUIP_Chip_Enchant_T3: EQUIP_Chip_Enchant_T3,
+    	EQUIP_Chip_Enchant_T4: EQUIP_Chip_Enchant_T4,
+    	EQUIP_Chip_AimHack_T4: EQUIP_Chip_AimHack_T4,
+    	EQUIP_Sub_T60ExtArmor_T4: EQUIP_Sub_T60ExtArmor_T4,
+    	EQUIP_Sub_40mmDUBullet_T4: EQUIP_Sub_40mmDUBullet_T4,
+    	EQUIP_Chip_ATFLIR_T4: EQUIP_Chip_ATFLIR_T4,
+    	EQUIP_Sub_CM67SpaceBooster_T4: EQUIP_Sub_CM67SpaceBooster_T4,
+    	EQUIP_Sub_MG80MODKit_T4: EQUIP_Sub_MG80MODKit_T4,
+    	EQUIP_Sub_STEROID_T4: EQUIP_Sub_STEROID_T4,
+    	EQUIP_Sub_SK14MODKit_T4: EQUIP_Sub_SK14MODKit_T4,
+    	EQUIP_Sub_LunchBox_T4: EQUIP_Sub_LunchBox_T4,
+    	EQUIP_Sub_Bombard_T4: EQUIP_Sub_Bombard_T4,
+    	EQUIP_Chip_SpAtk_T1: EQUIP_Chip_SpAtk_T1,
+    	EQUIP_Chip_SpAtk_T2: EQUIP_Chip_SpAtk_T2,
+    	EQUIP_Chip_SpAtk_T3: EQUIP_Chip_SpAtk_T3,
+    	EQUIP_Chip_SpAtk_T4: EQUIP_Chip_SpAtk_T4,
+    	EQUIP_System_EyesOfBeholderD_T4: EQUIP_System_EyesOfBeholderD_T4,
+    	EQUIP_Chip_AtkCri_T1: EQUIP_Chip_AtkCri_T1,
+    	EQUIP_Chip_AtkCri_T2: EQUIP_Chip_AtkCri_T2,
+    	EQUIP_Chip_AtkCri_T3: EQUIP_Chip_AtkCri_T3,
+    	EQUIP_Chip_AtkCri_T4: EQUIP_Chip_AtkCri_T4,
+    	EQUIP_Chip_KillExp_T1: EQUIP_Chip_KillExp_T1,
+    	EQUIP_Chip_KillExp_T2: EQUIP_Chip_KillExp_T2,
+    	EQUIP_Chip_KillExp_T3: EQUIP_Chip_KillExp_T3,
+    	EQUIP_Chip_KillExp_T4: EQUIP_Chip_KillExp_T4,
+    	EQUIP_Sub_AquaModule_T1: EQUIP_Sub_AquaModule_T1,
+    	EQUIP_Sub_AquaModule_T2: EQUIP_Sub_AquaModule_T2,
+    	EQUIP_Sub_AquaModule_T3: EQUIP_Sub_AquaModule_T3,
+    	EQUIP_Sub_AquaModule_T4: EQUIP_Sub_AquaModule_T4,
+    	EQUIP_Sub_Overclock_T1: EQUIP_Sub_Overclock_T1,
+    	EQUIP_Sub_Overclock_T2: EQUIP_Sub_Overclock_T2,
+    	EQUIP_Sub_Overclock_T3: EQUIP_Sub_Overclock_T3,
+    	EQUIP_Sub_Overclock_T4: EQUIP_Sub_Overclock_T4,
+    	EQUIP_System_HManeuver_T1: EQUIP_System_HManeuver_T1,
+    	EQUIP_System_HManeuver_T2: EQUIP_System_HManeuver_T2,
+    	EQUIP_System_HManeuver_T3: EQUIP_System_HManeuver_T3,
+    	EQUIP_System_HManeuver_T4: EQUIP_System_HManeuver_T4,
+    	EQUIP_System_EXAM_T1: EQUIP_System_EXAM_T1,
+    	EQUIP_System_EXAM_T2: EQUIP_System_EXAM_T2,
+    	EQUIP_System_EXAM_T3: EQUIP_System_EXAM_T3,
+    	EQUIP_System_EXAM_T4: EQUIP_System_EXAM_T4,
+    	EQUIP_Sub_IcePack_T4: EQUIP_Sub_IcePack_T4,
+    	EQUIP_Sub_SunCream_T4: EQUIP_Sub_SunCream_T4,
+    	EQUIP_Sub_ASN6G_T4: EQUIP_Sub_ASN6G_T4,
+    	EQUIP_Sub_HornOfBADK_T4: EQUIP_Sub_HornOfBADK_T4,
+    	EQUIP_Sub_MoonCake_T4: EQUIP_Sub_MoonCake_T4,
+    	EQUIP_Sub_Interceptor_T4: EQUIP_Sub_Interceptor_T4,
+    	EQUIP_Sub_AntiShield_T4: EQUIP_Sub_AntiShield_T4,
+    	EQUIP_Chip_AtkSpd_T4: EQUIP_Chip_AtkSpd_T4,
+    	EQUIP_Sub_FortuneOrb_T4: EQUIP_Sub_FortuneOrb_T4,
+    	EQUIP_Sub_ElectroGenerator_T1: EQUIP_Sub_ElectroGenerator_T1,
+    	EQUIP_Sub_ElectroGenerator_T2: EQUIP_Sub_ElectroGenerator_T2,
+    	EQUIP_Sub_ElectroGenerator_T3: EQUIP_Sub_ElectroGenerator_T3,
+    	EQUIP_Sub_ElectroGenerator_T4: EQUIP_Sub_ElectroGenerator_T4,
+    	EQUIP_Sub_Recycler_T1: EQUIP_Sub_Recycler_T1,
+    	EQUIP_Sub_Recycler_T2: EQUIP_Sub_Recycler_T2,
+    	EQUIP_Sub_Recycler_T3: EQUIP_Sub_Recycler_T3,
+    	EQUIP_Sub_Recycler_T4: EQUIP_Sub_Recycler_T4,
+    	EQUIP_Chip_LTWT_T1: EQUIP_Chip_LTWT_T1,
+    	EQUIP_Chip_LTWT_T2: EQUIP_Chip_LTWT_T2,
+    	EQUIP_Chip_LTWT_T3: EQUIP_Chip_LTWT_T3,
+    	EQUIP_Chip_LTWT_T4: EQUIP_Chip_LTWT_T4,
+    	EQUIP_Chip_CriAccEx_T4: EQUIP_Chip_CriAccEx_T4,
+    	EQUIP_Sub_NitroEx3000_T4: EQUIP_Sub_NitroEx3000_T4,
+    	EQUIP_Sub_MiniPerrault_T4: EQUIP_Sub_MiniPerrault_T4,
+    	EQUIP_Sub_MiniHachiko_T4: EQUIP_Sub_MiniHachiko_T4,
+    	EQUIP_Sub_MiniLilith_T4: EQUIP_Sub_MiniLilith_T4,
+    	EQUIP_System_Advanced_T4: EQUIP_System_Advanced_T4,
+    	EQUIP_Sub_GrandCruChocolate_T4: EQUIP_Sub_GrandCruChocolate_T4,
+    	EQUIP_Chip_AtkControl_T1: EQUIP_Chip_AtkControl_T1,
+    	EQUIP_Chip_AtkControl_T2: EQUIP_Chip_AtkControl_T2,
+    	EQUIP_Chip_AtkControl_T3: EQUIP_Chip_AtkControl_T3,
+    	EQUIP_Chip_AtkControl_T4: EQUIP_Chip_AtkControl_T4,
+    	EQUIP_Sub_ExoSkeleton_T1: EQUIP_Sub_ExoSkeleton_T1,
+    	EQUIP_Sub_ExoSkeleton_T2: EQUIP_Sub_ExoSkeleton_T2,
+    	EQUIP_Sub_ExoSkeleton_T3: EQUIP_Sub_ExoSkeleton_T3,
+    	EQUIP_Sub_ExoSkeleton_T4: EQUIP_Sub_ExoSkeleton_T4,
+    	EQUIP_Sub_Odamplifier_T1: EQUIP_Sub_Odamplifier_T1,
+    	EQUIP_Sub_Odamplifier_T2: EQUIP_Sub_Odamplifier_T2,
+    	EQUIP_Sub_Odamplifier_T3: EQUIP_Sub_Odamplifier_T3,
+    	EQUIP_Sub_Odamplifier_T4: EQUIP_Sub_Odamplifier_T4,
+    	EQUIP_Sub_CMIIShield_T4: EQUIP_Sub_CMIIShield_T4,
+    	EQUIP_Sub_VerminEliminator_T4: EQUIP_Sub_VerminEliminator_T4,
+    	EQUIP_Sub_GigantesArmor_T4: EQUIP_Sub_GigantesArmor_T4,
+    	EQUIP_Sub_QMObserver_T4: EQUIP_Sub_QMObserver_T4,
+    	EQUIP_Chip_AtkTypeB_T1: EQUIP_Chip_AtkTypeB_T1,
+    	EQUIP_Chip_AtkTypeB_T2: EQUIP_Chip_AtkTypeB_T2,
+    	EQUIP_Chip_AtkTypeB_T3: EQUIP_Chip_AtkTypeB_T3,
+    	EQUIP_Chip_AtkTypeB_T4: EQUIP_Chip_AtkTypeB_T4,
+    	EQUIP_Chip_AccTypeB_T1: EQUIP_Chip_AccTypeB_T1,
+    	EQUIP_Chip_AccTypeB_T2: EQUIP_Chip_AccTypeB_T2,
+    	EQUIP_Chip_AccTypeB_T3: EQUIP_Chip_AccTypeB_T3,
+    	EQUIP_Chip_AccTypeB_T4: EQUIP_Chip_AccTypeB_T4,
+    	EQUIP_Chip_DefTypeB_T1: EQUIP_Chip_DefTypeB_T1,
+    	EQUIP_Chip_DefTypeB_T2: EQUIP_Chip_DefTypeB_T2,
+    	EQUIP_Chip_DefTypeB_T3: EQUIP_Chip_DefTypeB_T3,
+    	EQUIP_Chip_DefTypeB_T4: EQUIP_Chip_DefTypeB_T4,
+    	EQUIP_Chip_EvTypeB_T1: EQUIP_Chip_EvTypeB_T1,
+    	EQUIP_Chip_EvTypeB_T2: EQUIP_Chip_EvTypeB_T2,
+    	EQUIP_Chip_EvTypeB_T3: EQUIP_Chip_EvTypeB_T3,
+    	EQUIP_Chip_EvTypeB_T4: EQUIP_Chip_EvTypeB_T4,
+    	EQUIP_Chip_CriTypeB_T1: EQUIP_Chip_CriTypeB_T1,
+    	EQUIP_Chip_CriTypeB_T2: EQUIP_Chip_CriTypeB_T2,
+    	EQUIP_Chip_CriTypeB_T3: EQUIP_Chip_CriTypeB_T3,
+    	EQUIP_Chip_CriTypeB_T4: EQUIP_Chip_CriTypeB_T4,
+    	EQUIP_Chip_HpTypeB_T1: EQUIP_Chip_HpTypeB_T1,
+    	EQUIP_Chip_HpTypeB_T2: EQUIP_Chip_HpTypeB_T2,
+    	EQUIP_Chip_HpTypeB_T3: EQUIP_Chip_HpTypeB_T3,
+    	EQUIP_Chip_HpTypeB_T4: EQUIP_Chip_HpTypeB_T4,
+    	EQUIP_Chip_SpdTypeB_T1: EQUIP_Chip_SpdTypeB_T1,
+    	EQUIP_Chip_SpdTypeB_T2: EQUIP_Chip_SpdTypeB_T2,
+    	EQUIP_Chip_SpdTypeB_T3: EQUIP_Chip_SpdTypeB_T3,
+    	EQUIP_Chip_SpdTypeB_T4: EQUIP_Chip_SpdTypeB_T4,
+    	EQUIP_System_AntiAirTypeB_T1: EQUIP_System_AntiAirTypeB_T1,
+    	EQUIP_System_AntiAirTypeB_T2: EQUIP_System_AntiAirTypeB_T2,
+    	EQUIP_System_AntiAirTypeB_T3: EQUIP_System_AntiAirTypeB_T3,
+    	EQUIP_System_AntiAirTypeB_T4: EQUIP_System_AntiAirTypeB_T4,
+    	EQUIP_System_AntiTrooperTypeB_T1: EQUIP_System_AntiTrooperTypeB_T1,
+    	EQUIP_System_AntiTrooperTypeB_T2: EQUIP_System_AntiTrooperTypeB_T2,
+    	EQUIP_System_AntiTrooperTypeB_T3: EQUIP_System_AntiTrooperTypeB_T3,
+    	EQUIP_System_AntiTrooperTypeB_T4: EQUIP_System_AntiTrooperTypeB_T4,
+    	EQUIP_System_AntiArmorTypeB_T1: EQUIP_System_AntiArmorTypeB_T1,
+    	EQUIP_System_AntiArmorTypeB_T2: EQUIP_System_AntiArmorTypeB_T2,
+    	EQUIP_System_AntiArmorTypeB_T3: EQUIP_System_AntiArmorTypeB_T3,
+    	EQUIP_System_AntiArmorTypeB_T4: EQUIP_System_AntiArmorTypeB_T4,
+    	EQUIP_Sub_Precision_T4: EQUIP_Sub_Precision_T4,
+    	EQUIP_Sub_RangerSet_T4: EQUIP_Sub_RangerSet_T4,
+    	EQUIP_Sub_UnevenTerrain_T4: EQUIP_Sub_UnevenTerrain_T4,
+    	EQUIP_Sub_ThornNecklace_T4: EQUIP_Sub_ThornNecklace_T4,
+    	EQUIP_System_OverFlow_T4: EQUIP_System_OverFlow_T4,
+    	EQUIP_Sub_FCS_T4: EQUIP_Sub_FCS_T4,
+    	EQUIP_Sub_ImSpSight_T4: EQUIP_Sub_ImSpSight_T4,
+    	EQUIP_System_AntiTrooperAir_T1: EQUIP_System_AntiTrooperAir_T1,
+    	EQUIP_System_AntiTrooperAir_T2: EQUIP_System_AntiTrooperAir_T2,
+    	EQUIP_System_AntiTrooperAir_T3: EQUIP_System_AntiTrooperAir_T3,
+    	EQUIP_System_AntiTrooperAir_T4: EQUIP_System_AntiTrooperAir_T4,
+    	EQUIP_System_AntiAirArmor_T1: EQUIP_System_AntiAirArmor_T1,
+    	EQUIP_System_AntiAirArmor_T2: EQUIP_System_AntiAirArmor_T2,
+    	EQUIP_System_AntiAirArmor_T3: EQUIP_System_AntiAirArmor_T3,
+    	EQUIP_System_AntiAirArmor_T4: EQUIP_System_AntiAirArmor_T4,
+    	EQUIP_System_AntiArmorTrooper_T1: EQUIP_System_AntiArmorTrooper_T1,
+    	EQUIP_System_AntiArmorTrooper_T2: EQUIP_System_AntiArmorTrooper_T2,
+    	EQUIP_System_AntiArmorTrooper_T3: EQUIP_System_AntiArmorTrooper_T3,
+    	EQUIP_System_AntiArmorTrooper_T4: EQUIP_System_AntiArmorTrooper_T4,
+    	EQUIP_System_ImExp_T4: EQUIP_System_ImExp_T4,
+    	EQUIP_System_ImExp_T4_T4: EQUIP_System_ImExp_T4_T4,
+    	EQUIP_Sub_ParticleAcceleratorATK_T4: EQUIP_Sub_ParticleAcceleratorATK_T4,
+    	EQUIP_Sub_ImNitroEx3500_T4: EQUIP_Sub_ImNitroEx3500_T4,
+    	EQUIP_Sub_ImBarrier_T4: EQUIP_Sub_ImBarrier_T4,
+    	EQUIP_Sub_AngelLegs_T4: EQUIP_Sub_AngelLegs_T4,
+    	EQUIP_Sub_LRCannon_T4: EQUIP_Sub_LRCannon_T4,
+    	EQUIP_System_RogTrooperNukerATK_T1: EQUIP_System_RogTrooperNukerATK_T1,
+    	EQUIP_System_RogTrooperNukerATK_T2: EQUIP_System_RogTrooperNukerATK_T2,
+    	EQUIP_System_RogTrooperNukerATK_T3: EQUIP_System_RogTrooperNukerATK_T3,
+    	EQUIP_System_RogTrooperNukerATK_T4: EQUIP_System_RogTrooperNukerATK_T4,
+    	EQUIP_System_RogTrooperNukerATK_T5: EQUIP_System_RogTrooperNukerATK_T5,
+    	EQUIP_System_RogMobilityNukerATK_T1: EQUIP_System_RogMobilityNukerATK_T1,
+    	EQUIP_System_RogMobilityNukerATK_T2: EQUIP_System_RogMobilityNukerATK_T2,
+    	EQUIP_System_RogMobilityNukerATK_T3: EQUIP_System_RogMobilityNukerATK_T3,
+    	EQUIP_System_RogMobilityNukerATK_T4: EQUIP_System_RogMobilityNukerATK_T4,
+    	EQUIP_System_RogMobilityNukerATK_T5: EQUIP_System_RogMobilityNukerATK_T5,
+    	EQUIP_System_RogArmoredNukerATK_T1: EQUIP_System_RogArmoredNukerATK_T1,
+    	EQUIP_System_RogArmoredNukerATK_T2: EQUIP_System_RogArmoredNukerATK_T2,
+    	EQUIP_System_RogArmoredNukerATK_T3: EQUIP_System_RogArmoredNukerATK_T3,
+    	EQUIP_System_RogArmoredNukerATK_T4: EQUIP_System_RogArmoredNukerATK_T4,
+    	EQUIP_System_RogArmoredNukerATK_T5: EQUIP_System_RogArmoredNukerATK_T5,
+    	EQUIP_System_RogTrooperTankerDEF_T1: EQUIP_System_RogTrooperTankerDEF_T1,
+    	EQUIP_System_RogTrooperTankerDEF_T2: EQUIP_System_RogTrooperTankerDEF_T2,
+    	EQUIP_System_RogTrooperTankerDEF_T3: EQUIP_System_RogTrooperTankerDEF_T3,
+    	EQUIP_System_RogTrooperTankerDEF_T4: EQUIP_System_RogTrooperTankerDEF_T4,
+    	EQUIP_System_RogTrooperTankerDEF_T5: EQUIP_System_RogTrooperTankerDEF_T5,
+    	EQUIP_System_RogMobilityTankerEVA_T1: EQUIP_System_RogMobilityTankerEVA_T1,
+    	EQUIP_System_RogMobilityTankerEVA_T2: EQUIP_System_RogMobilityTankerEVA_T2,
+    	EQUIP_System_RogMobilityTankerEVA_T3: EQUIP_System_RogMobilityTankerEVA_T3,
+    	EQUIP_System_RogMobilityTankerEVA_T4: EQUIP_System_RogMobilityTankerEVA_T4,
+    	EQUIP_System_RogMobilityTankerEVA_T5: EQUIP_System_RogMobilityTankerEVA_T5,
+    	EQUIP_System_RogArmoredTankerDEF_T1: EQUIP_System_RogArmoredTankerDEF_T1,
+    	EQUIP_System_RogArmoredTankerDEF_T2: EQUIP_System_RogArmoredTankerDEF_T2,
+    	EQUIP_System_RogArmoredTankerDEF_T3: EQUIP_System_RogArmoredTankerDEF_T3,
+    	EQUIP_System_RogArmoredTankerDEF_T4: EQUIP_System_RogArmoredTankerDEF_T4,
+    	EQUIP_System_RogArmoredTankerDEF_T5: EQUIP_System_RogArmoredTankerDEF_T5,
+    	EQUIP_System_RogTrooperSupporterSPd_T1: EQUIP_System_RogTrooperSupporterSPd_T1,
+    	EQUIP_System_RogTrooperSupporterSPd_T2: EQUIP_System_RogTrooperSupporterSPd_T2,
+    	EQUIP_System_RogTrooperSupporterSPd_T3: EQUIP_System_RogTrooperSupporterSPd_T3,
+    	EQUIP_System_RogTrooperSupporterSPd_T4: EQUIP_System_RogTrooperSupporterSPd_T4,
+    	EQUIP_System_RogTrooperSupporterSPd_T5: EQUIP_System_RogTrooperSupporterSPd_T5,
+    	EQUIP_System_RogMobilitySupporterSPd_T1: EQUIP_System_RogMobilitySupporterSPd_T1,
+    	EQUIP_System_RogMobilitySupporterSPd_T2: EQUIP_System_RogMobilitySupporterSPd_T2,
+    	EQUIP_System_RogMobilitySupporterSPd_T3: EQUIP_System_RogMobilitySupporterSPd_T3,
+    	EQUIP_System_RogMobilitySupporterSPd_T4: EQUIP_System_RogMobilitySupporterSPd_T4,
+    	EQUIP_System_RogMobilitySupporterSPd_T5: EQUIP_System_RogMobilitySupporterSPd_T5,
+    	EQUIP_System_RogArmoredSupporterSPd_T1: EQUIP_System_RogArmoredSupporterSPd_T1,
+    	EQUIP_System_RogArmoredSupporterSPd_T2: EQUIP_System_RogArmoredSupporterSPd_T2,
+    	EQUIP_System_RogArmoredSupporterSPd_T3: EQUIP_System_RogArmoredSupporterSPd_T3,
+    	EQUIP_System_RogArmoredSupporterSPd_T4: EQUIP_System_RogArmoredSupporterSPd_T4,
+    	EQUIP_System_RogArmoredSupporterSPd_T5: EQUIP_System_RogArmoredSupporterSPd_T5,
+    	EQUIP_Sub_ParticleAcceleratorHP_T4: EQUIP_Sub_ParticleAcceleratorHP_T4,
+    	EQUIP_System_ImHighspd_T4: EQUIP_System_ImHighspd_T4,
+    	EQUIP_Sub_FlameStone_T4: EQUIP_Sub_FlameStone_T4,
+    	EQUIP_Sub_FrostStone_T4: EQUIP_Sub_FrostStone_T4,
+    	EQUIP_Sub_ThunderStone_T4: EQUIP_Sub_ThunderStone_T4,
+    	EQUIP_System_LRAD_T4: EQUIP_System_LRAD_T4,
+    	EQUIP_Chip_S42Adlib_T4: EQUIP_Chip_S42Adlib_T4,
+    	EQUIP_Sub_AESARadar_T4: EQUIP_Sub_AESARadar_T4,
+    	EQUIP_Sub_MKEngine_T4: EQUIP_Sub_MKEngine_T4,
+    	EQUIP_Sub_BulgasariPileBunker_T4: EQUIP_Sub_BulgasariPileBunker_T4,
+    	EQUIP_Sub_ImOverclock_T4: EQUIP_Sub_ImOverclock_T4,
+    	EQUIP_System_HQ1Commander_T4: EQUIP_System_HQ1Commander_T4,
+    	EQUIP_Sub_TuinOrellia_T4: EQUIP_Sub_TuinOrellia_T4,
+    	EQUIP_Sub_SumaOrellia_T4: EQUIP_Sub_SumaOrellia_T4,
+    	EQUIP_Sub_ZoweOrellia_T4: EQUIP_Sub_ZoweOrellia_T4,
+    	EQUIP_Sub_LWLoader_T1: EQUIP_Sub_LWLoader_T1,
+    	EQUIP_Sub_LWLoader_T2: EQUIP_Sub_LWLoader_T2,
+    	EQUIP_Sub_LWLoader_T3: EQUIP_Sub_LWLoader_T3,
+    	EQUIP_Sub_LWLoader_T4: EQUIP_Sub_LWLoader_T4,
+    	EQUIP_Sub_AWThruster_T1: EQUIP_Sub_AWThruster_T1,
+    	EQUIP_Sub_AWThruster_T2: EQUIP_Sub_AWThruster_T2,
+    	EQUIP_Sub_AWThruster_T3: EQUIP_Sub_AWThruster_T3,
+    	EQUIP_Sub_AWThruster_T4: EQUIP_Sub_AWThruster_T4,
+    	EQUIP_Sub_CMDProtocol_T4: EQUIP_Sub_CMDProtocol_T4,
+    	EQUIP_Sub_ImAdvRada_T4: EQUIP_Sub_ImAdvRada_T4,
+    	EQUIP_Sub_BattleASST_T4: EQUIP_Sub_BattleASST_T4,
+    	EQUIP_Sub_SpikeShield_T4: EQUIP_Sub_SpikeShield_T4,
+    	EQUIP_System_Backstab_T4: EQUIP_System_Backstab_T4,
+    	EQUIP_System_RebootAlpha_T4: EQUIP_System_RebootAlpha_T4,
+    	EQUIP_System_RebootBeta_T4: EQUIP_System_RebootBeta_T4,
+    	EQUIP_System_RebootGamma_T4: EQUIP_System_RebootGamma_T4,
+    	EQUIP_System_Circulation_T4: EQUIP_System_Circulation_T4,
+    	EQUIP_Sub_HotPack_T4: EQUIP_Sub_HotPack_T4,
+    	EQUIP_Sub_SEyepatch_T4: EQUIP_Sub_SEyepatch_T4,
+    	EQUIP_Chip_AtkTypeB_T5: EQUIP_Chip_AtkTypeB_T5,
+    	EQUIP_Chip_AccTypeB_T5: EQUIP_Chip_AccTypeB_T5,
+    	EQUIP_Chip_DefTypeB_T5: EQUIP_Chip_DefTypeB_T5,
+    	EQUIP_Chip_EvTypeB_T5: EQUIP_Chip_EvTypeB_T5,
+    	EQUIP_Chip_CriTypeB_T5: EQUIP_Chip_CriTypeB_T5,
+    	EQUIP_Chip_HpTypeB_T5: EQUIP_Chip_HpTypeB_T5,
+    	EQUIP_Chip_SpdTypeB_T5: EQUIP_Chip_SpdTypeB_T5,
+    	EQUIP_Sub_SHCA_T4: EQUIP_Sub_SHCA_T4,
+    	EQUIP_Sub_MiniFenrir_T4: EQUIP_Sub_MiniFenrir_T4,
+    	EQUIP_Sub_MiniSnowFeather_T4: EQUIP_Sub_MiniSnowFeather_T4,
+    	EQUIP_Sub_MiniPoi_T4: EQUIP_Sub_MiniPoi_T4,
+    	EQUIP_Sub_MiniFrigga_T4: EQUIP_Sub_MiniFrigga_T4,
+    	EQUIP_Sub_MiniHirume_T4: EQUIP_Sub_MiniHirume_T4,
+    	EQUIP_Sub_MiniBlackWyrm_T4: EQUIP_Sub_MiniBlackWyrm_T4
+    };
+
     // 'return' outside of functionでビルドがコケるのを防ぐ即時実行関数
     (function () {
         const isGameWindow = injection();
@@ -2265,10 +3381,8 @@
         // LAOPLUSオブジェクトを露出させる
         unsafeWindow.LAOPLUS = {
             config: config,
-            tacticsManual: {
-                locale: {},
-                unit: [],
-            },
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            locale: Object.assign({}, locale),
             exploration: [],
             status: status,
             units: new Map(),
@@ -2285,7 +3399,6 @@
         void initResizeObserver();
         initInputObserver();
         initWheelAmplfy();
-        initTacticsManual();
     })();
 
 })();
