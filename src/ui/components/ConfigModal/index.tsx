@@ -450,26 +450,6 @@ export const ConfigModal = () => {
               </div>
             </main>
 
-            <div className="flex flex-col items-center gap-2 p-4">
-              <span className="text-sm text-gray-600">
-                {GM_info.script.name}
-                は以下のサービスが提供するゲームデータを使用しています
-              </span>
-              <a
-                title="滅亡前の戦術教本"
-                href="https://lo.swaytwig.com/"
-                target="_blank"
-                rel="noopener"
-                className="flex items-center gap-1 rounded bg-white p-2 px-3 shadow"
-              >
-                <img src={GM_getResourceURL("TacticsManualIcon")} className="w-12" />
-                <div className="flex flex-col">
-                  <span className="text-lg font-semibold">滅亡前の戦術教本</span>
-                  <span className="text-sm text-gray-400">by WolfgangKurz</span>
-                </div>
-              </a>
-            </div>
-
             <div className="p-4">
               <details className="flex flex-col gap-4">
                 <summary>危険エリア</summary>
