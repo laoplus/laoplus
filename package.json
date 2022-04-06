@@ -1,6 +1,6 @@
 {
     "name": "laoplus",
-    "version": "0.6.1",
+    "version": "1.0.0",
     "author": "Eai <eai@mizle.net>",
     "license": "MIT",
     "scripts": {
@@ -14,6 +14,7 @@
     },
     "devDependencies": {
         "@headlessui/react": "^1.4.3",
+        "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.1.3",
         "@rollup/plugin-typescript": "^8.3.0",
         "@tailwindcss/forms": "^0.4.0",

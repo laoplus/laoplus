@@ -152,6 +152,11 @@ export const incrementDrops = (res: wave_clear["res"]) => {
 
     const equipments = res.ClearRewardInfo.ItemRewardList.reduce(
         (equipmentDrops, item) => {
+            // 棺桶は無視する
+            if (item.ItemKeyString.startsWith("Equip_Chip_Enchant_")) {
+                return equipmentDrops;
+            }
+
             const rank = itemKeyToRank(item.ItemKeyString);
             if (rank === "") return equipmentDrops;
 

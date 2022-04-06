@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { log } from "~/utils";
 import { InvokeProps } from "~/types/api";
 import { invoke as invokeExplorationTimer } from "../explorationTimer/invoke";
 import { invoke as invokeDropNotification } from "../dropNotification/invoke";
 import { invoke as invokeAutorunDetection } from "../autorunDetection/invoke";
 import { invoke as invokeFarmingStats } from "../farmingStats/invoke";
+import { invoke as invokeUnitList } from "../unitList/invoke";
 import { invoke as invokeLevelupDetection } from "../levelupDetection/invoke";
 
 interface ExtendedXHR extends XMLHttpRequest {
@@ -46,6 +49,7 @@ const interceptor = (xhr: ExtendedXHR): void => {
         invokeAutorunDetection(invokeProps);
         invokeFarmingStats(invokeProps);
         invokeLevelupDetection(invokeProps);
+        invokeUnitList(invokeProps);
     } catch (error) {
         log.error("Interceptor", "Error", error);
     }
@@ -53,6 +57,7 @@ const interceptor = (xhr: ExtendedXHR): void => {
 
 export const initInterceptor = () => {
     // オリジナルのメソッド
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const { open, send } = XMLHttpRequest.prototype;
 
     (XMLHttpRequest.prototype as ExtendedXHR).open = function (method, url) {

@@ -95,7 +95,7 @@ export const watchUnitLevel = (res: wave_clear["res"]) => {
                 },
             ],
         };
-        sendToDiscordWebhook(body);
+        void sendToDiscordWebhook(body);
     }
 };
 
@@ -133,6 +133,6 @@ export const watchSkillLevel = (res: wave_clear["res"]) => {
                 },
             ],
         };
-        sendToDiscordWebhook(body);
+        void sendToDiscordWebhook(body);
     }
 };

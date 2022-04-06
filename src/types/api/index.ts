@@ -15,6 +15,7 @@ import {
     facility_upgrade,
     facility_upgrade_confirm,
     facility_work,
+    pclist,
     wave_clear,
 } from "./endpoints";
 
@@ -35,6 +36,7 @@ export type {
     facility_upgrade,
     facility_upgrade_confirm,
     facility_work,
+    pclist,
     wave_clear,
 } from "./endpoints";
 
@@ -123,6 +125,11 @@ export type InvokeProps =
           pathname: "/facility_work";
           req: facility_work["req"];
           res: facility_work["res"];
+      })
+    | (InvokePropsBase & {
+          pathname: "/pclist";
+          req: pclist["req"];
+          res: pclist["res"];
       })
     | (InvokePropsBase & {
           pathname: "/wave_clear";

@@ -332,7 +332,7 @@ LAOPLUS は挙動的には広告ブロッカーみたいなものです、広告
 ## Special Thanks
 
 -   [@rinsuki](https://github.com/rinsuki) : Rollup と GitHub Actions を用いた userscript 開発ベースとして [rinsuki/userscripts](https://github.com/rinsuki/userscripts) を参考にさせていただきました。
--   [@WolfgangKurz](https://github.com/WolfgangKurz) : LAOPLUS にて [滅亡前の戦術教本](https://lo.swaytwig.com/) のデータを用いることをご快諾していただきました。
+-   [@WolfgangKurz](https://github.com/WolfgangKurz) : LAOPLUS にて ~~[滅亡前の戦術教本](https://lo.swaytwig.com/)~~(閉鎖済) のデータを用いることをご快諾していただきました。
 
 ## License
 

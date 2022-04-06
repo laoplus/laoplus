@@ -23,7 +23,7 @@ const sendNotification = () => {
         unsafeWindow.LAOPLUS.config.config.features.discordNotification
             .interests.autorunStop
     ) {
-        sendToDiscordWebhook(body);
+        void sendToDiscordWebhook(body);
     } else {
         log.debug(
             "Autorun Detection",
