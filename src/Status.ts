@@ -41,6 +41,7 @@ export const defaultStatus = {
         latestResources: null,
         currentSquadCosts: null,
     },
+    units: new Map(),
 } as statusType;
 Object.freeze(defaultStatus);
 
