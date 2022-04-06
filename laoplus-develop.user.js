@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name        LAOPLUS-DEVELOP
 // @namespace   net.mizle
-// @version     1646068552-dc88fe770b6609f8ac2c1080e6835349fdf7914c
+// @version     1649241539-2b7e72a04519d645207cde1a3a05af76bbd21585
 // @author      Eai <eai@mizle.net>
 // @description ブラウザ版ラストオリジンのプレイを支援する Userscript
 // @homepageURL https://github.com/eai04191/laoplus
@@ -1076,6 +1076,10 @@
             };
         }, status.status.farmingStats.drops.units);
         const equipments = res.ClearRewardInfo.ItemRewardList.reduce((equipmentDrops, item) => {
+            // 棺桶は無視する
+            if (item.ItemKeyString.startsWith("Equip_Chip_Enchant_")) {
+                return equipmentDrops;
+            }
             const rank = itemKeyToRank(item.ItemKeyString);
             if (rank === "")
                 return equipmentDrops;
