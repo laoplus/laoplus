@@ -10,6 +10,7 @@ import { tailwindConfig, initTailwindCustomStyle } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
 import { initWheelAmplfy } from "./features/wheelAmplify";
 import { exploration_enter } from "./types/api";
+import { PCInfo } from "~/types/api/shared";
 
 type exploration = exploration_enter["res"]["EnterInfo"] & {
     timeoutID: number | null;
@@ -26,6 +27,7 @@ declare global {
             };
             exploration: exploration[];
             status: Status;
+            units: Map<PCInfo["PCId"], PCInfo>;
         };
     }
 }
@@ -47,6 +49,7 @@ declare global {
         },
         exploration: [],
         status: status,
+        units: new Map(),
     };
 
     // @ts-ignore
