@@ -28,8 +28,7 @@ export const PcDropNotification = (res: wave_clear["res"]) => {
             if (pc.Grade === 5 && notifyRankSS === false) return embeds;
 
             const id = pc.PCKeyString.replace(/^Char_/, "").replace(/_N$/, "");
-            const name =
-                unsafeWindow.LAOPLUS.tacticsManual.locale[`UNIT_${id}`];
+            const name = unsafeWindow.LAOPLUS.locale[`UNIT_${id}`];
             const rank = gradeToRank(pc.Grade);
 
             // クラゲ
@@ -44,9 +43,8 @@ export const PcDropNotification = (res: wave_clear["res"]) => {
                     rank !== ""
                         ? colorHexToInteger(rankColor[rank].hex())
                         : undefined,
-                url: `https://lo.swaytwig.com/units/${id}`,
                 thumbnail: {
-                    url: `https://lo.swaytwig.com/assets/webp/tbar/TbarIcon_${id}_N.webp`,
+                    url: `https://cdn.laoplus.net/unit/tbar/TbarIcon_${id}_N.png`,
                 },
             });
 
@@ -82,15 +80,13 @@ export const itemDropNotification = (res: wave_clear["res"]) => {
             if (!item.ItemKeyString.includes("T4")) return embeds;
 
             const localeKey = item.ItemKeyString.replace(/^Equip_/, "EQUIP_");
-            const id = item.ItemKeyString.replace(/^Equip_/, "");
-            const name = unsafeWindow.LAOPLUS.tacticsManual.locale[localeKey];
+            const name = unsafeWindow.LAOPLUS.locale[localeKey];
 
             embeds.push({
                 title: name || localeKey,
                 color: colorHexToInteger(rankColor["SS"].hex()),
-                url: `https://lo.swaytwig.com/equips/${id}`,
                 thumbnail: {
-                    url: `https://lo.swaytwig.com/assets/webp/item/UI_Icon_${item.ItemKeyString}.webp`,
+                    url: `https://cdn.laoplus.net/item/UI_Icon_${item.ItemKeyString}.png`,
                 },
             });
 

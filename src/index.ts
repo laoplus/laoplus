@@ -4,13 +4,12 @@ import { Status } from "./Status";
 import { initUi } from "ui/index";
 import { initInterceptor } from "features/interceptor";
 import { initResizeObserver } from "features/resizeObserver";
-import { initTacticsManual } from "tacticsManual";
-import { TacticsManualUnit } from "./types";
 import { tailwindConfig, initTailwindCustomStyle } from "./ui/tailwind";
 import { initInputObserver } from "./features/inputObserver";
 import { initWheelAmplfy } from "./features/wheelAmplify";
 import { exploration_enter } from "./types/api";
 import { PCInfo } from "~/types/api/shared";
+import locale from "./json/JP.json";
 
 type exploration = exploration_enter["res"]["EnterInfo"] & {
     timeoutID: number | null;
@@ -21,10 +20,7 @@ declare global {
     interface Window {
         LAOPLUS: {
             config: Config;
-            tacticsManual: {
-                locale: { [key: string]: string };
-                unit: TacticsManualUnit[];
-            };
+            locale: { [key: string]: string };
             exploration: exploration[];
             status: Status;
             units: Map<PCInfo["PCId"], PCInfo>;
@@ -43,10 +39,8 @@ declare global {
     // LAOPLUSオブジェクトを露出させる
     unsafeWindow.LAOPLUS = {
         config: config,
-        tacticsManual: {
-            locale: {},
-            unit: [],
-        },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        locale: Object.assign({}, locale),
         exploration: [],
         status: status,
         units: new Map(),
@@ -66,5 +60,4 @@ declare global {
     void initResizeObserver();
     initInputObserver();
     initWheelAmplfy();
-    initTacticsManual();
 })();

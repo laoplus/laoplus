@@ -2,6 +2,7 @@ import pluginUserscript from "rollup-plugin-userscript";
 import pluginTypescript from "@rollup/plugin-typescript";
 import pluginNodeResolve from "@rollup/plugin-node-resolve";
 import pluginPostcss from "rollup-plugin-postcss";
+import pluginJson from "@rollup/plugin-json";
 import pkg from "./package.json";
 
 export default {
@@ -14,6 +15,7 @@ export default {
         },
     ],
     plugins: [
+        pluginJson(),
         pluginPostcss(),
         pluginUserscript(__dirname + "/src/banner.js", (meta) =>
             meta
