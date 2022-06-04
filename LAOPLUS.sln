@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LAOPLUS", "LAOPLUS.csproj", "{2D090841-2BFD-4FF6-8337-4932D4839215}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D090841-2BFD-4FF6-8337-4932D4839215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D090841-2BFD-4FF6-8337-4932D4839215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D090841-2BFD-4FF6-8337-4932D4839215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D090841-2BFD-4FF6-8337-4932D4839215}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F500832D-1530-417E-B73B-0FB0C615F2D6}
+	EndGlobalSection
+EndGlobal

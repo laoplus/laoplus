@@ -24,7 +24,7 @@
 
 [![Discord Invite](https://invidget.switchblade.xyz/EGWqTuhjrE?theme=light)](https://discord.gg/EGWqTuhjrE)
 
-新機能の提案や開発の進捗報告などが Discord で行われています。参加してください！
+新機能の提案や開発の進捗報告などが Discord で行われています。ご参加ください！
 
 ## 機能
 
