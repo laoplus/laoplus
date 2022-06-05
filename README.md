@@ -54,6 +54,22 @@
 
 </details>
 
+## 設定
+
+![](https://user-images.githubusercontent.com/3516343/172048318-2b80c9eb-fcf1-4dd3-bc1e-cffb4a4b9a73.png)
+
+AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
+
+設定項目の変更後は上の`Save Preferences`を押して保存することを忘れないでください。
+
+> **Warning**
+> Discord Webhook URL の変更後は再起動が必要です
+> 正しい Webhook URL が設定されている場合起動時に通知が呼びだされます。
+
+設定の実体は `lastoriginインストール先\BepInEx\config\net.laoplus.LAOPLUS.cfg`に保存されます。
+
+不具合などで一時的にラストオリジンをアンインストールする際はこのファイルのバックアップを取り、新しい環境に差し替えることで LAOPLUS の設定を引き継ぐことが出来ます。
+
 ## 開発ポリシー
 
 この MOD は不正をするためのものではありません。
