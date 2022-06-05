@@ -27,7 +27,9 @@ namespace LAOPLUS
 
             try
             {
-                var body = $"{{\"embeds\": [{{\"title\": \"{message}\"}}]}}";
+                // JSONに改行は含めない
+                var escapedMessage = message.Replace(Environment.NewLine, "\\n");
+                var body = $"{{\"embeds\": [{{\"title\": \"{escapedMessage}\"}}]}}";
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(this.uri, content);
                 var success = response.IsSuccessStatusCode;
