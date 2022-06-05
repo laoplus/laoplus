@@ -28,11 +28,36 @@
 
 ## 機能
 
-機能がここに記載されます
+<details>
+<summary><b>周回停止通知</b></summary>
+
+![image](https://user-images.githubusercontent.com/3516343/172043568-021b7ab2-d95d-4d48-8ab2-d6898d356db7.png)
+
+周回停止時に画面に出る「以下の理由で、これ以上反復戦闘が行えません。」から始まるメッセージの通知を検出したとき Discord に通知を送信します。
+
+---
+
+</details>
+
+<details>
+<summary><b>ホイールスクロール増幅</b></summary>
+
+|                                                デフォルト                                                 |                                               増幅倍率 6 倍                                               |
+| :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
+| ![](https://user-images.githubusercontent.com/3516343/172043512-a679f80a-91d2-49b3-838b-4483b3189f3e.gif) | ![](https://user-images.githubusercontent.com/3516343/172043513-19b3ce33-dcc5-4220-b716-b87b459a3f26.gif) |
+
+戦闘員一覧や装備一覧などのウィンドウでホイールスクロールした際に移動量がやたら小さい問題に対する修正です。
+
+スクロールが発生したときにこの倍率を掛け算た値分移動するようになります。
+
+---
+
+</details>
 
 ## 開発ポリシー
 
-この MOD は不正をするためのものではないため、自動操作（マクロ）や送受信内容の改ざん（チート）は行いません。
+この MOD は不正をするためのものではありません。
+自動操作（マクロ）や送受信内容の改ざん（チート）の機能はありません。
 
 ## インストール
 
@@ -41,13 +66,63 @@
 LAOPLUS を利用したことによりアカウント BAN などの被害が発生したとしても、開発者は一切の責任を負いません。
 
 <details>
-<summary><b>インストール手順</b></summary>
+<summary><b>初回インストール手順</b></summary>
 
-1. [releases](https://github.com/eai04191/laoplus/releases) から最新の `LAOPLUS_x_x_x.zip` をダウンロードする
-2. zip ファイルの中身を LastOrigin のインストールフォルダに貼り付ける
-3. ゲームを起動すると反映されているはずです
+LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちらにも導入可能です。
 
-不明な場合は [Discord](https://discord.gg/EGWqTuhjrE) か[作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
+1. [releases](https://github.com/eai04191/laoplus/releases) から最新の `LAOPLUS_x.x.x_AIO.zip` をダウンロードする
+2. `winhttp.dll`などが入っている zip ファイルの中身をコピーする
+
+    - ![](https://user-images.githubusercontent.com/3516343/172044273-07f20b45-7f27-453b-8c72-d27bacd602e9.png)
+
+3. (`LastOrigin_R.exe`か`LastOrigin_N.exe`のある) 「LastOrigin のインストールフォルダ」に貼り付ける
+
+    - ![](https://user-images.githubusercontent.com/3516343/172044274-6f21a7a1-0793-447d-90e0-02eea060a945.png)
+
+4. ゲームを起動すると反映されているはずです
+
+> **Note**
+>
+> LastOrigin のインストールフォルダは DMM GAME PLAYER の **詳細** から **ダウンロード先フォルダの表示** を選択することで開くことが出来ます
+>
+> 1. ![](https://user-images.githubusercontent.com/3516343/172044134-f8f994ca-24d3-4f80-bb47-18a571cd49af.png)
+> 2. ![](https://user-images.githubusercontent.com/3516343/172044132-3d5d91a0-1d63-456a-b6c1-02da7090a525.png)
+
+> **Note**
+>
+> AIO.zip はこれだけで導入が完了できるように
+>
+> -   最新の BepinEx の Bleeding Edge ビルド
+> -   [BepInExConfigManager](https://github.com/sinai-dev/BepInExConfigManager)
+> -   LAOPLUS
+>
+> が含まれています。
+>
+> PluginOnly.zip には LAOPLUS のみが含まれています。
+
+手順などが不明な場合は [Discord](https://discord.gg/EGWqTuhjrE) か[作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
+
+---
+
+</details>
+
+<details>
+<summary><b>アンインストール手順</b></summary>
+
+### 一時的に無効化したい場合
+
+LastOrigin のインストールフォルダにある `winhttp.dll` を、デスクトップなど別の場所に移動させるとすべての mod が読み込まれなくなります。
+
+### 完全にアンインストールしたい場合
+
+LastOrigin のインストールフォルダにある
+
+-   winhttp.dll
+-   doorstop_config.ini
+-   mono フォルダ
+-   BepInEx フォルダ
+
+を削除してください。
 
 ---
 
