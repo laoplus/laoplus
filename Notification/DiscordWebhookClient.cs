@@ -20,7 +20,7 @@ namespace LAOPLUS
 
         public async Task<bool> SendMessageAsync(string message)
         {
-            if (Plugin.configUseDiscordWebhook.Value)
+            if (Plugin.configUseDiscordWebhook.Value == false)
             {
                 return false;
             }
