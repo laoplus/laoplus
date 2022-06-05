@@ -33,7 +33,13 @@ namespace LAOPLUS
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
                 var response = await client.PostAsync(this.uri, content);
                 var success = response.IsSuccessStatusCode;
-                Plugin.Log.LogInfo($"SendMessageAsync on {this.GetClientName} is Success?" + success);
+                Plugin.Log.LogInfo($"SendMessageAsync on {this.GetClientName} is Success? {success}");
+
+                if (success == false)
+                {
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Plugin.Log.LogWarning($"The request was unsuccessful: {responseContent}");
+                }
 
                 return success;
             }
