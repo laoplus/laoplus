@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>net.laoplus.LAOPLUS</AssemblyName>
+        <Product>LAOPLUS</Product>
+        <VersionPrefix>2.0.0</VersionPrefix>
+        <VersionSuffix>alpha1</VersionSuffix>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <DebugType>none</DebugType>
+        <PackageProjectUrl>https://github.com/eai04191/laoplus</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-*" IncludeAssets="compile" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp" Private="False">
+            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
+        </Reference>
+        <Reference Include="Il2Cppmscorlib" Private="False">
+            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule" Private="False">
+            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Exec Command="cd $(SolutionDir)scripts\&#xD;&#xA;call PreBuild.bat" />
+    </Target>
+</Project>
