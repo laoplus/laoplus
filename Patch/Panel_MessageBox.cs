@@ -25,8 +25,7 @@ namespace LAOPLUS
 
             if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
             {
-                string data = msg.Replace(Environment.NewLine, "\n");
-                Plugin.NotificationClients.ForEach(async w => await w.SendMessageAsync(data));
+                Plugin.NotificationClients.ForEach(async w => await w.SendMessageAsync(msg));
             }
         }
     }

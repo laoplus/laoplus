@@ -25,11 +25,31 @@ namespace LAOPLUS
                 return false;
             }
 
-            var body = $"{{\"embeds\": [{{\"title\": \"{message}\"}}]}}";
-            var content = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(this.uri, content);
-            Plugin.Log.LogInfo($"SendMessageAsync on {this.GetClientName} is Success?" + response.IsSuccessStatusCode);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                // JSONに改行は含めない
+                var escapedMessage = message.Replace(Environment.NewLine, "\\n");
+                var body = $"{{\"embeds\": [{{\"title\": \"{escapedMessage}\"}}]}}";
+                var content = new StringContent(body, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(this.uri, content);
+                var success = response.IsSuccessStatusCode;
+                Plugin.Log.LogInfo($"SendMessageAsync on {this.GetClientName} is Success? {success}");
+
+                if (success == false)
+                {
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Plugin.Log.LogWarning($"The request was unsuccessful: {responseContent}");
+                }
+
+                return success;
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.LogError(e.Message);
+                Plugin.Log.LogError(e.ToString());
+
+                return false;
+            }
         }
     }
 }
