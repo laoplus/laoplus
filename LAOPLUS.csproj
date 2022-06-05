@@ -21,6 +21,12 @@
         <Reference Include="Assembly-CSharp" Private="False">
             <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
         </Reference>
+        <Reference Include="Il2Cppmscorlib" Private="False">
+            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule" Private="False">
+            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>

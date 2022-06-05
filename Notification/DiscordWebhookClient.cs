@@ -20,6 +20,11 @@ namespace LAOPLUS
 
         public async Task<bool> SendMessageAsync(string message)
         {
+            if (Plugin.configUseDiscordWebhook.Value)
+            {
+                return false;
+            }
+
             var body = $"{{\"embeds\": [{{\"title\": \"{message}\"}}]}}";
             var content = new StringContent(body, Encoding.UTF8, "application/json");
             var response = await client.PostAsync(this.uri, content);

@@ -17,10 +17,15 @@ namespace LAOPLUS
         internal static new ManualLogSource Log;
         internal static HttpClient httpClient = new();
 
-        private ConfigEntry<string> configDiscordWebhookUrl;
-        private ConfigEntry<bool> configSendDiscordWebhook;
+        // Dev
+        public static ConfigEntry<bool> configVerboseLogging;
+        // Discord
+        public static ConfigEntry<string> configDiscordWebhookUrl;
+        public static ConfigEntry<bool> configUseDiscordWebhook;
+        // ScrollPatch
+        public static ConfigEntry<float> configScrollPatchMultiplier;
 
-        static List<NotificationClient> NotificationClients = new();
+        public static List<NotificationClient> NotificationClients = new();
 
         public override void Load()
         {
@@ -29,41 +34,25 @@ namespace LAOPLUS
 
             httpClient.DefaultRequestHeaders.Add("User-Agent", $"{PluginInfo.PLUGIN_NAME}/{PluginInfo.PLUGIN_VERSION}");
 
-            configDiscordWebhookUrl = Config.Bind("Discord", "Webhook URL", "", "Discord webhook URL");
-            configSendDiscordWebhook = Config.Bind("Discord", "Send webhook", true, "Send Discord webhook");
+            // Dev
+            configVerboseLogging = Config.Bind("Dev", "VerboseLogging", false, new ConfigDescription("Enable verbose logging", null, "Advanced"));
 
+            // Discord
+            configDiscordWebhookUrl = Config.Bind("Discord Notification", "Webhook URL", "", "Discord webhook URL");
+            configUseDiscordWebhook = Config.Bind("Discord Notification", "Webhookを送信する", true, "すべてのWebhookの無効・有効を切り替えます");
             if (!(configDiscordWebhookUrl.Value.Equals("")))
             {
                 var Discord = new DiscordWebhookClient(httpClient, configDiscordWebhookUrl.Value);
                 NotificationClients.Add(Discord);
             }
 
+            // ScrollPatch
+            configScrollPatchMultiplier = Config.Bind("Scroll Patch", "スクロール倍率", 6.0f, "戦闘員・装備リストなどのホイールスクロール倍率");
+
             Log.LogInfo($"{NotificationClients.Count} notification client(s) loaded.");
-            NotificationClients.ForEach(async w => await w.SendMessageAsync("Plugin loaded!"));
+            NotificationClients.ForEach(async w => await w.SendMessageAsync($"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} loaded!"));
 
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
-        }
-
-        [HarmonyPatch]
-        public static class PanelPatch
-        {
-            static IEnumerable<MethodBase> TargetMethods()
-            {
-                MethodInfo[] methods = typeof(Panel_MessageBox).GetMethods();
-                return methods.Where(method => method.Name == "SetMessage").Cast<MethodBase>();
-            }
-
-            static void Postfix(object[] __args, MethodBase __originalMethod)
-            {
-                string msg = (string)__args[0];
-                Log.LogInfo("msg: " + msg);
-
-                if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
-                {
-                    string data = msg.Replace(Environment.NewLine, "\n");
-                    NotificationClients.ForEach(w => w.SendMessageAsync(data));
-                }
-            }
         }
     }
 }
