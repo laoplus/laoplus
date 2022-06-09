@@ -3,10 +3,14 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 
-namespace LAOPLUS.Patch
+namespace LAOPLUS.Feature
 {
+    /// <summary>
+    /// メッセージボックスの表示をフックする機能
+    /// 内容に応じた通知など
+    /// </summary>
     [HarmonyPatch]
-    public static class PanelPatch
+    public static class MessageBoxInterception
     {
         static IEnumerable<MethodBase> TargetMethods()
         {

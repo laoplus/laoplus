@@ -1,11 +1,14 @@
 using HarmonyLib;
 
-namespace LAOPLUS.Patch
+namespace LAOPLUS.Feature
 {
+    /// <summary>
+    /// タイトル画面のバージョン情報にLAOPLUSのバージョンを表示する機能
+    /// </summary>
     [HarmonyPatch(typeof(Panel_Title), nameof(Panel_Title.Start))]
-    public static class TitlePatch
+    public static class TitleScreenVersion
     {
-        private static void Postfix(Panel_Title __instance)
+        static void Postfix(Panel_Title __instance)
         {
             __instance._lblVersion.text +=
                 $"\n{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION}";

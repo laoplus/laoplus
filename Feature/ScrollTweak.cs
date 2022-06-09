@@ -1,9 +1,12 @@
 using HarmonyLib;
 
-namespace LAOPLUS.Patch
+namespace LAOPLUS.Feature
 {
+    /// <summary>
+    /// ホイールスクロールに関連する機能
+    /// </summary>
     [HarmonyPatch(typeof(UIReuseScrollView), nameof(UIReuseScrollView.Scroll))]
-    public static class ScrollPatch
+    public static class ScrollTweak
     {
         static void Prefix(ref float delta)
         {

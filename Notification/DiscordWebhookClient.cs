@@ -6,15 +6,15 @@ namespace LAOPLUS.Notification
 {
     internal class DiscordWebhookClient : INotificationClient
     {
-        internal readonly HttpClient Client;
-        internal readonly Uri Uri;
+        readonly HttpClient _client;
+        readonly Uri _uri;
 
-        public string GetClientName => "Discord";
+        string GetClientName => "Discord";
 
         public DiscordWebhookClient(HttpClient client, string webhookUrl)
         {
-            this.Client = client;
-            this.Uri = new Uri(webhookUrl);
+            this._client = client;
+            this._uri = new Uri(webhookUrl);
         }
 
         public async void SendMessageAsync(string message)
@@ -30,7 +30,7 @@ namespace LAOPLUS.Notification
                 var escapedMessage = message.Replace(Environment.NewLine, "\\n");
                 var body = $"{{\"embeds\": [{{\"title\": \"{escapedMessage}\"}}]}}";
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
-                var response = await this.Client.PostAsync(this.Uri, content);
+                var response = await this._client.PostAsync(this._uri, content);
                 var success = response.IsSuccessStatusCode;
                 LAOPLUS.Log.LogInfo(
                     $"SendMessageAsync on {this.GetClientName} is Success? {success}"
