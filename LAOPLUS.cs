@@ -27,6 +27,7 @@ namespace LAOPLUS
 
         // ScrollPatch
         public static ConfigEntry<float> ConfigScrollPatchMultiplier;
+        public static ConfigEntry<bool> ConfigDisableScrollingOoB;
 
         public static readonly List<INotificationClient> NotificationClients = new();
 
@@ -67,12 +68,18 @@ namespace LAOPLUS
                 NotificationClients.Add(discord);
             }
 
-            // ScrollPatch
+            // ScrollTweak
             ConfigScrollPatchMultiplier = Config.Bind(
                 "Scroll Patch",
                 "スクロール倍率",
                 6.0f,
                 "戦闘員・装備リストなどのホイールスクロール倍率"
+            );
+            ConfigDisableScrollingOoB = Config.Bind(
+                "Scroll Patch",
+                "範囲外へのスクロールを無効にする",
+                true,
+                "リストでのスクロール時に項目の範囲外までスクロールしないようにします"
             );
 
             Log.LogInfo($"{NotificationClients.Count} notification client(s) loaded.");
