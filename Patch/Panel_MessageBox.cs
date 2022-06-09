@@ -1,10 +1,9 @@
-using HarmonyLib;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
 
-namespace LAOPLUS
+namespace LAOPLUS.Patch
 {
     [HarmonyPatch]
     public static class PanelPatch
@@ -12,20 +11,20 @@ namespace LAOPLUS
         static IEnumerable<MethodBase> TargetMethods()
         {
             MethodInfo[] methods = typeof(Panel_MessageBox).GetMethods();
-            return methods.Where(method => method.Name == "SetMessage").Cast<MethodBase>();
+            return methods.Where(method => method.Name == "SetMessage");
         }
 
-        static void Postfix(object[] __args, MethodBase __originalMethod)
+        static void Postfix(object[] __args)
         {
             string msg = (string)__args[0];
-            if (Plugin.configVerboseLogging.Value)
+            if (LAOPLUS.ConfigVerboseLogging.Value)
             {
-                Plugin.Log.LogInfo($"Panel_MessageBox.SetMessage: {msg}");
+                LAOPLUS.Log.LogInfo($"Panel_MessageBox.SetMessage: {msg}");
             }
 
             if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
             {
-                Plugin.NotificationClients.ForEach(async w => await w.SendMessageAsync(msg));
+                LAOPLUS.NotificationClients.ForEach(w => w.SendMessageAsync(msg));
             }
         }
     }

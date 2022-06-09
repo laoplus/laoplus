@@ -1,11 +1,7 @@
-using System.Threading.Tasks;
-
-namespace LAOPLUS
+namespace LAOPLUS.Notification
 {
-    public interface NotificationClient
+    public interface INotificationClient
     {
-        string GetClientName { get; }
-        Task<bool> SendMessageAsync(string message);
-
+        void SendMessageAsync(string message);
     }
 }

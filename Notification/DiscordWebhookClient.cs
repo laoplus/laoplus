@@ -1,28 +1,27 @@
 using System;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace LAOPLUS
+namespace LAOPLUS.Notification
 {
-    internal class DiscordWebhookClient : NotificationClient
+    internal class DiscordWebhookClient : INotificationClient
     {
-        internal readonly HttpClient client;
-        internal readonly Uri uri;
+        internal readonly HttpClient Client;
+        internal readonly Uri Uri;
 
         public string GetClientName => "Discord";
 
         public DiscordWebhookClient(HttpClient client, string webhookUrl)
         {
-            this.client = client;
-            this.uri = new Uri(webhookUrl);
+            this.Client = client;
+            this.Uri = new Uri(webhookUrl);
         }
 
-        public async Task<bool> SendMessageAsync(string message)
+        public async void SendMessageAsync(string message)
         {
-            if (Plugin.configUseDiscordWebhook.Value == false)
+            if (LAOPLUS.ConfigUseDiscordWebhook.Value == false)
             {
-                return false;
+                return;
             }
 
             try
@@ -31,24 +30,22 @@ namespace LAOPLUS
                 var escapedMessage = message.Replace(Environment.NewLine, "\\n");
                 var body = $"{{\"embeds\": [{{\"title\": \"{escapedMessage}\"}}]}}";
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(this.uri, content);
+                var response = await this.Client.PostAsync(this.Uri, content);
                 var success = response.IsSuccessStatusCode;
-                Plugin.Log.LogInfo($"SendMessageAsync on {this.GetClientName} is Success? {success}");
+                LAOPLUS.Log.LogInfo(
+                    $"SendMessageAsync on {this.GetClientName} is Success? {success}"
+                );
 
                 if (success == false)
                 {
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    Plugin.Log.LogWarning($"The request was unsuccessful: {responseContent}");
+                    LAOPLUS.Log.LogWarning($"The request was unsuccessful: {responseContent}");
                 }
-
-                return success;
             }
             catch (Exception e)
             {
-                Plugin.Log.LogError(e.Message);
-                Plugin.Log.LogError(e.ToString());
-
-                return false;
+                LAOPLUS.Log.LogError(e.Message);
+                LAOPLUS.Log.LogError(e.ToString());
             }
         }
     }
