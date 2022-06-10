@@ -29,6 +29,9 @@ namespace LAOPLUS
         public static ConfigEntry<float> ConfigScrollPatchMultiplier;
         public static ConfigEntry<bool> ConfigDisableScrollingOoB;
 
+        const string ConfigBaseLabel = "Base / 基地";
+        public static ConfigEntry<bool> ConfigAutoPressRestartWhenRewarded;
+
         public static readonly List<INotificationClient> NotificationClients = new();
 
         public override void Load()
@@ -80,6 +83,15 @@ namespace LAOPLUS
                 "範囲外へのスクロールを無効にする",
                 true,
                 "リストでのスクロール時に項目の範囲外までスクロールしないようにします"
+            );
+
+            // Base / 基地
+            ConfigAutoPressRestartWhenRewarded = Config.Bind(
+                ConfigBaseLabel,
+                "Automatic restart when rewarded / 受取時自動再作動",
+                true,
+                "When you receive the production reward at the production facility in base, automatically press the restart button in the pop-up.\n"
+                    + "基地の生産施設にて製作報酬を受取時、自動でポップアップ内の再作動ボタンを押します"
             );
 
             Log.LogInfo($"{NotificationClients.Count} notification client(s) loaded.");
