@@ -19,7 +19,7 @@ namespace LAOPLUS.Notification
 
         public async void SendMessageAsync(string message)
         {
-            if (LAOPLUS.ConfigUseDiscordWebhook.Value == false)
+            if (LAOPLUS.ConfigDiscordWebhookEnabled.Value == false)
             {
                 return;
             }

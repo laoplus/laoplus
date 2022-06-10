@@ -18,16 +18,16 @@ namespace LAOPLUS
         internal new static ManualLogSource Log;
         private static readonly HttpClient HttpClient = new();
 
-        // Dev
+        const string ConfigDevLabel = "Dev / 開発";
         public static ConfigEntry<bool> ConfigVerboseLogging;
 
-        // Discord
+        const string ConfigDiscordLabel = "Discord";
         public static ConfigEntry<string> ConfigDiscordWebhookUrl;
-        public static ConfigEntry<bool> ConfigUseDiscordWebhook;
+        public static ConfigEntry<bool> ConfigDiscordWebhookEnabled;
 
-        // ScrollPatch
+        const string ConfigScrollLabel = "Scroll / スクロール";
         public static ConfigEntry<float> ConfigScrollPatchMultiplier;
-        public static ConfigEntry<bool> ConfigDisableScrollingOoB;
+        public static ConfigEntry<bool> ConfigPreventsScrollingOoB;
 
         const string ConfigBaseLabel = "Base / 基地";
         public static ConfigEntry<bool> ConfigAutoPressRestartWhenRewarded;
@@ -46,7 +46,7 @@ namespace LAOPLUS
 
             // Dev
             ConfigVerboseLogging = Config.Bind(
-                "Dev",
+                ConfigDevLabel,
                 "VerboseLogging",
                 false,
                 new ConfigDescription("Enable verbose logging", null, "Advanced")
@@ -54,16 +54,17 @@ namespace LAOPLUS
 
             // Discord
             ConfigDiscordWebhookUrl = Config.Bind(
-                "Discord Notification",
+                ConfigDiscordLabel,
                 "Webhook URL",
                 "",
                 "Discord webhook URL"
             );
-            ConfigUseDiscordWebhook = Config.Bind(
-                "Discord Notification",
-                "Webhookを送信する",
+            ConfigDiscordWebhookEnabled = Config.Bind(
+                ConfigDiscordLabel,
+                "Send a notification / 通知を送信する",
                 true,
-                "すべてのWebhookの無効・有効を切り替えます"
+                "Toggles whether all notifications are disabled or enabled.\n"
+                    + "すべての通知の無効・有効を切り替えます"
             );
             if (!(ConfigDiscordWebhookUrl.Value.Equals("")))
             {
@@ -71,18 +72,20 @@ namespace LAOPLUS
                 NotificationClients.Add(discord);
             }
 
-            // ScrollTweak
+            // Scroll / スクロール
             ConfigScrollPatchMultiplier = Config.Bind(
-                "Scroll Patch",
-                "スクロール倍率",
+                ConfigScrollLabel,
+                "Scroll Multiplier / スクロール倍率",
                 6.0f,
-                "戦闘員・装備リストなどのホイールスクロール倍率"
+                "Wheel scroll multiplier for combatant, equipment list, etc.\n"
+                    + "戦闘員・装備リストなどのホイールスクロール倍率"
             );
-            ConfigDisableScrollingOoB = Config.Bind(
-                "Scroll Patch",
-                "範囲外へのスクロールを無効にする",
+            ConfigPreventsScrollingOoB = Config.Bind(
+                ConfigScrollLabel,
+                "Disable Scrolling to Out of Bounds / 範囲外へのスクロールを無効にする",
                 true,
-                "リストでのスクロール時に項目の範囲外までスクロールしないようにします"
+                "Prevents scrolling outside the bounds of items when scrolling in the list\n"
+                    + "リストでのスクロール時に項目の範囲外までスクロールしないようにします"
             );
 
             // Base / 基地

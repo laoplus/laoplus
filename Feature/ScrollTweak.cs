@@ -30,7 +30,7 @@ namespace LAOPLUS.Feature
         {
             static void Prefix(UIReuseScrollView __instance)
             {
-                if (LAOPLUS.ConfigDisableScrollingOoB.Value)
+                if (LAOPLUS.ConfigPreventsScrollingOoB.Value)
                 {
                     __instance.dragEffect = UIReuseScrollView.DragEffect.Momentum;
                 }
@@ -46,7 +46,7 @@ namespace LAOPLUS.Feature
         {
             static void Prefix(UIScrollView __instance)
             {
-                if (LAOPLUS.ConfigDisableScrollingOoB.Value)
+                if (LAOPLUS.ConfigPreventsScrollingOoB.Value)
                 {
                     __instance.dragEffect = UIScrollView.DragEffect.Momentum;
                 }
