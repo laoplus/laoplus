@@ -6,7 +6,7 @@ using UnityEngine;
 namespace LAOPLUS.Feature
 {
     [HarmonyPatch(typeof(Panel_StageBattle), nameof(Panel_StageBattle.OnEvent))]
-    public static class LogBattleLog
+    public static class LoggingBattleLog
     {
         static void Postfix(Base msg, Panel_StageBattle __instance)
         {
@@ -15,7 +15,7 @@ namespace LAOPLUS.Feature
                 return;
             }
 
-            if (msg.Type != eType.BattleLogText)
+            if (msg.Type is not (eType.BattleLogText or eType.ReadyToGame))
             {
                 return;
             }

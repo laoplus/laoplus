@@ -57,7 +57,7 @@
 <details>
 <summary><b>バトルログを出力</b></summary>
 
-![](https://user-images.githubusercontent.com/3516343/173231342-598bb042-30d7-42fe-bc08-62d886656d1f.png)
+![](https://user-images.githubusercontent.com/3516343/173231815-47bfff0e-3523-4ec6-a4aa-9e6c6f872738.png)
 
 バトルログをBepinExのログに出力します。特定のギミックを確認したい場合などの一時的な利用が想定されています。
 
