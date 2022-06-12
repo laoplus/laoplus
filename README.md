@@ -54,6 +54,19 @@
 
 </details>
 
+<details>
+<summary><b>バトルログを出力</b></summary>
+
+![](https://user-images.githubusercontent.com/3516343/173231342-598bb042-30d7-42fe-bc08-62d886656d1f.png)
+
+バトルログをBepinExのログに出力します。特定のギミックを確認したい場合などの一時的な利用が想定されています。
+
+ログはデフォルトで `lastoriginインストール先\BepinEx\LogOutput.log` に保存され、再起動時に過去のログが削除されます。
+
+---
+
+</details>
+
 ## 設定
 
 ![](https://user-images.githubusercontent.com/3516343/172048318-2b80c9eb-fcf1-4dd3-bc1e-cffb4a4b9a73.png)
