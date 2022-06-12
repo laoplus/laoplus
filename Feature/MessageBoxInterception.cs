@@ -25,7 +25,7 @@ namespace LAOPLUS.Feature
 
             if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
             {
-                LAOPLUS.NotificationClients.ForEach(w => w.SendMessageAsync(msg));
+                LAOPLUS.SendMessageToAllNotificationClients(msg);
             }
         }
     }

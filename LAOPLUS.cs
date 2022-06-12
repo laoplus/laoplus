@@ -96,11 +96,8 @@ namespace LAOPLUS
         static void SendTestMessageToAllNotificationClients()
         {
             Log.LogInfo($"{NotificationClients.Count} notification client(s) loaded.");
-            NotificationClients.ForEach(
-                w =>
-                    w.SendMessageAsync(
-                        $"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} loaded!"
-                    )
+            SendMessageToAllNotificationClients(
+                $"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} loaded!"
             );
         }
 
@@ -112,6 +109,11 @@ namespace LAOPLUS
             AddClientToNotificationClients(discordWebhookClient);
 
             SendTestMessageToAllNotificationClients();
+        }
+
+        public static void SendMessageToAllNotificationClients(string message)
+        {
+            NotificationClients.ForEach(w => w.SendMessageAsync(message));
         }
 
         public override void Load()
