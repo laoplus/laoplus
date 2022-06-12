@@ -1,4 +1,3 @@
-using System;
 using HarmonyLib;
 
 namespace LAOPLUS.Feature
@@ -14,23 +13,22 @@ namespace LAOPLUS.Feature
         [HarmonyPatch(typeof(UIScrollView), nameof(UIScrollView.Scroll))]
         static void Prefix(ref float delta)
         {
-            delta = delta * LAOPLUS.ConfigScrollPatchMultiplier.Value;
-            if (LAOPLUS.ConfigVerboseLogging.Value)
-            {
-                LAOPLUS.Log.LogInfo($"ScrollPatch: {delta}");
-            }
+            delta *= LAOPLUS.ConfigScrollPatchMultiplier.Value;
+            LAOPLUS.Log.LogDebug($"ScrollPatch: {delta}");
         }
 
         [HarmonyPatch(
             typeof(UIReuseScrollView),
             nameof(UIReuseScrollView.RestrictWithinBounds),
-            new[] { typeof(bool), typeof(bool), typeof(bool) }
+            typeof(bool),
+            typeof(bool),
+            typeof(bool)
         )]
         public static class ScrollingOoBPatchForUIReuseScrollView
         {
             static void Prefix(UIReuseScrollView __instance)
             {
-                if (LAOPLUS.ConfigDisableScrollingOoB.Value)
+                if (LAOPLUS.ConfigPreventsScrollingOoB.Value)
                 {
                     __instance.dragEffect = UIReuseScrollView.DragEffect.Momentum;
                 }
@@ -40,13 +38,15 @@ namespace LAOPLUS.Feature
         [HarmonyPatch(
             typeof(UIScrollView),
             nameof(UIScrollView.RestrictWithinBounds),
-            new[] { typeof(bool), typeof(bool), typeof(bool) }
+            typeof(bool),
+            typeof(bool),
+            typeof(bool)
         )]
         public static class ScrollingOoBPatchForUIScrollView
         {
             static void Prefix(UIScrollView __instance)
             {
-                if (LAOPLUS.ConfigDisableScrollingOoB.Value)
+                if (LAOPLUS.ConfigPreventsScrollingOoB.Value)
                 {
                     __instance.dragEffect = UIScrollView.DragEffect.Momentum;
                 }
