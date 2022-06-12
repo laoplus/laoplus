@@ -42,7 +42,7 @@
 <details>
 <summary><b>スクロール倍率</b></summary>
 
-|                                                デフォルト                                                 |                                               増幅倍率 6 倍                                               |
+|                                                デフォルト                                                 |                                            スクロール倍率 6 倍                                            |
 | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
 | ![](https://user-images.githubusercontent.com/3516343/172043512-a679f80a-91d2-49b3-838b-4483b3189f3e.gif) | ![](https://user-images.githubusercontent.com/3516343/172043513-19b3ce33-dcc5-4220-b716-b87b459a3f26.gif) |
 
@@ -70,7 +70,7 @@ https://user-images.githubusercontent.com/3516343/173115422-5cf61115-4a0a-4cdf-9
 
 ![](https://user-images.githubusercontent.com/3516343/173231815-47bfff0e-3523-4ec6-a4aa-9e6c6f872738.png)
 
-バトルログをBepinExのログに出力します。特定のギミックを確認したい場合などの一時的な利用が想定されています。
+バトルログを BepinEx のログに出力します。特定のギミックを確認したい場合などの一時的な利用が想定されています。
 
 ログはデフォルトで `lastoriginインストール先\BepinEx\LogOutput.log` に保存され、再起動時に過去のログが削除されます。
 
@@ -80,15 +80,18 @@ https://user-images.githubusercontent.com/3516343/173115422-5cf61115-4a0a-4cdf-9
 
 ## 設定
 
-![](https://user-images.githubusercontent.com/3516343/172048318-2b80c9eb-fcf1-4dd3-bc1e-cffb4a4b9a73.png)
+![](https://user-images.githubusercontent.com/3516343/173232374-95b1b5c5-267f-4abe-8d1a-5d4bf236ae43.png)
 
 AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
 
-設定項目の変更後は上の`Save Preferences`を押して保存することを忘れないでください。
+**設定項目の変更後は上の`Save Preferences`を押して保存することを忘れないでください。**
 
-> **Warning**
-> Discord Webhook URL の変更後は再起動が必要です
-> 正しい Webhook URL が設定されている場合起動時に通知が呼びだされます。
+> **Note**
+>
+> 正しい Webhook URL が設定された場合、設定保存時とゲーム起動時に通知が呼びだされます。
+>
+> ![](https://user-images.githubusercontent.com/3516343/173232340-8166f64e-2f2c-4cf3-aea1-1abf4d0f7d39.png)
+
 
 設定の実体は `lastoriginインストール先\BepInEx\config\net.laoplus.LAOPLUS.cfg`に保存されます。
 
@@ -97,7 +100,8 @@ AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が
 ## 開発ポリシー
 
 この MOD は不正をするためのものではありません。
-自動操作（マクロ）や送受信内容の改ざん（チート）の機能はありません。
+
+マクロのような自動操作や通信内容を改ざんする機能はありません。
 
 ## インストール
 
@@ -106,7 +110,7 @@ AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が
 LAOPLUS を利用したことによりアカウント BAN などの被害が発生したとしても、開発者は一切の責任を負いません。
 
 <details>
-<summary><b>初回インストール手順</b></summary>
+<summary><b>新規インストール手順</b></summary>
 
 LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちらにも導入可能です。
 
@@ -132,8 +136,9 @@ LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちら�
 >
 > AIO.zip はこれだけで導入が完了できるように
 >
-> -   最新の BepinEx の Bleeding Edge ビルド
+> -   [最新の BepinEx の Bleeding Edge ビルド](https://builds.bepinex.dev/projects/bepinex_be)
 > -   [BepInExConfigManager](https://github.com/sinai-dev/BepInExConfigManager)
+> -   [UniverseLib](https://github.com/sinai-dev/UniverseLib)
 > -   LAOPLUS
 >
 > が含まれています。
@@ -143,6 +148,16 @@ LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちら�
 手順などが不明な場合は [Discord](https://discord.gg/EGWqTuhjrE) か[作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
 
 ---
+
+</details>
+
+<details>
+<summary><b>更新手順</b></summary>
+
+新規インストール手順で上書きしてもよいですが、使用ライブラリの更新などがない場合はプラグインだけの更新でも問題ありません。
+
+1. [releases](https://github.com/eai04191/laoplus/releases) から最新の `LAOPLUS_x.x.x_PluginOnly.zip` をダウンロードする
+2. zipに含まれている`net.laoplus.LAOPLUS.dll`を`LastOriginインストール先\BepInEx\plugins\net.laoplus.LAOPLUS.dll` に上書きする
 
 </details>
 
