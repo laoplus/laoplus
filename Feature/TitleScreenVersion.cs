@@ -12,10 +12,7 @@ namespace LAOPLUS.Feature
         {
             __instance._lblVersion.text +=
                 $"\n{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION}";
-            if (LAOPLUS.ConfigVerboseLogging.Value)
-            {
-                LAOPLUS.Log.LogInfo($"TitlePatch: {__instance._lblVersion.text}");
-            }
+            LAOPLUS.Log.LogDebug($"TitlePatch: {__instance._lblVersion.text}");
         }
     }
 }

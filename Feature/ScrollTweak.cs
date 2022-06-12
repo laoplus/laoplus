@@ -15,10 +15,7 @@ namespace LAOPLUS.Feature
         static void Prefix(ref float delta)
         {
             delta = delta * LAOPLUS.ConfigScrollPatchMultiplier.Value;
-            if (LAOPLUS.ConfigVerboseLogging.Value)
-            {
-                LAOPLUS.Log.LogInfo($"ScrollPatch: {delta}");
-            }
+            LAOPLUS.Log.LogDebug($"ScrollPatch: {delta}");
         }
 
         [HarmonyPatch(

@@ -19,9 +19,6 @@ namespace LAOPLUS
         internal new static ManualLogSource Log;
         static readonly HttpClient HttpClient = new();
 
-        const string ConfigDevLabel = "Dev / 開発";
-        public static ConfigEntry<bool> ConfigVerboseLogging;
-
         const string ConfigDiscordLabel = "Discord";
         public static ConfigEntry<string> ConfigDiscordWebhookUrl;
         public static ConfigEntry<bool> ConfigDiscordWebhookEnabled;
@@ -125,14 +122,6 @@ namespace LAOPLUS
             HttpClient.DefaultRequestHeaders.Add(
                 "User-Agent",
                 $"{PluginInfo.PLUGIN_NAME}/{PluginInfo.PLUGIN_VERSION}"
-            );
-
-            // Dev
-            ConfigVerboseLogging = Config.Bind(
-                ConfigDevLabel,
-                "VerboseLogging",
-                false,
-                new ConfigDescription("Enable verbose logging", null, "Advanced")
             );
 
             // Discord

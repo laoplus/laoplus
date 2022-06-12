@@ -21,10 +21,7 @@ namespace LAOPLUS.Feature
         static void Postfix(object[] __args)
         {
             string msg = (string)__args[0];
-            if (LAOPLUS.ConfigVerboseLogging.Value)
-            {
-                LAOPLUS.Log.LogInfo($"Panel_MessageBox.SetMessage: {msg}");
-            }
+            LAOPLUS.Log.LogDebug($"Panel_MessageBox.SetMessage: {msg}");
 
             if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
             {
