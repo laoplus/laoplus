@@ -30,7 +30,7 @@ namespace LAOPLUS
         const string ConfigBaseLabel = "Base / 基地";
         public static ConfigEntry<bool> ConfigAutoPressRestartWhenRewarded;
 
-        public static readonly List<INotificationClient> NotificationClients = new();
+        static readonly List<INotificationClient> NotificationClients = new();
 
         static void ConfigDiscordWebhookUrlChangedHandler(object sender, EventArgs e)
         {

@@ -14,13 +14,13 @@ namespace LAOPLUS.Feature
     {
         static IEnumerable<MethodBase> TargetMethods()
         {
-            MethodInfo[] methods = typeof(Panel_MessageBox).GetMethods();
+            var methods = typeof(Panel_MessageBox).GetMethods();
             return methods.Where(method => method.Name == "SetMessage");
         }
 
         static void Postfix(object[] __args)
         {
-            string msg = (string)__args[0];
+            var msg = (string)__args[0];
             LAOPLUS.Log.LogDebug($"Panel_MessageBox.SetMessage: {msg}");
 
             if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))

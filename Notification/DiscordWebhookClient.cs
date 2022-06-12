@@ -9,12 +9,12 @@ namespace LAOPLUS.Notification
         readonly HttpClient _client;
         public Uri Uri { get; }
 
-        string GetClientName => "Discord";
+        static string GetClientName => "Discord";
 
         public DiscordWebhookClient(HttpClient client, string webhookUrl)
         {
             this._client = client;
-            this.Uri = new Uri(webhookUrl);
+            Uri = new Uri(webhookUrl);
         }
 
         public async void SendMessageAsync(string message)
@@ -30,17 +30,17 @@ namespace LAOPLUS.Notification
                 var escapedMessage = message.Replace(Environment.NewLine, "\\n");
                 var body = $"{{\"embeds\": [{{\"title\": \"{escapedMessage}\"}}]}}";
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
-                var response = await this._client.PostAsync(this.Uri, content);
+                var response = await this._client.PostAsync(Uri, content);
                 var success = response.IsSuccessStatusCode;
-                LAOPLUS.Log.LogInfo(
-                    $"SendMessageAsync on {this.GetClientName} is Success? {success}"
-                );
+                LAOPLUS.Log.LogInfo($"SendMessageAsync on {GetClientName} is Success? {success}");
 
-                if (success == false)
+                if (success)
                 {
-                    string responseContent = await response.Content.ReadAsStringAsync();
-                    LAOPLUS.Log.LogWarning($"The request was unsuccessful: {responseContent}");
+                    return;
                 }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                LAOPLUS.Log.LogWarning($"The request was unsuccessful: {responseContent}");
             }
             catch (Exception e)
             {

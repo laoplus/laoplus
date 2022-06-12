@@ -1,4 +1,3 @@
-using System;
 using HarmonyLib;
 
 namespace LAOPLUS.Feature
@@ -14,14 +13,16 @@ namespace LAOPLUS.Feature
         [HarmonyPatch(typeof(UIScrollView), nameof(UIScrollView.Scroll))]
         static void Prefix(ref float delta)
         {
-            delta = delta * LAOPLUS.ConfigScrollPatchMultiplier.Value;
+            delta *= LAOPLUS.ConfigScrollPatchMultiplier.Value;
             LAOPLUS.Log.LogDebug($"ScrollPatch: {delta}");
         }
 
         [HarmonyPatch(
             typeof(UIReuseScrollView),
             nameof(UIReuseScrollView.RestrictWithinBounds),
-            new[] { typeof(bool), typeof(bool), typeof(bool) }
+            typeof(bool),
+            typeof(bool),
+            typeof(bool)
         )]
         public static class ScrollingOoBPatchForUIReuseScrollView
         {
@@ -37,7 +38,9 @@ namespace LAOPLUS.Feature
         [HarmonyPatch(
             typeof(UIScrollView),
             nameof(UIScrollView.RestrictWithinBounds),
-            new[] { typeof(bool), typeof(bool), typeof(bool) }
+            typeof(bool),
+            typeof(bool),
+            typeof(bool)
         )]
         public static class ScrollingOoBPatchForUIScrollView
         {
