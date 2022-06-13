@@ -31,7 +31,7 @@
 <details>
 <summary><b>周回停止通知</b></summary>
 
-![image](https://user-images.githubusercontent.com/3516343/172043568-021b7ab2-d95d-4d48-8ab2-d6898d356db7.png)
+![](https://user-images.githubusercontent.com/3516343/173385903-6157a00e-e7bf-402d-baa8-65ae4f5c5a16.png)
 
 周回停止時に画面に出る「以下の理由で、これ以上反復戦闘が行えません。」から始まるメッセージの通知を検出したとき Discord に通知を送信します。
 
@@ -41,6 +41,8 @@
 
 <details>
 <summary><b>ドロップ通知</b></summary>
+
+![](https://user-images.githubusercontent.com/3516343/173386269-55be8420-273f-424c-9336-59dc637772b6.png)
 
 ウェーブごとのユニットと装備品の入手を検知して Discord に通知を送信します。
 
@@ -99,7 +101,7 @@ AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が
 >
 > 正しい Webhook URL が設定された場合、設定保存時とゲーム起動時に通知が呼びだされます。
 >
-> ![](https://user-images.githubusercontent.com/3516343/173232340-8166f64e-2f2c-4cf3-aea1-1abf4d0f7d39.png)
+> ![](https://user-images.githubusercontent.com/3516343/173385706-54fd8eb4-de3f-4fda-ab4c-4be834bb1fe4.png)
 
 設定の実体は `lastoriginインストール先\BepInEx\config\net.laoplus.LAOPLUS.cfg`に保存されます。
 
