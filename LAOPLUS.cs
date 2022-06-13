@@ -132,7 +132,7 @@ namespace LAOPLUS
         )
         {
             NotificationClients.ForEach(
-                w => w.SendUnitNotificationAsync(unitName, unitLinkUrl, unitImageUrl)
+                w => w.SendUnitDropNotificationAsync(unitName, unitLinkUrl, unitImageUrl)
             );
         }
 
@@ -145,7 +145,7 @@ namespace LAOPLUS
         {
             NotificationClients.ForEach(
                 w =>
-                    w.SendItemNotificationAsync(
+                    w.SendEquipItemDropNotificationAsync(
                         itemName,
                         itemDescription,
                         itemLinkUrl,

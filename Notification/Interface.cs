@@ -6,13 +6,13 @@ namespace LAOPLUS.Notification
     {
         Uri Uri { get; }
         void SendMessageAsync(string message);
-        void SendItemNotificationAsync(
+        void SendEquipItemDropNotificationAsync(
             string itemName,
             string itemDescription,
             string itemLinkUrl,
             string itemImageUrl
         );
-        void SendUnitNotificationAsync(
+        void SendUnitDropNotificationAsync(
             string unitName,
             string unitLinkUrl,
             string unitImageUrl

@@ -48,7 +48,7 @@ namespace LAOPLUS.Notification
             }
         }
 
-        public async void SendItemNotificationAsync(
+        public async void SendEquipItemDropNotificationAsync(
             string itemName,
             string itemDescription,
             string itemLinkUrl,
@@ -69,7 +69,7 @@ namespace LAOPLUS.Notification
 				                    ""url"":""{itemImageUrl}""
 			                    }},
 			                    ""author"":{{
-				                    ""name"":""アイテムドロップ""
+				                    ""name"":""装備品ドロップ""
 			                    }}
 		                    }}
 	                    ]
@@ -95,7 +95,7 @@ namespace LAOPLUS.Notification
             }
         }
 
-        public async void SendUnitNotificationAsync(
+        public async void SendUnitDropNotificationAsync(
             string unitName,
             string unitLinkUrl,
             string unitImageUrl
@@ -114,7 +114,7 @@ namespace LAOPLUS.Notification
 				                    ""url"":""{unitImageUrl}""
 			                    }},
 			                    ""author"":{{
-				                    ""name"":""装備品ドロップ""
+				                    ""name"":""ユニットドロップ""
 			                    }}
 		                    }}
 	                    ]
