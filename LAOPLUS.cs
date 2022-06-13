@@ -186,14 +186,16 @@ namespace LAOPLUS
                 "Unit Drop Notification / ユニットドロップ通知",
                 true,
                 "Toggles whether unit drop notifications are disabled or enabled.\n"
-                    + "ユニットドロップ通知の無効・有効を切り替えます"
+                    + "ユニットドロップ通知の無効・有効を切り替えます\n"
+                    + "Currently only supports SS ranks. / 現在SSランクのみ対応しています"
             );
             ConfigEquipItemDropNotificationEnabled = Config.Bind(
                 ConfigNotificationLabel,
                 "Equip Item Drop Notification / 装備品ドロップ通知",
                 true,
                 "Toggles whether equip item drop notifications are disabled or enabled.\n"
-                    + "装備品ドロップ通知の無効・有効を切り替えます"
+                    + "装備品ドロップ通知の無効・有効を切り替えます\n"
+                    + "Currently only supports SS ranks. / 現在SSランクのみ対応しています"
             );
 
             // Scroll / スクロール
