@@ -45,7 +45,98 @@ namespace LAOPLUS.Notification
             catch (Exception e)
             {
                 LAOPLUS.Log.LogError(e.Message);
-                LAOPLUS.Log.LogError(e.ToString());
+            }
+        }
+
+        public async void SendEquipItemDropNotificationAsync(
+            string itemName,
+            string itemDescription,
+            string itemLinkUrl,
+            string itemImageUrl
+        )
+        {
+            try
+            {
+                var body =
+                    $@"
+                    {{
+	                    ""embeds"": [
+		                    {{
+			                    ""title"": ""{itemName}"",
+			                    ""description"":""{itemDescription}"",
+			                    ""url"":""{itemLinkUrl}"",
+			                    ""thumbnail"": {{
+				                    ""url"":""{itemImageUrl}""
+			                    }},
+			                    ""author"":{{
+				                    ""name"":""装備品ドロップ""
+			                    }}
+		                    }}
+	                    ]
+                    }}";
+                var content = new StringContent(body, Encoding.UTF8, "application/json");
+                var response = await this._client.PostAsync(Uri, content);
+                var success = response.IsSuccessStatusCode;
+
+                if (success)
+                {
+                    return;
+                }
+
+                var requestContent = await response.RequestMessage.Content.ReadAsStringAsync();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                LAOPLUS.Log.LogWarning($"Item Notification request was unsuccessful:");
+                LAOPLUS.Log.LogWarning($"Request: {requestContent}");
+                LAOPLUS.Log.LogWarning($"Response: {responseContent}");
+            }
+            catch (Exception e)
+            {
+                LAOPLUS.Log.LogError(e.Message);
+            }
+        }
+
+        public async void SendUnitDropNotificationAsync(
+            string unitName,
+            string unitLinkUrl,
+            string unitImageUrl
+        )
+        {
+            try
+            {
+                var body =
+                    $@"
+                    {{
+	                    ""embeds"": [
+		                    {{
+			                    ""title"": ""{unitName}"",
+			                    ""url"":""{unitLinkUrl}"",
+			                    ""thumbnail"": {{
+				                    ""url"":""{unitImageUrl}""
+			                    }},
+			                    ""author"":{{
+				                    ""name"":""ユニットドロップ""
+			                    }}
+		                    }}
+	                    ]
+                    }}";
+                var content = new StringContent(body, Encoding.UTF8, "application/json");
+                var response = await this._client.PostAsync(Uri, content);
+                var success = response.IsSuccessStatusCode;
+
+                if (success)
+                {
+                    return;
+                }
+
+                var requestContent = await response.RequestMessage.Content.ReadAsStringAsync();
+                var responseContent = await response.Content.ReadAsStringAsync();
+                LAOPLUS.Log.LogWarning($"Unit Notification request was unsuccessful:");
+                LAOPLUS.Log.LogWarning($"Request: {requestContent}");
+                LAOPLUS.Log.LogWarning($"Response: {responseContent}");
+            }
+            catch (Exception e)
+            {
+                LAOPLUS.Log.LogError(e.Message);
             }
         }
     }

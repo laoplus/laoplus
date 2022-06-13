@@ -40,6 +40,15 @@
 </details>
 
 <details>
+<summary><b>ドロップ通知</b></summary>
+
+ウェーブごとのユニットと装備品の入手を検知して Discord に通知を送信します。
+
+---
+
+</details>
+
+<details>
 <summary><b>スクロール倍率</b></summary>
 
 |                                                デフォルト                                                 |                                            スクロール倍率 6 倍                                            |
@@ -91,7 +100,6 @@ AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が
 > 正しい Webhook URL が設定された場合、設定保存時とゲーム起動時に通知が呼びだされます。
 >
 > ![](https://user-images.githubusercontent.com/3516343/173232340-8166f64e-2f2c-4cf3-aea1-1abf4d0f7d39.png)
-
 
 設定の実体は `lastoriginインストール先\BepInEx\config\net.laoplus.LAOPLUS.cfg`に保存されます。
 
@@ -157,7 +165,7 @@ LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちら�
 新規インストール手順で上書きしてもよいですが、使用ライブラリの更新などがない場合はプラグインだけの更新でも問題ありません。
 
 1. [releases](https://github.com/eai04191/laoplus/releases) から最新の `LAOPLUS_x.x.x_PluginOnly.zip` をダウンロードする
-2. zipに含まれている`net.laoplus.LAOPLUS.dll`を`LastOriginインストール先\BepInEx\plugins\net.laoplus.LAOPLUS.dll` に上書きする
+2. zip に含まれている`net.laoplus.LAOPLUS.dll`を`LastOriginインストール先\BepInEx\plugins\net.laoplus.LAOPLUS.dll` に上書きする
 
 </details>
 
