@@ -11,6 +11,11 @@ namespace LAOPLUS.Notification
 
         static string GetClientName => "Discord";
 
+        string EscapeInvalidJsonChars(string str)
+        {
+            return str.Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t");
+        }
+
         public DiscordWebhookClient(HttpClient client, string webhookUrl)
         {
             this._client = client;
@@ -26,8 +31,7 @@ namespace LAOPLUS.Notification
 
             try
             {
-                // JSONに改行は含めない
-                var escapedMessage = message.Replace(Environment.NewLine, "\\n");
+                var escapedMessage = EscapeInvalidJsonChars(message);
                 var body = $"{{\"embeds\": [{{\"title\": \"{escapedMessage}\"}}]}}";
                 var content = new StringContent(body, Encoding.UTF8, "application/json");
                 var response = await this._client.PostAsync(Uri, content);
@@ -62,8 +66,8 @@ namespace LAOPLUS.Notification
                     {{
 	                    ""embeds"": [
 		                    {{
-			                    ""title"": ""{itemName}"",
-			                    ""description"":""{itemDescription}"",
+			                    ""title"": ""{EscapeInvalidJsonChars(itemName)}"",
+			                    ""description"":""{EscapeInvalidJsonChars(itemDescription)}"",
 			                    ""url"":""{itemLinkUrl}"",
 			                    ""thumbnail"": {{
 				                    ""url"":""{itemImageUrl}""
@@ -108,7 +112,7 @@ namespace LAOPLUS.Notification
                     {{
 	                    ""embeds"": [
 		                    {{
-			                    ""title"": ""{unitName}"",
+			                    ""title"": ""{EscapeInvalidJsonChars(unitName)}"",
 			                    ""url"":""{unitLinkUrl}"",
 			                    ""thumbnail"": {{
 				                    ""url"":""{unitImageUrl}""
