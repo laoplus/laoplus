@@ -9,16 +9,12 @@
 
 ## LAOPLUS のビルド
 
-まず LastOrigin (N 版/R 版どちらでも可) に [BepinEx (Bleeding Edge)](https://builds.bepinex.dev/projects/bepinex_be) を導入して `lastorigin\BepInEx\unhollowed` に unhollow された dll があることを確認してください
-
 1. LAOPLUS を clone する
-1. 環境変数`LAOPLUS_ROOT` に BepinEx を導入した LastOrigin のインストール先を指定する
-    ```cmd
-    setx LAOPLUS_ROOT G:\DMMGP\lastorigin
-    ```
-1. ビルドする
+2. ビルドする
     - Visual Studio を使う場合: LAOPLUS.sln を開き、ビルドする
     - dotnet cli を使う場合: LAOPLUS.sln があるディレクトリで `dotnet build` する
+
+ゲームアセンブリの情報は[LastOrigin.GameLibs](https://nuget.bepinex.dev/packages/LastOrigin.GameLibs)から取得しています。これが古くなっている場合は更新が必要なのでこのリポジトリの issue でご連絡ください。
 
 ## Pull Request を送る
 

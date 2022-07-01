@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: /home/runner/work/laoplus/laoplus/bin/Debug/netstandard2.1/net.laoplus.LAOPLUS.dll
+          if-no-files-found: error

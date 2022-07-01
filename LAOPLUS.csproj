@@ -15,18 +15,7 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-*" IncludeAssets="compile" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Assembly-CSharp" Private="False">
-            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
-        </Reference>
-        <Reference Include="Il2Cppmscorlib" Private="False">
-            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule" Private="False">
-            <HintPath>$(LAOPLUS_ROOT)\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
+        <PackageReference Include="LastOrigin.GameLibs" Version="*-*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -37,6 +26,6 @@
     </ItemGroup>
 
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <Exec Command="cd $(SolutionDir)scripts\&#xD;&#xA;call PreBuild.bat" />
+        <Exec Command="cd $(SolutionDir)scripts\&#xD;&#xA;call PreBuild.bat" Condition=" '$(OS)' == 'Windows_NT' " />
     </Target>
 </Project>
