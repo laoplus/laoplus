@@ -89,6 +89,17 @@ https://user-images.githubusercontent.com/3516343/173115422-5cf61115-4a0a-4cdf-9
 
 </details>
 
+<details>
+<summary><b>プレミアムログインボーナス振り直し時の表示待機時間を削除</b></summary>
+
+https://user-images.githubusercontent.com/3516343/176680128-269b23a7-0f97-44ac-b67a-dc9d6730916c.mp4
+
+通常 1 つずつ表示されるプレミアムログインボーナスの表示待機時間を削除し、すべて同時に表示されるようにします。
+
+---
+
+</details>
+
 ## 設定
 
 ![](https://user-images.githubusercontent.com/3516343/173232374-95b1b5c5-267f-4abe-8d1a-5d4bf236ae43.png)
@@ -168,6 +179,8 @@ LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちら�
 
 1. [releases](https://github.com/eai04191/laoplus/releases) から最新の `LAOPLUS_x.x.x_PluginOnly.zip` をダウンロードする
 2. zip に含まれている`net.laoplus.LAOPLUS.dll`を`LastOriginインストール先\BepInEx\plugins\net.laoplus.LAOPLUS.dll` に上書きする
+
+---
 
 </details>
 

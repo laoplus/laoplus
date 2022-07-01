@@ -39,6 +39,9 @@ namespace LAOPLUS
         const string ConfigLoggingLabel = "Logging / ログ";
         public static ConfigEntry<bool> ConfigLoggingBattleLog;
 
+        const string ConfigOtherLabel = "Other / その他";
+        public static ConfigEntry<bool> ConfigInstantRerollOnPremiumLoginRewardEnabled;
+
         static readonly List<INotificationClient> NotificationClients = new();
 
         static void ConfigDiscordWebhookUrlChangedHandler(object sender, EventArgs e)
@@ -229,6 +232,15 @@ namespace LAOPLUS
                 "Output battle log / バトルログを出力",
                 false,
                 "Output battle log to BepinEx log output. \n" + "バトルログをBepinExのログに出力する"
+            );
+
+            // Other / その他
+            ConfigInstantRerollOnPremiumLoginRewardEnabled = Config.Bind(
+                ConfigOtherLabel,
+                "Instant Reroll on Premium Login Reward / プレミアムログインボーナスの振り直しを高速化",
+                true,
+                "Remove the animation wait when reroll the Premium Login Reward.\n"
+                    + "プレミアムログインボーナス振り直し時の表示待機時間を削除します"
             );
 
             InitNotificationClients();
