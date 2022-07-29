@@ -3,7 +3,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>net.laoplus.LAOPLUS</AssemblyName>
         <Product>LAOPLUS</Product>
-        <VersionPrefix>2.0.1</VersionPrefix>
+        <VersionPrefix>2.1.0</VersionPrefix>
         <VersionSuffix></VersionSuffix>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
