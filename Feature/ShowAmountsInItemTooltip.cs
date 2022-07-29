@@ -5,6 +5,12 @@ namespace LAOPLUS.Feature
     [HarmonyPatch(typeof(Panel_ItemTooltip))]
     public class ShowAmountsInItemTooltip
     {
+        static void SetLabel(UIGrid grid, int amounts)
+        {
+            var label = grid.gameObject.GetComponentInChildren<UILabel>();
+            label.text = $"{amounts:N0}個所持\n" + label.text;
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Panel_ItemTooltip.SetItemTooltip), typeof(Table_ItemConsumable))]
         public static void ConsumableTooltip(
@@ -16,7 +22,7 @@ namespace LAOPLUS.Feature
             var amounts = SingleTon<DataManager>.Instance.GetItemConsumableStackCount(
                 tableConsume.Key
             );
-            __instance._lblSimpleDesc.text = $"（{amounts}個所持）\n" + __instance._lblSimpleDesc.text;
+            SetLabel(__instance._grid, amounts);
         }
 
         [HarmonyPostfix]
@@ -34,7 +40,7 @@ namespace LAOPLUS.Feature
                 }
             }
 
-            __instance._lblSimpleDesc.text = $"（{amounts}個所持）\n" + __instance._lblSimpleDesc.text;
+            SetLabel(__instance._grid, amounts);
         }
     }
 }

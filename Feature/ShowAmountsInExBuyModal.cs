@@ -52,7 +52,7 @@ namespace LAOPLUS.Feature
                     );
 
                     __instance._lblItemDesc.text =
-                        $"（{amounts}個所持）\n" + __instance._lblItemDesc.text;
+                        $"{amounts:N0}個所持\n" + __instance._lblItemDesc.text;
                     return;
                 }
             }
