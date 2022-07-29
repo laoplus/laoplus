@@ -5,6 +5,11 @@ namespace LAOPLUS.Feature
     [HarmonyPatch(typeof(Panel_ExShopBuyMsg), nameof(Panel_ExShopBuyMsg.SetExShopData))]
     public class ShowAmountsInExBuyModal
     {
+        static void SetLabel(UILabel label, int amount)
+        {
+            label.text = $"{amount:N0}個所持\n{label.text}";
+        }
+
         public static void Postfix(Panel_ExShopBuyMsg __instance)
         {
             var shopData = __instance._exShopData;
@@ -19,19 +24,19 @@ namespace LAOPLUS.Feature
                         || s.StartsWith("Equip_System_"):
                 {
                     var items = SingleTon<DataManager>.Instance._invenItemInfo;
-                    var amounts = 0;
+                    var amount = 0;
                     foreach (var item in items)
                     {
                         if (item.ItemKeyString == shopData.SellItemKeyString)
                         {
-                            amounts++;
+                            amount++;
                         }
                     }
 
-                    __instance._lblItemDesc.text =
-                        $"（{amounts}個所持）\n" + __instance._lblItemDesc.text;
+                    SetLabel(__instance._lblItemDesc, amount);
                     return;
                 }
+
                 case "Normal_Module":
                 case "Advanced_Module":
                 case "Special_Module":
@@ -47,12 +52,11 @@ namespace LAOPLUS.Feature
                         || s.EndsWith("Parts_T2")
                         || s.EndsWith("Parts_T3"):
                 {
-                    var amounts = SingleTon<DataManager>.Instance.GetItemConsumableStackCount(
+                    var amount = SingleTon<DataManager>.Instance.GetItemConsumableStackCount(
                         shopData.SellItemKeyString
                     );
 
-                    __instance._lblItemDesc.text =
-                        $"{amounts:N0}個所持\n" + __instance._lblItemDesc.text;
+                    SetLabel(__instance._lblItemDesc, amount);
                     return;
                 }
             }
