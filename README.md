@@ -28,6 +28,8 @@
 
 ## 機能
 
+### 通知
+
 <details>
 <summary><b>周回停止通知</b></summary>
 
@@ -50,6 +52,8 @@
 
 </details>
 
+### スクロール
+
 <details>
 <summary><b>スクロール倍率</b></summary>
 
@@ -65,6 +69,8 @@
 
 </details>
 
+### 基地
+
 <details>
 <summary><b>基地受取時自動再作動</b></summary>
 
@@ -75,6 +81,8 @@ https://user-images.githubusercontent.com/3516343/173115422-5cf61115-4a0a-4cdf-9
 ---
 
 </details>
+
+### ログ
 
 <details>
 <summary><b>バトルログを出力</b></summary>
@@ -89,12 +97,36 @@ https://user-images.githubusercontent.com/3516343/173115422-5cf61115-4a0a-4cdf-9
 
 </details>
 
+### その他
+
 <details>
 <summary><b>プレミアムログインボーナス振り直し時の表示待機時間を削除</b></summary>
 
 https://user-images.githubusercontent.com/3516343/176680128-269b23a7-0f97-44ac-b67a-dc9d6730916c.mp4
 
 通常 1 つずつ表示されるプレミアムログインボーナスの表示待機時間を削除し、すべて同時に表示されるようにします。
+
+---
+
+</details>
+
+<details>
+<summary><b>アイテム詳細ツールチップに所持数を表示</b></summary>
+
+![](https://user-images.githubusercontent.com/3516343/181692396-a456800c-cb9c-470c-8626-7b5d9ad7f13c.png)
+
+アイテム長押し時に表示される項目詳細情報にそのアイテムの所持数を表示します。
+
+---
+
+</details>
+
+<details>
+<summary><b>アイテム交換所の交換画面に所持数を表示</b></summary>
+
+![](https://user-images.githubusercontent.com/3516343/181692711-fed7e7f3-77f2-4e81-800d-4862ff25ae82.png)
+
+アイテム交換所の交換画面にそのアイテムの所持数を表示します。
 
 ---
 
