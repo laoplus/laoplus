@@ -1,7 +1,5 @@
 using HarmonyLib;
 
-using Il2CppList = Il2CppSystem.Collections.Generic.List<ClientItemInfo>;
-
 namespace LAOPLUS.Feature
 {
     [HarmonyPatch(typeof(Panel_ItemTooltip))]
@@ -18,20 +16,15 @@ namespace LAOPLUS.Feature
             var amounts = SingleTon<DataManager>.Instance.GetItemConsumableStackCount(
                 tableConsume.Key
             );
-            // ラベルの扱いはWarehouseの表記と合わせると良さそう（右寄せ・サイズ変動）
-            __instance._lblEnchantLevel.overflowMethod = UILabel.Overflow.ResizeFreely;
-            __instance._lblEnchantLevel.text = $"x{amounts}";
+            __instance._lblSimpleDesc.text = $"（{amounts}個所持）\n" + __instance._lblSimpleDesc.text;
         }
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(Panel_ItemTooltip.SetItemTooltip), typeof(Table_ItemEquip))]
         public static void ItemTooltip(Panel_ItemTooltip __instance, Table_ItemEquip tableEquip)
         {
-
             LAOPLUS.Log.LogInfo($"ItemTooltip.Postfix: {tableEquip.Key}");
             var items = SingleTon<DataManager>.Instance._invenItemInfo;
-            var amounts2 = items.Select(x => x.Key).Where(x => x == tableEquip.Key).ToList();
-            // var amounts = items.Cast<System.Collections.Generic.List<ClientItemInfo>>();
             var amounts = 0;
             foreach (var item in items)
             {
@@ -41,9 +34,7 @@ namespace LAOPLUS.Feature
                 }
             }
 
-            // ラベルの扱いはWarehouseの表記と合わせると良さそう（右寄せ・サイズ変動）
-            __instance._lblEnchantLevel.overflowMethod = UILabel.Overflow.ResizeFreely;
-            __instance._lblEnchantLevel.text = $"x{amounts}";
+            __instance._lblSimpleDesc.text = $"（{amounts}個所持）\n" + __instance._lblSimpleDesc.text;
         }
     }
 }
