@@ -41,6 +41,8 @@ namespace LAOPLUS
 
         const string ConfigOtherLabel = "Other / その他";
         public static ConfigEntry<bool> ConfigInstantRerollOnPremiumLoginRewardEnabled;
+        public static ConfigEntry<bool> ConfigShowTheNumberOfItemsInItemTooltipEnabled;
+        public static ConfigEntry<bool> ConfigShowTheNumberOfItemsInExBuyModalEnabled;
 
         static readonly List<INotificationClient> NotificationClients = new();
 
@@ -213,7 +215,7 @@ namespace LAOPLUS
                 ConfigScrollLabel,
                 "Disable Scrolling to Out of Bounds / 範囲外へのスクロールを無効にする",
                 true,
-                "Prevents scrolling outside the bounds of items when scrolling in the list\n"
+                "Prevents scrolling outside the bounds of items when scrolling in the list.\n"
                     + "リストでのスクロール時に項目の範囲外までスクロールしないようにします"
             );
 
@@ -231,7 +233,7 @@ namespace LAOPLUS
                 ConfigLoggingLabel,
                 "Output battle log / バトルログを出力",
                 false,
-                "Output battle log to BepinEx log output. \n" + "バトルログをBepinExのログに出力する"
+                "Output battle log to BepinEx log output.\n" + "バトルログをBepinExのログに出力する"
             );
 
             // Other / その他
@@ -241,6 +243,20 @@ namespace LAOPLUS
                 true,
                 "Remove the animation wait when reroll the Premium Login Reward.\n"
                     + "プレミアムログインボーナス振り直し時の表示待機時間を削除します"
+            );
+            ConfigShowTheNumberOfItemsInItemTooltipEnabled = Config.Bind(
+                ConfigOtherLabel,
+                "Show the Number of Items in Item Tooltip / アイテム詳細ツールチップに所持数を表示",
+                true,
+                "Show the number of items in item detail tooltip.\n"
+                    + "アイテム長押し時に表示される項目詳細情報にそのアイテムの所持数を表示します"
+            );
+            ConfigShowTheNumberOfItemsInExBuyModalEnabled = Config.Bind(
+                ConfigOtherLabel,
+                "Show the Number of Items in Item Exchange Modal / アイテム交換所の交換画面に所持数を表示",
+                true,
+                "Show the number of items in item exchange modal.\n"
+                    + "アイテム交換所の交換画面にそのアイテムの所持数を表示します"
             );
 
             InitNotificationClients();

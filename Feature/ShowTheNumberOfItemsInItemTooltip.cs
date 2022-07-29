@@ -3,7 +3,7 @@ using HarmonyLib;
 namespace LAOPLUS.Feature
 {
     [HarmonyPatch(typeof(Panel_ItemTooltip))]
-    public class ShowAmountsInItemTooltip
+    public class ShowTheNumberOfItemsInItemTooltip
     {
         static void SetLabel(UIGrid grid, int amount)
         {
@@ -18,6 +18,11 @@ namespace LAOPLUS.Feature
             Table_ItemConsumable tableConsume
         )
         {
+            if (!LAOPLUS.ConfigShowTheNumberOfItemsInItemTooltipEnabled.Value)
+            {
+                return;
+            }
+
             LAOPLUS.Log.LogDebug($"ConsumableTooltip.Postfix: {tableConsume.Key}");
             var amount = SingleTon<DataManager>.Instance.GetItemConsumableStackCount(
                 tableConsume.Key
@@ -29,6 +34,11 @@ namespace LAOPLUS.Feature
         [HarmonyPatch(nameof(Panel_ItemTooltip.SetItemTooltip), typeof(Table_ItemEquip))]
         public static void ItemTooltip(Panel_ItemTooltip __instance, Table_ItemEquip tableEquip)
         {
+            if (!LAOPLUS.ConfigShowTheNumberOfItemsInItemTooltipEnabled.Value)
+            {
+                return;
+            }
+
             LAOPLUS.Log.LogDebug($"ItemTooltip.Postfix: {tableEquip.Key}");
             var items = SingleTon<DataManager>.Instance._invenItemInfo;
             var amount = 0;

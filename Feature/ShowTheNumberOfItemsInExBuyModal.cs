@@ -3,7 +3,7 @@ using HarmonyLib;
 namespace LAOPLUS.Feature
 {
     [HarmonyPatch(typeof(Panel_ExShopBuyMsg), nameof(Panel_ExShopBuyMsg.SetExShopData))]
-    public class ShowAmountsInExBuyModal
+    public class ShowTheNumberOfItemsInExBuyModal
     {
         static void SetLabel(UILabel label, int amount)
         {
@@ -12,6 +12,11 @@ namespace LAOPLUS.Feature
 
         public static void Postfix(Panel_ExShopBuyMsg __instance)
         {
+            if (!LAOPLUS.ConfigShowTheNumberOfItemsInExBuyModalEnabled.Value)
+            {
+                return;
+            }
+
             var shopData = __instance._exShopData;
             LAOPLUS.Log.LogInfo($"ShowAmountsInExBuyModal.Postfix: {shopData.SellItemKeyString}");
 
