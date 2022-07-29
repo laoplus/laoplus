@@ -69,6 +69,21 @@
 
 </details>
 
+### ロビー
+
+<details>
+<summary><b>カメラの自動移動を防ぐ</b></summary>
+
+https://user-images.githubusercontent.com/3516343/181697575-2a036456-38b7-4d7a-922b-b05c6b9d1e67.mp4
+
+ロビーでのカメラ移動時にカメラが自動で中央に戻らないようにします。
+
+好きな位置でスクリーンショットを撮りたいときに有用です。
+
+---
+
+</details>
+
 ### 基地
 
 <details>

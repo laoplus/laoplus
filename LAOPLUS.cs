@@ -33,6 +33,9 @@ namespace LAOPLUS
         public static ConfigEntry<float> ConfigScrollPatchMultiplier;
         public static ConfigEntry<bool> ConfigPreventsScrollingOoB;
 
+        const string ConfigLobbyLabel = "Lobby / ロビー";
+        public static ConfigEntry<bool> ConfigPreventLobbyCameraAutoRevertEnabled;
+
         const string ConfigBaseLabel = "Base / 基地";
         public static ConfigEntry<bool> ConfigAutoPressRestartWhenRewarded;
 
@@ -217,6 +220,15 @@ namespace LAOPLUS
                 true,
                 "Prevents scrolling outside the bounds of items when scrolling in the list.\n"
                     + "リストでのスクロール時に項目の範囲外までスクロールしないようにします"
+            );
+
+            // Lobby / ロビー
+            ConfigPreventLobbyCameraAutoRevertEnabled = Config.Bind(
+                ConfigLobbyLabel,
+                "Prevent Camera Auto Revert / カメラの自動移動を防ぐ",
+                false,
+                "Prevents the camera from returning to the center when moving the camera in the lobby.\n"
+                    + "ロビーでのカメラ移動時にカメラが自動で中央に戻らないようにします"
             );
 
             // Base / 基地
