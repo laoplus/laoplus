@@ -1,7 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using BepInEx.IL2CPP.Utils;
 using HarmonyLib;
+using UnityEngine;
 
 namespace LAOPLUS.Feature
 {
@@ -18,14 +21,20 @@ namespace LAOPLUS.Feature
             return methods.Where(method => method.Name == "SetMessage");
         }
 
-        static void Postfix(object[] __args)
+        static void Postfix(Panel_MessageBox __instance)
         {
-            var msg = (string)__args[0];
-            LAOPLUS.Log.LogDebug($"Panel_MessageBox.SetMessage: {msg}");
+            __instance.StartCoroutine(Call(__instance));
+        }
 
-            if (msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
+        static IEnumerator Call(Panel_MessageBox __instance)
+        {
+            // すぐに処理すると描画が欠けることがあるため1秒待つ
+            yield return new WaitForSeconds(1);
+
+            LAOPLUS.Log.LogDebug($"Panel_MessageBox.SetMessage: {__instance.msg}");
+            if (__instance.msg.StartsWith("以下の理由で、これ以上反復戦闘が行えません。"))
             {
-                LAOPLUS.SendMessageToAllNotificationClients(msg);
+                LAOPLUS.SendMessageToAllNotificationClients(__instance.msg);
             }
         }
     }
