@@ -1,4 +1,4 @@
-<h1 align="center">LAOPLUS</h1>
+![BANNER](https://user-images.githubusercontent.com/3516343/185739554-77146afe-404a-4aca-8f48-4a857b09633e.png)
 
 <p align="center">
     <a href="https://discord.gg/EGWqTuhjrE">
