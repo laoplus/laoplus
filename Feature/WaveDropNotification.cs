@@ -37,10 +37,12 @@ namespace LAOPLUS.Feature
         static void NotifyUnit(GiveRewardPCInfo pc)
         {
             LAOPLUS.Log.LogInfo($"Drop PC: {pc.PCKeyString}");
-            var unit = SingleTon<DataManager>.Instance.GetTablePC(pc.PCKeyString);
+            var dm = SingleTon<DataManager>.Instance;
+            var unit = dm.GetTablePC(pc.PCKeyString);
+            var unitName = dm.GetLocalization(unit.Name);
 
             LAOPLUS.SendUnitDropNotificationToAllNotificationClients(
-                unit.Name,
+                unitName,
                 CreateUnitSwaytwigPageUrl(pc.PCKeyString),
                 CreateUnitTbarIconUrl(unit.Key)
             );
@@ -61,15 +63,18 @@ namespace LAOPLUS.Feature
                 return;
             }
 
+            var itemName = dm.GetLocalization(itemEquip.ItemName);
+            var itemDesc = dm.GetLocalization(itemEquip.ItemDesc_Detail);
+
             LAOPLUS.SendItemDropNotificationToAllNotificationClients(
-                itemEquip.ItemName,
-                itemEquip.ItemDesc_Detail,
+                itemName,
+                itemDesc,
                 CreateEquipSwaytwigPageUrl(itemEquip.Key),
                 CreateItemIconUrl(itemEquip.Key)
             );
 
-            LAOPLUS.Log.LogDebug($"Drop Item Name: {itemEquip.ItemName}");
-            LAOPLUS.Log.LogDebug($"Drop Item Desc: {itemEquip.ItemDesc_Detail}");
+            LAOPLUS.Log.LogDebug($"Drop Item Name: {itemName}");
+            LAOPLUS.Log.LogDebug($"Drop Item Desc: {itemDesc}");
             LAOPLUS.Log.LogDebug($"Drop Item URL: {CreateEquipSwaytwigPageUrl(itemEquip.Key)}");
             LAOPLUS.Log.LogDebug($"Drop Item Image URL: {CreateItemIconUrl(itemEquip.Key)}");
         }
