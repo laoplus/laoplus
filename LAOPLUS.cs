@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using LAOPLUS.Notification;
+using LAOPLUS.UI;
 using UnityEngine;
 
 namespace LAOPLUS
@@ -274,6 +275,8 @@ namespace LAOPLUS
 
             InitNotificationClients();
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+
+            AddComponent<StatsWindow>();
         }
     }
 }
