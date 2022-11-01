@@ -26,29 +26,6 @@ internal static class SkinTex
     public static readonly Texture2D NavButtonSelectedHover = Load("UI/Side Nav_/Parts_/Side Nav List Item Selected-hover.png");
     public static readonly Texture2D NavButtonSelectedPressed= Load("UI/Side Nav_/Parts_/Side Nav List Item Selected-pressed.png");
 
-    static SkinTex()
-    {
-        // Window
-        Window.hideFlags = HideFlags.HideAndDontSave;
-
-        // Box
-        ContentBox.hideFlags = HideFlags.HideAndDontSave;
-
-        // Button
-        CloseButtonRest.hideFlags = HideFlags.HideAndDontSave;
-        CloseButtonHover.hideFlags = HideFlags.HideAndDontSave;
-        CloseButtonPressed.hideFlags = HideFlags.HideAndDontSave;
-        // ButtonRest.hideFlags = HideFlags.HideAndDontSave;
-        // ButtonHover.hideFlags = HideFlags.HideAndDontSave;
-        // ButtonPressed.hideFlags = HideFlags.HideAndDontSave;
-        NavButtonRest.hideFlags = HideFlags.HideAndDontSave;
-        NavButtonHover.hideFlags = HideFlags.HideAndDontSave;
-        NavButtonPressed.hideFlags = HideFlags.HideAndDontSave;
-        NavButtonSelectedRest.hideFlags = HideFlags.HideAndDontSave;
-        NavButtonSelectedHover.hideFlags = HideFlags.HideAndDontSave;
-        NavButtonSelectedPressed.hideFlags = HideFlags.HideAndDontSave;
-    }
-
     static Texture2D Load(string path)
     {
         // ReSharper disable StringLiteralTypo
@@ -65,6 +42,7 @@ internal static class SkinTex
         // LoadImage時に読み込んだ画像のサイズに変わるのでこの時点でのテクスチャサイズは気にしなくていい
         var tempTexture = new Texture2D(1, 1);
         tempTexture.LoadImage(File.ReadAllBytes(fullPath));
+        tempTexture.hideFlags = HideFlags.HideAndDontSave;
 
         return tempTexture;
     }
