@@ -40,7 +40,7 @@ internal static class SkinTex
         }
 
         // LoadImage時に読み込んだ画像のサイズに変わるのでこの時点でのテクスチャサイズは気にしなくていい
-        var tempTexture = new Texture2D(1, 1);
+        var tempTexture = new Texture2D(1, 1, TextureFormat.ARGB32, false);
         tempTexture.LoadImage(File.ReadAllBytes(fullPath));
         tempTexture.hideFlags = HideFlags.HideAndDontSave;
 
