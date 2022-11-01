@@ -17,18 +17,18 @@ namespace LAOPLUS.UI
         Rect _windowRect = new Rect(10, 10, WindowWidth * 2f, WindowHeight * 2f);
         float _guiScale = 0.5f;
         bool _showWindow = true;
-        bool enableDvdMode = false;
+        bool _enableDvdMode;
         Vector2 _dvdMovingDirection = Vector2.one;
         const KeyCode ToggleKey = KeyCode.F1;
         Vector2 _scrollPosition;
 
-        int _metal = 0;
-        int _nutrient = 0;
-        int _power = 0;
-        int _normalModule = 0;
-        int _advancedModule = 0;
-        int _specialModule = 0;
-        int _dropCount = 0;
+        int _metal;
+        int _nutrient;
+        int _power;
+        int _normalModule;
+        int _advancedModule;
+        int _specialModule;
+        int _dropCount;
         readonly List<Table_PC> _obtainPcList = new();
 
         void OnGUI()
@@ -79,7 +79,7 @@ namespace LAOPLUS.UI
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                this.enableDvdMode = !this.enableDvdMode;
+                this._enableDvdMode = !this._enableDvdMode;
             }
         }
 
@@ -126,7 +126,7 @@ namespace LAOPLUS.UI
                 return;
             }
 
-            if (this.enableDvdMode)
+            if (this._enableDvdMode)
             {
                 // do 2 times per frame to make it faster moving
                 for (var i = 0; i < 2; i++)
