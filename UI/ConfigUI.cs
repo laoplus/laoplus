@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using HutongGames.PlayMaker.Actions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace LAOPLUS.UI
 {
-    public class StatsWindow : MonoBehaviour
+    public class ConfigUI : MonoBehaviour
     {
-        public StatsWindow(IntPtr ptr) : base(ptr) { }
+        public ConfigUI(IntPtr ptr) : base(ptr) { }
 
         const int WindowWidth = 500;
         const int WindowHeight = 200;
@@ -31,11 +30,6 @@ namespace LAOPLUS.UI
         int _specialModule = 0;
         int _dropCount = 0;
         readonly List<Table_PC> _obtainPcList = new();
-
-        void Start()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
 
         void OnGUI()
         {
@@ -127,6 +121,11 @@ namespace LAOPLUS.UI
 
         void FixedUpdate()
         {
+            if (!this._showWindow)
+            {
+                return;
+            }
+
             if (this.enableDvdMode)
             {
                 // do 2 times per frame to make it faster moving
@@ -354,7 +353,7 @@ namespace LAOPLUS.UI
                 }
             }
 
-            var statsWindows = Resources.FindObjectsOfTypeAll<StatsWindow>();
+            var statsWindows = Resources.FindObjectsOfTypeAll<ConfigUI>();
             var statsWindow = statsWindows.FirstOrDefault();
             if (statsWindow == null)
             {
@@ -377,13 +376,4 @@ namespace LAOPLUS.UI
             );
         }
     }
-
-    // [HarmonyPatch(typeof(Panel_Title), nameof(Panel_Title.Start))]
-    // internal class PanelTitleStartEventWatcher
-    // {
-    //     static void Postfix(Panel_Title __instance)
-    //     {
-    //         __instance.gameObject.AddComponent<StatsWindow>();
-    //     }
-    // }
 }
