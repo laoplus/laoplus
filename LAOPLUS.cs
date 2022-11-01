@@ -276,7 +276,14 @@ namespace LAOPLUS
             InitNotificationClients();
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
-            AddComponent<StatsWindow>();
+            var obj = new GameObject("StatsWindow");
+            Log.LogInfo(obj);
+            GameObject.DontDestroyOnLoad(obj);
+            Log.LogInfo(obj);
+            obj.hideFlags |= HideFlags.HideAndDontSave;
+            Log.LogInfo(obj);
+            obj.AddComponent<StatsWindow>();
+            Log.LogInfo(obj);
         }
     }
 }
