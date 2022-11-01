@@ -157,49 +157,60 @@ namespace LAOPLUS.UI
             {
                 this._showWindow = false;
             }
+
             GUILayout.BeginHorizontal(CustomSkin.MainBox);
 
             var gm = SingleTon<GameManager>.Instance;
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
-            if (GUI.Button(new Rect(10, 10, 10, 10), "Reset"))
             {
-                LAOPLUS.Log.LogInfo("Button Reset");
-                ResetStats();
+                GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
+                if (GUILayout.Button("Reset"))
+                {
+                    LAOPLUS.Log.LogInfo("Button Reset");
+                    ResetStats();
+                }
             }
-
             GUILayout.EndHorizontal();
 
             GUILayout.BeginVertical(CustomSkin.ContentBox);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
-            GUILayout.Label($"Total Drop Count: {this._dropCount}");
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Metal: {this._metal}");
-            GUILayout.Label($"Nutrient: {this._nutrient}");
-            GUILayout.Label($"Power: {this._power}");
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"Normal Module: {this._normalModule}");
-            GUILayout.Label($"Advanced Module: {this._advancedModule}");
-            GUILayout.Label($"Special Module: {this._specialModule}");
-            GUILayout.EndHorizontal();
-
-            GUILayout.Label("Unit Acquired History:");
-            this._scrollPosition = GUILayout.BeginScrollView(this._scrollPosition);
-            // 新しい順に表示したいので逆順にする
-            var tempObtainPcList = new List<Table_PC>(this._obtainPcList);
-            tempObtainPcList.Reverse();
-            foreach (var pc in tempObtainPcList)
             {
-                GUILayout.Label($"[{GradeToRank(pc.StartGrade)}] {pc.Name}");
-            }
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
+                    GUILayout.Label($"Total Drop Count: {this._dropCount}");
+                }
+                GUILayout.EndHorizontal();
 
-            GUILayout.EndScrollView();
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label($"Metal: {this._metal}");
+                    GUILayout.Label($"Nutrient: {this._nutrient}");
+                    GUILayout.Label($"Power: {this._power}");
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label($"Normal Module: {this._normalModule}");
+                    GUILayout.Label($"Advanced Module: {this._advancedModule}");
+                    GUILayout.Label($"Special Module: {this._specialModule}");
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Label("Unit Acquired History:");
+                this._scrollPosition = GUILayout.BeginScrollView(this._scrollPosition);
+                {
+                    // 新しい順に表示したいので逆順にする
+                    var tempObtainPcList = new List<Table_PC>(this._obtainPcList);
+                    tempObtainPcList.Reverse();
+                    foreach (var pc in tempObtainPcList)
+                    {
+                        GUILayout.Label($"[{GradeToRank(pc.StartGrade)}] {pc.Name}");
+                    }
+                }
+                GUILayout.EndScrollView();
+            }
             GUILayout.EndVertical();
 
             GUILayout.EndHorizontal();
@@ -302,7 +313,6 @@ namespace LAOPLUS.UI
             {
                 return;
             }
-
             if (tablePc.ToString() == "System.Action")
             {
                 return;
@@ -360,8 +370,6 @@ namespace LAOPLUS.UI
                 LAOPLUS.Log.LogInfo("Not Found Sample");
                 return;
             }
-
-            LAOPLUS.Log.LogInfo("Found Sample!");
 
             tablePc.Name = dm.GetLocalization(tablePc.Name);
 
