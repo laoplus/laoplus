@@ -290,6 +290,7 @@ public static class CustomSkin
     static void CreateSkin()
     {
         var skin = ScriptableObject.CreateInstance<GUISkin>();
+        skin.hideFlags |= HideFlags.HideAndDontSave;
         skin.button = Button;
         skin.window = Window;
         skin.label = Label;
