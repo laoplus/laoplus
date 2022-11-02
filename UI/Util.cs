@@ -1,6 +1,8 @@
+using UnityEngine;
+
 namespace LAOPLUS.UI
 {
-    public class Util
+    public static class Util
     {
         public static (float researchMultiplier, float boostMultiplier, float totalMultiplier) GetResearchMultipliers()
         {
@@ -27,6 +29,28 @@ namespace LAOPLUS.UI
             LAOPLUS.Log.LogDebug($"Total Multiplier: {totalMultiplier}");
 
             return (researchMultiplier, boostMultiplier, totalMultiplier);
+        }
+
+        public static Rect ClampToScreen(Rect rect, float guiScale)
+        {
+            var screenSizeMultiplier = 1 / guiScale;
+            rect.x = Mathf.Clamp(rect.x, 0, Screen.width * screenSizeMultiplier - rect.width);
+            rect.y = Mathf.Clamp(rect.y, 0, Screen.height * screenSizeMultiplier - rect.height);
+
+            return rect;
+        }
+
+        public static string GradeToRank(int grade)
+        {
+            return grade switch
+            {
+                1 => "",
+                2 => "B",
+                3 => "A",
+                4 => "S",
+                5 => "SS",
+                _ => "??"
+            };
         }
     }
 }

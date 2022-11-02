@@ -32,6 +32,19 @@ namespace LAOPLUS.UI
         readonly List<Table_PC> _obtainPcList = new();
         readonly List<string> _obtainPcLog = new();
 
+        void ResetStats()
+        {
+            this._metal = 0;
+            this._nutrient = 0;
+            this._power = 0;
+            this._normalModule = 0;
+            this._advancedModule = 0;
+            this._specialModule = 0;
+            this._dropCount = 0;
+            this._obtainPcList.Clear();
+            this._obtainPcLog.Clear();
+        }
+
         void OnGUI()
         {
             if (!this._showWindow)
@@ -46,13 +59,14 @@ namespace LAOPLUS.UI
                 new Vector3(this._guiScale, this._guiScale, 1)
             );
 
-            this._windowRect = ClampToScreen(
+            this._windowRect = Util.ClampToScreen(
                 GUI.Window(
                     21,
                     this._windowRect,
                     (GUI.WindowFunction)WindowFunc,
                     $"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} ({this._guiScale}x)"
-                )
+                ),
+                this._guiScale
             );
 
             // this._windowRect = GUI.Window(
@@ -219,15 +233,6 @@ namespace LAOPLUS.UI
             GUI.DragWindow();
         }
 
-        Rect ClampToScreen(Rect rect)
-        {
-            var screenSizeMultiplier = 1 / this._guiScale;
-            rect.x = Mathf.Clamp(rect.x, 0, Screen.width * screenSizeMultiplier - rect.width);
-            rect.y = Mathf.Clamp(rect.y, 0, Screen.height * screenSizeMultiplier - rect.height);
-
-            return rect;
-        }
-
         public void IncreaseBattleStats(Table_PC tablePc)
         {
             var dm = SingleTon<DataManager>.Instance;
@@ -235,7 +240,7 @@ namespace LAOPLUS.UI
             this._dropCount++;
             this._obtainPcList.Add(tablePc);
             this._obtainPcLog.Add(
-                $"[{GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
+                $"[{Util.GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
             );
 
             var researchMultipliers = Util.GetResearchMultipliers();
@@ -293,32 +298,6 @@ namespace LAOPLUS.UI
             this._normalModule = normalModule;
             this._advancedModule = advancedModule;
             this._specialModule = specialModule;
-        }
-
-        static string GradeToRank(int grade)
-        {
-            return grade switch
-            {
-                1 => "",
-                2 => "B",
-                3 => "A",
-                4 => "S",
-                5 => "SS",
-                _ => "??"
-            };
-        }
-
-        void ResetStats()
-        {
-            this._metal = 0;
-            this._nutrient = 0;
-            this._power = 0;
-            this._normalModule = 0;
-            this._advancedModule = 0;
-            this._specialModule = 0;
-            this._dropCount = 0;
-            this._obtainPcList.Clear();
-            this._obtainPcLog.Clear();
         }
     }
 
