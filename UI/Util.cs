@@ -4,31 +4,31 @@ namespace LAOPLUS.UI
 {
     public static class Util
     {
-        public static (float researchMultiplier, float boostMultiplier, float totalMultiplier) GetResearchMultipliers()
+        public static (float research, float boost, float total) GetDisassembleMultipliers()
         {
             var dm = SingleTon<DataManager>.Instance;
 
-            var researchMultiplier = 0f;
+            var research = 0f;
             var resourceSearchInfo = dm.GetResourceSearchInfo(RESEARCH_RESULT.DISASSEMBLE_UP);
             if (resourceSearchInfo != null)
             {
-                researchMultiplier = float.Parse(resourceSearchInfo.EffectValue);
+                research = float.Parse(resourceSearchInfo.EffectValue);
             }
 
-            var boostMultiplier = 0f;
+            var boost = 0f;
             var boostInfo = Common.GetBoostInfo(FUNCTION_TYPE.BreakSearchBoost_ACTIVATE);
             if (boostInfo != null)
             {
-                boostMultiplier = boostInfo.Rate;
+                boost = boostInfo.Rate;
             }
 
-            var totalMultiplier = 1f + researchMultiplier + boostMultiplier;
+            var total = 1f + research + boost;
 
-            LAOPLUS.Log.LogDebug($"Research Multiplier: {researchMultiplier}");
-            LAOPLUS.Log.LogDebug($"Boost Multiplier: {boostMultiplier}");
-            LAOPLUS.Log.LogDebug($"Total Multiplier: {totalMultiplier}");
+            LAOPLUS.Log.LogDebug($"Research Multiplier: {research}");
+            LAOPLUS.Log.LogDebug($"Boost Multiplier: {boost}");
+            LAOPLUS.Log.LogDebug($"Total Multiplier: {total}");
 
-            return (researchMultiplier, boostMultiplier, totalMultiplier);
+            return (research, boost, total);
         }
 
         public static Rect ClampToScreen(Rect rect, float guiScale)

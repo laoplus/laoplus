@@ -243,7 +243,7 @@ public class ConfigUI : MonoBehaviour
             $"[{Util.GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
         );
 
-        var researchMultipliers = Util.GetResearchMultipliers();
+        var researchMultipliers = Util.GetDisassembleMultipliers();
 
         var metal = 0;
         var nutrient = 0;
@@ -292,9 +292,9 @@ public class ConfigUI : MonoBehaviour
             }
         }
 
-        this._metal = (int)(metal * researchMultipliers.totalMultiplier);
-        this._nutrient = (int)(nutrient * researchMultipliers.totalMultiplier);
-        this._power = (int)(power * researchMultipliers.totalMultiplier);
+        this._metal = (int)(metal * researchMultipliers.total);
+        this._nutrient = (int)(nutrient * researchMultipliers.total);
+        this._power = (int)(power * researchMultipliers.total);
         this._normalModule = normalModule;
         this._advancedModule = advancedModule;
         this._specialModule = specialModule;
