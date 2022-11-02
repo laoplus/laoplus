@@ -30,6 +30,7 @@ namespace LAOPLUS.UI
         int _specialModule;
         int _dropCount;
         readonly List<Table_PC> _obtainPcList = new();
+        readonly List<string> _obtainPcLog = new();
 
         void OnGUI()
         {
@@ -202,11 +203,11 @@ namespace LAOPLUS.UI
                 this._scrollPosition = GUILayout.BeginScrollView(this._scrollPosition);
                 {
                     // 新しい順に表示したいので逆順にする
-                    var tempObtainPcList = new List<Table_PC>(this._obtainPcList);
-                    tempObtainPcList.Reverse();
-                    foreach (var pc in tempObtainPcList)
+                    var tempObtainPcLog = new List<string>(this._obtainPcLog);
+                    tempObtainPcLog.Reverse();
+                    foreach (var log in tempObtainPcLog)
                     {
-                        GUILayout.Label($"[{GradeToRank(pc.StartGrade)}] {pc.Name}");
+                        GUILayout.Label(log);
                     }
                 }
                 GUILayout.EndScrollView();
@@ -227,17 +228,22 @@ namespace LAOPLUS.UI
             return rect;
         }
 
-        public void IncreaseBattleStats(
-            int metal,
-            int nutrient,
-            int power,
-            int normalModule,
-            int advancedModule,
-            int specialModule,
-            Table_PC tablePc
-        )
+        public void IncreaseBattleStats(Table_PC tablePc)
         {
             var dm = SingleTon<DataManager>.Instance;
+
+            this._dropCount++;
+            this._obtainPcList.Add(tablePc);
+            this._obtainPcLog.Add(
+                $"[{GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
+            );
+
+            // TODO: なおす
+            // 本家の実装では乗数の計算を分解時に
+            // 1. 分解PC全てのリソース獲得値を合計する
+            // 2. その合計値に対して乗数をかける
+            // という実装をしているので、現在の逐一乗数をかける実装では若干誤差が生じる
+
             var researchMultiplier = 0f;
             var resourceSearchInfo = dm.GetResourceSearchInfo(RESEARCH_RESULT.DISASSEMBLE_UP);
             if (resourceSearchInfo != null)
@@ -253,25 +259,63 @@ namespace LAOPLUS.UI
             }
 
             var totalMultiplier = 1f + researchMultiplier + boostMultiplier;
+            LAOPLUS.Log.LogDebug($"Research Multiplier: {researchMultiplier}");
+            LAOPLUS.Log.LogDebug($"Boost Multiplier: {boostMultiplier}");
+            LAOPLUS.Log.LogDebug($"Total Multiplier: {totalMultiplier}");
 
-            LAOPLUS.Log.LogInfo($"Research Multiplier: {researchMultiplier}");
-            LAOPLUS.Log.LogInfo($"Boost Multiplier: {boostMultiplier}");
-            LAOPLUS.Log.LogInfo($"Total Multiplier: {totalMultiplier}");
+            var metal = 0;
+            var nutrient = 0;
+            var power = 0;
+            var normalModule = 0;
+            var advancedModule = 0;
+            var specialModule = 0;
 
-            this._metal += (int)(metal * totalMultiplier);
-            this._nutrient += (int)(nutrient * totalMultiplier);
-            this._power += (int)(power * totalMultiplier);
-            this._normalModule += normalModule;
-            this._advancedModule += advancedModule;
-            this._specialModule += specialModule;
-            this._dropCount++;
-            this._obtainPcList.Add(tablePc);
+            foreach (var pc in this._obtainPcList)
+            {
+                var disassembleTable = dm.GetTableDisassemble(pc.Disassemblekey);
+                metal += disassembleTable.MetalObtain;
+                nutrient += disassembleTable.NutrientObtain;
+                power += disassembleTable.PowerObtain;
 
-            // TODO: なおす
-            // 本家の実装では乗数の計算を分解時に
-            // 1. 分解PC全てのリソース獲得値を合計する
-            // 2. その合計値に対して乗数をかける
-            // という実装をしているので、現在の逐一乗数をかける実装では若干誤差が生じる
+                var itemCountClone = new List<int>();
+                var itemKeyClone = new List<string>();
+                foreach (var count in disassembleTable.GiveItemCount)
+                {
+                    itemCountClone.Add(count);
+                }
+
+                foreach (var itemKey in disassembleTable.GiveItemKeyString)
+                {
+                    itemKeyClone.Add(itemKey);
+                }
+
+                var itemCountDict = itemKeyClone
+                    .Zip(itemCountClone, (k, v) => new { k, v })
+                    .ToDictionary(x => x.k, x => x.v);
+
+                foreach (var (key, count) in itemCountDict)
+                {
+                    switch (key)
+                    {
+                        case "Normal_Module":
+                            normalModule += count;
+                            break;
+                        case "Advanced_Module":
+                            advancedModule += count;
+                            break;
+                        case "Special_Module":
+                            specialModule += count;
+                            break;
+                    }
+                }
+            }
+
+            this._metal = (int)(metal * totalMultiplier);
+            this._nutrient = (int)(nutrient * totalMultiplier);
+            this._power = (int)(power * totalMultiplier);
+            this._normalModule = normalModule;
+            this._advancedModule = advancedModule;
+            this._specialModule = specialModule;
         }
 
         static string GradeToRank(int grade)
@@ -297,6 +341,7 @@ namespace LAOPLUS.UI
             this._specialModule = 0;
             this._dropCount = 0;
             this._obtainPcList.Clear();
+            this._obtainPcLog.Clear();
         }
     }
 
@@ -321,47 +366,6 @@ namespace LAOPLUS.UI
             LAOPLUS.Log.LogInfo($"tablePc: {tablePc.ToString()}");
             LAOPLUS.Log.LogInfo($"instance: {__instance.ToString()}");
             LAOPLUS.Log.LogInfo($"GetPc: {tablePc.Name}");
-            var dm = SingleTon<DataManager>.Instance;
-            var disassembleTable = dm.GetTableDisassemble(tablePc.Disassemblekey);
-
-            var metal = disassembleTable.MetalObtain;
-            var nutrient = disassembleTable.NutrientObtain;
-            var power = disassembleTable.PowerObtain;
-            var normalModule = 0;
-            var advancedModule = 0;
-            var specialModule = 0;
-
-            var itemCountClone = new List<int>();
-            var itemKeyClone = new List<string>();
-            foreach (var count in disassembleTable.GiveItemCount)
-            {
-                itemCountClone.Add(count);
-            }
-
-            foreach (var itemKey in disassembleTable.GiveItemKeyString)
-            {
-                itemKeyClone.Add(itemKey);
-            }
-
-            var itemCountDict = itemKeyClone
-                .Zip(itemCountClone, (k, v) => new { k, v })
-                .ToDictionary(x => x.k, x => x.v);
-
-            foreach (var (key, count) in itemCountDict)
-            {
-                switch (key)
-                {
-                    case "Normal_Module":
-                        normalModule += count;
-                        break;
-                    case "Advanced_Module":
-                        advancedModule += count;
-                        break;
-                    case "Special_Module":
-                        specialModule += count;
-                        break;
-                }
-            }
 
             var statsWindows = Resources.FindObjectsOfTypeAll<ConfigUI>();
             var statsWindow = statsWindows.FirstOrDefault();
@@ -371,17 +375,7 @@ namespace LAOPLUS.UI
                 return;
             }
 
-            tablePc.Name = dm.GetLocalization(tablePc.Name);
-
-            statsWindow.IncreaseBattleStats(
-                metal,
-                nutrient,
-                power,
-                normalModule,
-                advancedModule,
-                specialModule,
-                tablePc
-            );
+            statsWindow.IncreaseBattleStats(tablePc);
         }
     }
 }
