@@ -238,30 +238,7 @@ namespace LAOPLUS.UI
                 $"[{GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
             );
 
-            // TODO: なおす
-            // 本家の実装では乗数の計算を分解時に
-            // 1. 分解PC全てのリソース獲得値を合計する
-            // 2. その合計値に対して乗数をかける
-            // という実装をしているので、現在の逐一乗数をかける実装では若干誤差が生じる
-
-            var researchMultiplier = 0f;
-            var resourceSearchInfo = dm.GetResourceSearchInfo(RESEARCH_RESULT.DISASSEMBLE_UP);
-            if (resourceSearchInfo != null)
-            {
-                researchMultiplier = float.Parse(resourceSearchInfo.EffectValue);
-            }
-
-            var boostMultiplier = 0f;
-            var boostInfo = Common.GetBoostInfo(FUNCTION_TYPE.BreakSearchBoost_ACTIVATE);
-            if (boostInfo != null)
-            {
-                boostMultiplier = boostInfo.Rate;
-            }
-
-            var totalMultiplier = 1f + researchMultiplier + boostMultiplier;
-            LAOPLUS.Log.LogDebug($"Research Multiplier: {researchMultiplier}");
-            LAOPLUS.Log.LogDebug($"Boost Multiplier: {boostMultiplier}");
-            LAOPLUS.Log.LogDebug($"Total Multiplier: {totalMultiplier}");
+            var researchMultipliers = Util.GetResearchMultipliers();
 
             var metal = 0;
             var nutrient = 0;
@@ -310,9 +287,9 @@ namespace LAOPLUS.UI
                 }
             }
 
-            this._metal = (int)(metal * totalMultiplier);
-            this._nutrient = (int)(nutrient * totalMultiplier);
-            this._power = (int)(power * totalMultiplier);
+            this._metal = (int)(metal * researchMultipliers.totalMultiplier);
+            this._nutrient = (int)(nutrient * researchMultipliers.totalMultiplier);
+            this._power = (int)(power * researchMultipliers.totalMultiplier);
             this._normalModule = normalModule;
             this._advancedModule = advancedModule;
             this._specialModule = specialModule;
