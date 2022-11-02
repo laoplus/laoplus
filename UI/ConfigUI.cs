@@ -308,7 +308,7 @@ internal class GetPcEventWatcher
     {
         // よくわからないがPanel_RewardCha以外のインスタンスで呼ばれることがある
         // その時にメンバを参照してしまうと落ちるのでスキップする
-        // なぜ判定方法がこれなのかは謎
+        // 判定方法がこれでいいのかは謎
 
         if (!__instance.ToString().Contains("Panel_RewardCha"))
         {
