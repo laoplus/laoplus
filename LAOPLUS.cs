@@ -279,10 +279,16 @@ namespace LAOPLUS
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 
             ClassInjector.RegisterTypeInIl2Cpp<ConfigUI>();
-            var obj = new GameObject("StatsWindow");
-            Object.DontDestroyOnLoad(obj);
-            obj.hideFlags |= HideFlags.HideAndDontSave;
-            obj.AddComponent<ConfigUI>();
+            var configWindowGo = new GameObject("LAOPLUS-ConfigWindow");
+            Object.DontDestroyOnLoad(configWindowGo);
+            configWindowGo.hideFlags |= HideFlags.HideAndDontSave;
+            configWindowGo.AddComponent<ConfigUI>();
+
+            ClassInjector.RegisterTypeInIl2Cpp<UICameraUpdater>();
+            var singletonGo = new GameObject("LAOPLUS-Singleton");
+            Object.DontDestroyOnLoad(singletonGo);
+            singletonGo.hideFlags |= HideFlags.HideAndDontSave;
+            singletonGo.AddComponent<UICameraUpdater>();
         }
     }
 }

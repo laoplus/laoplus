@@ -9,7 +9,9 @@ namespace LAOPLUS.UI;
 
 public class ConfigUI : MonoBehaviour
 {
-    public ConfigUI(IntPtr ptr) : base(ptr) { }
+    public ConfigUI(IntPtr ptr) : base(ptr)
+    {
+    }
 
     const int WindowWidth = 500;
     const int WindowHeight = 200;
@@ -69,12 +71,40 @@ public class ConfigUI : MonoBehaviour
             this._guiScale
         );
 
-        // this._windowRect = GUI.Window(
-        //     0,
-        //     this._windowRect,
-        //     (GUI.WindowFunction)WindowFunc,
-        //     $"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION}"
-        // );
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
+
+        // マウスオーバーの判定
+        if (this._windowRect.Contains(Event.current.mousePosition))
+        {
+            OnMouseEnter();
+        }
+        else
+        {
+            OnMouseExit();
+        }
+    }
+
+    void OnMouseEnter()
+    {
+        var uiCameras = UICameraUpdater.Instance.GetUICameras();
+        foreach (var uiCamera in uiCameras.Where(uiCamera => uiCamera.enabled))
+        {
+            uiCamera.enabled = false;
+            LAOPLUS.Log.LogDebug("OnMouseEnter: uiCamera.disabled");
+        }
+    }
+
+    void OnMouseExit()
+    {
+        var uiCameras = UICameraUpdater.Instance.GetUICameras();
+        foreach (var uiCamera in uiCameras.Where(uiCamera => !uiCamera.enabled))
+        {
+            uiCamera.enabled = true;
+            LAOPLUS.Log.LogDebug("OnMouseExit: uiCamera.enabled");
+        }
     }
 
     void Update()
@@ -92,6 +122,7 @@ public class ConfigUI : MonoBehaviour
         {
             this._guiScale = Mathf.Min(1, this._guiScale + 0.25f);
         }
+
         if (Input.GetKeyDown(KeyCode.F3))
         {
             this._enableDvdMode = !this._enableDvdMode;
@@ -173,6 +204,10 @@ public class ConfigUI : MonoBehaviour
             this._showWindow = false;
         }
 
+        var titleBarRect = new Rect(padding, padding, WindowWidth * s - padding * 2, buttonHeight);
+        GUI.Box(titleBarRect, "", GUIStyle.none);
+        GUI.DragWindow(titleBarRect);
+
         GUILayout.BeginHorizontal(CustomSkin.MainBox);
 
         var gm = SingleTon<GameManager>.Instance;
@@ -229,8 +264,6 @@ public class ConfigUI : MonoBehaviour
         GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
-
-        GUI.DragWindow();
     }
 
     public void IncreaseBattleStats(Table_PC tablePc)
@@ -314,6 +347,7 @@ internal class GetPcEventWatcher
         {
             return;
         }
+
         if (tablePc.ToString() == "System.Action")
         {
             return;
