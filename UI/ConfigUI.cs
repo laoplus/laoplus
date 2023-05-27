@@ -9,14 +9,12 @@ namespace LAOPLUS.UI;
 
 public class ConfigUI : MonoBehaviour
 {
-    public ConfigUI(IntPtr ptr) : base(ptr)
-    {
-    }
+    public ConfigUI(IntPtr ptr) : base(ptr) { }
 
-    const int WindowWidth = 500;
-    const int WindowHeight = 200;
+    const int InitialWindowWidth = 500;
+    const int InitialWindowHeight = 200;
 
-    Rect _windowRect = new Rect(10, 10, WindowWidth * 2f, WindowHeight * 2f);
+    Rect _windowRect = new Rect(10, 10, InitialWindowWidth * 2f, InitialWindowHeight * 2f);
     float _guiScale = 0.5f;
     bool _showWindow = true;
     bool _enableDvdMode;
@@ -33,6 +31,10 @@ public class ConfigUI : MonoBehaviour
     int _dropCount;
     readonly List<Table_PC> _obtainPcList = new();
     readonly List<string> _obtainPcLog = new();
+
+    bool _isResizing = false;
+    const CursorMode CursorMode = UnityEngine.CursorMode.Auto;
+    readonly Texture2D _resizeCursor = SkinTex.ResizeCursor;
 
     void ResetStats()
     {
@@ -71,12 +73,17 @@ public class ConfigUI : MonoBehaviour
             this._guiScale
         );
 
+        HandleMouseOver();
+        HandleResizeGrip();
+    }
+
+    void HandleMouseOver()
+    {
         if (Event.current.type != EventType.Repaint)
         {
             return;
         }
 
-        // マウスオーバーの判定
         if (this._windowRect.Contains(Event.current.mousePosition))
         {
             OnMouseEnter();
@@ -104,6 +111,58 @@ public class ConfigUI : MonoBehaviour
         {
             uiCamera.enabled = true;
             LAOPLUS.Log.LogDebug("OnMouseExit: uiCamera.enabled");
+        }
+    }
+
+    void HandleResizeGrip()
+    {
+        var setResizeCursor = this._isResizing;
+
+        const int magicNumber = 16 * CustomSkin.InternalRenderScale;
+        if (
+            this._windowRect.Contains(Event.current.mousePosition)
+            && Mathf.Abs(this._windowRect.xMax - Event.current.mousePosition.x) < magicNumber
+            && Mathf.Abs(this._windowRect.yMax - Event.current.mousePosition.y) < magicNumber
+        )
+        {
+            setResizeCursor = true;
+        }
+
+        // Update cursor
+        if (setResizeCursor)
+        {
+            Cursor.SetCursor(this._resizeCursor, new Vector2(0, 0), CursorMode);
+        }
+        else
+        {
+            Cursor.SetCursor(null, Vector2.zero, CursorMode);
+        }
+
+        // Handle mouse events
+        if (Event.current.type == EventType.MouseDown)
+        {
+            if (
+                this._windowRect.Contains(Event.current.mousePosition)
+                && Mathf.Abs(this._windowRect.xMax - Event.current.mousePosition.x) < magicNumber
+                && Mathf.Abs(this._windowRect.yMax - Event.current.mousePosition.y) < magicNumber
+            )
+            {
+                this._isResizing = true;
+            }
+        }
+        else if (Event.current.type == EventType.MouseUp)
+        {
+            this._isResizing = false;
+        }
+        else if (Event.current.type == EventType.MouseDrag)
+        {
+            if (!this._isResizing)
+            {
+                return;
+            }
+
+            this._windowRect.width = Event.current.mousePosition.x - this._windowRect.x;
+            this._windowRect.height = Event.current.mousePosition.y - this._windowRect.y;
         }
     }
 
@@ -191,7 +250,7 @@ public class ConfigUI : MonoBehaviour
         if (
             GUI.Button(
                 new Rect(
-                    WindowWidth * s - buttonWidth - padding,
+                    this._windowRect.width - buttonWidth - padding,
                     padding,
                     buttonWidth,
                     buttonHeight
@@ -204,7 +263,13 @@ public class ConfigUI : MonoBehaviour
             this._showWindow = false;
         }
 
-        var titleBarRect = new Rect(padding, padding, WindowWidth * s - padding * 2, buttonHeight);
+        // title bar
+        var titleBarRect = new Rect(
+            padding,
+            padding,
+            this._windowRect.width - padding * 2,
+            buttonHeight
+        );
         GUI.Box(titleBarRect, "", GUIStyle.none);
         GUI.DragWindow(titleBarRect);
 
@@ -222,6 +287,33 @@ public class ConfigUI : MonoBehaviour
             }
         }
         GUILayout.EndHorizontal();
+
+        GUILayout.BeginVertical();
+        {
+            if (GUILayout.Button("+WindowHeight"))
+            {
+                this._windowRect.height += 100;
+            }
+            if (GUILayout.Button("-WindowHeight"))
+            {
+                this._windowRect.height -= 100;
+            }
+            if (GUILayout.Button("+WindowWidth"))
+            {
+                this._windowRect.width += 100;
+            }
+            if (GUILayout.Button("-WindowWidth"))
+            {
+                this._windowRect.width -= 100;
+            }
+
+            if (GUILayout.Button("DefaultSize"))
+            {
+                this._windowRect.width = 500;
+                this._windowRect.height = 200;
+            }
+        }
+        GUILayout.EndVertical();
 
         GUILayout.BeginVertical(CustomSkin.ContentBox);
         {

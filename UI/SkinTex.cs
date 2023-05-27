@@ -26,6 +26,8 @@ internal static class SkinTex
     public static readonly Texture2D NavButtonSelectedHover = Load("UI/Side Nav_/Parts_/Side Nav List Item Selected-hover.png");
     public static readonly Texture2D NavButtonSelectedPressed= Load("UI/Side Nav_/Parts_/Side Nav List Item Selected-pressed.png");
 
+    public static readonly Texture2D ResizeCursor = Load("UI/Parts_/Resize Cursor.png");
+    
     static Texture2D Load(string path)
     {
         // ReSharper disable StringLiteralTypo
