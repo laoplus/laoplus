@@ -34,7 +34,7 @@ public class ConfigUI : MonoBehaviour
 
     bool _isResizing = false;
     const CursorMode CursorMode = UnityEngine.CursorMode.Auto;
-    readonly Texture2D _resizeCursor = SkinTex.ResizeCursor;
+    readonly Texture2D _resizeCursor = SkinTex.CursorResize;
 
     void ResetStats()
     {
