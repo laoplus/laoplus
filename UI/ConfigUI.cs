@@ -12,7 +12,9 @@ public class ConfigUI : MonoBehaviour
     public ConfigUI(IntPtr ptr) : base(ptr) { }
 
     const int InitialWindowWidth = 500;
+    const int MinimumWindowWidth = 300;
     const int InitialWindowHeight = 200;
+    const int MinimumWindowHeight = 100;
 
     Rect _windowRect = new Rect(10, 10, InitialWindowWidth * 2f, InitialWindowHeight * 2f);
     float _guiScale = 0.5f;
@@ -32,7 +34,7 @@ public class ConfigUI : MonoBehaviour
     readonly List<Table_PC> _obtainPcList = new();
     readonly List<string> _obtainPcLog = new();
 
-    bool _isResizing = false;
+    bool _isResizing;
     const CursorMode CursorMode = UnityEngine.CursorMode.Auto;
     readonly Texture2D _resizeCursor = SkinTex.CursorResize;
 
@@ -68,7 +70,7 @@ public class ConfigUI : MonoBehaviour
                 21,
                 this._windowRect,
                 (GUI.WindowFunction)WindowFunc,
-                $"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} ({this._guiScale}x)"
+                $"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} ({this._guiScale}x) ({this._windowRect.width}x{this._windowRect.height})"
             ),
             this._guiScale
         );
@@ -167,8 +169,14 @@ public class ConfigUI : MonoBehaviour
                 return;
             }
 
-            this._windowRect.width = Event.current.mousePosition.x - this._windowRect.x;
-            this._windowRect.height = Event.current.mousePosition.y - this._windowRect.y;
+            this._windowRect.width = Mathf.Max(
+                MinimumWindowWidth * CustomSkin.InternalRenderScale,
+                Event.current.mousePosition.x - this._windowRect.x
+            );
+            this._windowRect.height = Mathf.Max(
+                MinimumWindowHeight * CustomSkin.InternalRenderScale,
+                Event.current.mousePosition.y - this._windowRect.y
+            );
         }
     }
 
