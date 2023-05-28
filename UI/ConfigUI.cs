@@ -9,8 +9,6 @@ namespace LAOPLUS.UI;
 
 public class ConfigUI : MonoBehaviour
 {
-    public ConfigUI(IntPtr ptr) : base(ptr) { }
-
     const int InitialWindowWidth = 500;
     const int MinimumWindowWidth = 300;
     const int InitialWindowHeight = 200;
@@ -68,7 +66,7 @@ public class ConfigUI : MonoBehaviour
                 21,
                 this._windowRect,
                 (GUI.WindowFunction)WindowFunc,
-                $"{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION} ({this._guiScale}x) ({this._windowRect.width}x{this._windowRect.height})"
+                $"{MyPluginInfo.PLUGIN_NAME} {MyPluginInfo.PLUGIN_VERSION} ({this._guiScale}x) ({this._windowRect.width}x{this._windowRect.height})"
             ),
             this._guiScale
         );
