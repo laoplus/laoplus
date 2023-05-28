@@ -7,42 +7,45 @@ namespace LAOPLUS.UI;
 internal static class SkinTex
 {
     // Window
-    public static readonly Texture2D Window = Load("UI/Surface/App Surface-base.png");
+    public static readonly Texture2D Window = Load("Surface/App Surface-base.png");
 
     // Box
-    public static readonly Texture2D ContentBox = Load("UI/Surface/App Surface-layer.png");
+    public static readonly Texture2D ContentBox = Load("Surface/App Surface-layer.png");
 
     // Button
-    public static readonly Texture2D CloseButtonRest = Load("UI/Parts/Title Bar Caption Control Button-rest.png");
-    public static readonly Texture2D CloseButtonHover = Load("UI/Parts/Title Bar Caption Control Button-hover.png");
-    public static readonly Texture2D CloseButtonPressed = Load("UI/Parts/Title Bar Caption Control Button-pressed.png");
+    public static readonly Texture2D CloseButtonRest = Load("Parts/Title Bar Caption Control Button-rest.png");
+    public static readonly Texture2D CloseButtonHover = Load("Parts/Title Bar Caption Control Button-hover.png");
+    public static readonly Texture2D CloseButtonPressed = Load("Parts/Title Bar Caption Control Button-pressed.png");
     public static readonly Texture2D ButtonRest = null;
     public static readonly Texture2D ButtonHover = null;
     public static readonly Texture2D ButtonPressed = null;
-    public static readonly Texture2D NavButtonRest = Load("UI/Side Nav/Parts/Side Nav List Item-rest.png");
-    public static readonly Texture2D NavButtonHover = Load("UI/Side Nav/Parts/Side Nav List Item-hover.png");
-    public static readonly Texture2D NavButtonPressed = Load("UI/Side Nav/Parts/Side Nav List Item-pressed.png");
-    public static readonly Texture2D NavButtonSelectedRest = Load("UI/Side Nav/Parts/Side Nav List Item Selected-rest.png");
-    public static readonly Texture2D NavButtonSelectedHover = Load("UI/Side Nav/Parts/Side Nav List Item Selected-hover.png");
-    public static readonly Texture2D NavButtonSelectedPressed= Load("UI/Side Nav/Parts/Side Nav List Item Selected-pressed.png");
+    public static readonly Texture2D NavButtonRest = Load("Side Nav/Parts/Side Nav List Item-rest.png");
+    public static readonly Texture2D NavButtonHover = Load("Side Nav/Parts/Side Nav List Item-hover.png");
+    public static readonly Texture2D NavButtonPressed = Load("Side Nav/Parts/Side Nav List Item-pressed.png");
+    public static readonly Texture2D NavButtonSelectedRest = Load("Side Nav/Parts/Side Nav List Item Selected-rest.png");
+    public static readonly Texture2D NavButtonSelectedHover = Load("Side Nav/Parts/Side Nav List Item Selected-hover.png");
+    public static readonly Texture2D NavButtonSelectedPressed= Load("Side Nav/Parts/Side Nav List Item Selected-pressed.png");
 
-    public static readonly Texture2D CursorResizeNs = Load("UI/Cursors/Cursor/ResizeNS.png");
+    public static readonly Texture2D CursorResizeNs = Load("Cursors/Cursor/ResizeNS.png");
 
     static string GetFullPath(string path)
     {
-        // ReSharper disable StringLiteralTypo
-        const string basePath = "G:/DMMGP/lastorigin/BepInEx/plugins/LAOPLUS/";
-        // ReSharper restore StringLiteralTypo
-        var fullPath = Path.Combine(basePath, path);
+        var pluginDirPath = Path.GetDirectoryName(
+            System.Reflection.Assembly.GetExecutingAssembly().Location
+        );
+        if (pluginDirPath == null)
+        {
+            return null;
+        }
 
+        var fullPath = Path.Combine(pluginDirPath, "Assets/UI/", path);
         if (File.Exists(fullPath))
         {
             return fullPath;
         }
 
-        LAOPLUS.Log.LogError($"File not found: {fullPath}");
+        LAOPLUS.Log.LogError($"File not found: {fullPath}, {path}, {pluginDirPath}");
         return null;
-
     }
 
     static Texture2D Load(string path)
