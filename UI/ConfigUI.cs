@@ -101,6 +101,7 @@ public class ConfigUI : MonoBehaviour
 
     void OnMouseEnter()
     {
+        UICamera.ignoreAllEvents = true;
         var objects = TouchObjectUpdater.Instance.GetObjects();
         foreach (var o in objects.Where(o => o.enabled))
         {
@@ -111,6 +112,7 @@ public class ConfigUI : MonoBehaviour
 
     void OnMouseExit()
     {
+        UICamera.ignoreAllEvents = false;
         var objects = TouchObjectUpdater.Instance.GetObjects();
         foreach (var o in objects.Where(o => !o.enabled))
         {

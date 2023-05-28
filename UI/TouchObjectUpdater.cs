@@ -48,11 +48,10 @@ namespace LAOPLUS.UI
 
         void UpdateObjectsList()
         {
-            var cameras = FindObjectsOfType<UICamera>().ToList();
             var easyTouches = FindObjectsOfType<EasyTouch>().ToList();
-            this._objects = cameras.Concat<MonoBehaviour>(easyTouches).ToList();
+            this._objects = new List<MonoBehaviour>().Concat(easyTouches).ToList();
             LAOPLUS.Log.LogDebug(
-                $"TouchObjectUpdater: UpdateObjectsList, {this._objects.Count} camera or easyTouches found."
+                $"TouchObjectUpdater: UpdateObjectsList, {this._objects.Count} easyTouches found."
             );
         }
 
