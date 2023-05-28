@@ -51,6 +51,9 @@ public static class CustomSkin
     {
         var ab = LoadAssetBundle("Assets/Fonts/notosansjp/regular");
         GameFont = ab.LoadAsset<Font>("NotoSansJP-Regular.ttf");
+        // シーン遷移時に破棄されないようにする
+        // 破棄されると文字がちらつくように見える
+        GameFont.hideFlags |= HideFlags.HideAndDontSave;
 
         // Window
         CreateWindow();
