@@ -102,23 +102,11 @@ public class ConfigUI : MonoBehaviour
     void OnMouseEnter()
     {
         UICamera.ignoreAllEvents = true;
-        var objects = TouchObjectUpdater.Instance.GetObjects();
-        foreach (var o in objects.Where(o => o.enabled))
-        {
-            o.enabled = false;
-            LAOPLUS.Log.LogDebug("OnMouseEnter: object=disabled");
-        }
     }
 
     void OnMouseExit()
     {
         UICamera.ignoreAllEvents = false;
-        var objects = TouchObjectUpdater.Instance.GetObjects();
-        foreach (var o in objects.Where(o => !o.enabled))
-        {
-            o.enabled = true;
-            LAOPLUS.Log.LogDebug("OnMouseExit: object=enabled");
-        }
     }
 
     // リサイズグリップの処理

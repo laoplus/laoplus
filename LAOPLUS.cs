@@ -282,12 +282,6 @@ namespace LAOPLUS
             UnityEngine.Object.DontDestroyOnLoad(configWindowGo);
             configWindowGo.hideFlags |= HideFlags.HideAndDontSave;
             configWindowGo.AddComponent<ConfigUI>();
-
-            ClassInjector.RegisterTypeInIl2Cpp<TouchObjectUpdater>();
-            var singletonGo = new GameObject("LAOPLUS-Singleton");
-            UnityEngine.Object.DontDestroyOnLoad(singletonGo);
-            singletonGo.hideFlags |= HideFlags.HideAndDontSave;
-            singletonGo.AddComponent<TouchObjectUpdater>();
         }
     }
 }
