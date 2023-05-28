@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 
 namespace LAOPLUS.UI;
@@ -28,8 +29,29 @@ public static class CustomSkin
     // ディスプレイ拡大率が200%: 最終的に1.0倍する
     public const int InternalRenderScale = 2;
 
+    // static readonly Font GameFont = ResourceManager.LoadFont("FontB_sc");
+    static readonly Font GameFont;
+
+    static AssetBundle LoadAssetBundle(string bundlePath)
+    {
+        var pluginDirPath = Path.GetDirectoryName(
+            System.Reflection.Assembly.GetExecutingAssembly().Location
+        );
+        if (pluginDirPath == null)
+        {
+            LAOPLUS.Log.LogError("Failed to get plugin path.");
+            return null;
+        }
+        var path = Path.Combine(pluginDirPath, bundlePath);
+        LAOPLUS.Log.LogDebug($"Loading AssetBundle: {path}");
+        return !File.Exists(path) ? null : AssetBundle.LoadFromFile(path);
+    }
+
     static CustomSkin()
     {
+        var ab = LoadAssetBundle("Assets/Fonts/notosansjp/regular");
+        GameFont = ab.LoadAsset<Font>("NotoSansJP-Regular.ttf");
+
         // Window
         CreateWindow();
 
@@ -88,6 +110,7 @@ public static class CustomSkin
                 textColor = SkinColor.Light_FillColor_Text_Primary,
                 background = SkinTex.Window
             },
+            font = GameFont,
             fontSize = 12 * InternalRenderScale
         };
     }
@@ -272,6 +295,7 @@ public static class CustomSkin
                 textColor = SkinColor.Light_FillColor_Text_Primary,
                 background = SkinTex.ButtonPressed
             },
+            font = GameFont,
             fontSize = 12 * InternalRenderScale
         };
     }
@@ -282,7 +306,8 @@ public static class CustomSkin
         {
             name = nameof(Label),
             normal = { textColor = SkinColor.Light_FillColor_Text_Primary },
-            fontSize = 12 * InternalRenderScale
+            font = GameFont,
+            fontSize = 12 * InternalRenderScale,
         };
     }
     #endregion

@@ -281,7 +281,8 @@ namespace LAOPLUS
             var configWindowGo = new GameObject("LAOPLUS-ConfigWindow");
             UnityEngine.Object.DontDestroyOnLoad(configWindowGo);
             configWindowGo.hideFlags |= HideFlags.HideAndDontSave;
-            configWindowGo.AddComponent<ConfigUI>();
+            var configUi = configWindowGo.AddComponent<ConfigUI>();
+            configUi.Plugin = this;
         }
     }
 }

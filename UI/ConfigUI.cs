@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +9,8 @@ namespace LAOPLUS.UI;
 
 public class ConfigUI : MonoBehaviour
 {
+    public BasePlugin Plugin { get; set; }
+
     const int InitialWindowWidth = 500;
     const int MinimumWindowWidth = 300;
     const int InitialWindowHeight = 200;
@@ -21,6 +23,7 @@ public class ConfigUI : MonoBehaviour
     Vector2 _dvdMovingDirection = Vector2.one;
     const KeyCode ToggleKey = KeyCode.F1;
     Vector2 _scrollPosition;
+    Vector2 _scrollPosition2;
 
     int _metal;
     int _nutrient;
@@ -273,7 +276,7 @@ public class ConfigUI : MonoBehaviour
 
         var gm = SingleTon<GameManager>.Instance;
 
-        GUILayout.BeginHorizontal();
+        GUILayout.BeginVertical();
         {
             GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
             if (GUILayout.Button("Reset"))
@@ -281,9 +284,23 @@ public class ConfigUI : MonoBehaviour
                 LAOPLUS.Log.LogInfo("Button Reset");
                 ResetStats();
             }
-        }
-        GUILayout.EndHorizontal();
 
+            this._scrollPosition2 = GUILayout.BeginScrollView(this._scrollPosition2);
+            {
+                var values = Plugin.Config.Values;
+                foreach (var entry in values)
+                {
+                    GUILayout.BeginHorizontal();
+                    {
+                        GUILayout.Label($@"[{entry.Definition.Section}] {entry.Definition.Key}");
+                        GUILayout.Label(entry.BoxedValue.ToString());
+                    }
+                    GUILayout.EndHorizontal();
+                }
+            }
+            GUILayout.EndScrollView();
+        }
+        GUILayout.EndVertical();
         GUILayout.BeginVertical(CustomSkin.ContentBox);
         {
             GUILayout.BeginVertical();
