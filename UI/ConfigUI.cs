@@ -84,6 +84,12 @@ public class ConfigUI : MonoBehaviour
             return;
         }
 
+        if (this._isResizing)
+        {
+            OnMouseEnter();
+            return;
+        }
+
         if (this._windowRect.Contains(Event.current.mousePosition))
         {
             OnMouseEnter();
@@ -96,21 +102,21 @@ public class ConfigUI : MonoBehaviour
 
     void OnMouseEnter()
     {
-        var uiCameras = UICameraUpdater.Instance.GetUICameras();
-        foreach (var uiCamera in uiCameras.Where(uiCamera => uiCamera.enabled))
+        var objects = TouchObjectUpdater.Instance.GetObjects();
+        foreach (var o in objects.Where(o => o.enabled))
         {
-            uiCamera.enabled = false;
-            LAOPLUS.Log.LogDebug("OnMouseEnter: uiCamera.disabled");
+            o.enabled = false;
+            LAOPLUS.Log.LogDebug("OnMouseEnter: object=disabled");
         }
     }
 
     void OnMouseExit()
     {
-        var uiCameras = UICameraUpdater.Instance.GetUICameras();
-        foreach (var uiCamera in uiCameras.Where(uiCamera => !uiCamera.enabled))
+        var objects = TouchObjectUpdater.Instance.GetObjects();
+        foreach (var o in objects.Where(o => !o.enabled))
         {
-            uiCamera.enabled = true;
-            LAOPLUS.Log.LogDebug("OnMouseExit: uiCamera.enabled");
+            o.enabled = true;
+            LAOPLUS.Log.LogDebug("OnMouseExit: object=enabled");
         }
     }
 

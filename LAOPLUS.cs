@@ -284,11 +284,11 @@ namespace LAOPLUS
             configWindowGo.hideFlags |= HideFlags.HideAndDontSave;
             configWindowGo.AddComponent<ConfigUI>();
 
-            ClassInjector.RegisterTypeInIl2Cpp<UICameraUpdater>();
+            ClassInjector.RegisterTypeInIl2Cpp<TouchObjectUpdater>();
             var singletonGo = new GameObject("LAOPLUS-Singleton");
             Object.DontDestroyOnLoad(singletonGo);
             singletonGo.hideFlags |= HideFlags.HideAndDontSave;
-            singletonGo.AddComponent<UICameraUpdater>();
+            singletonGo.AddComponent<TouchObjectUpdater>();
         }
     }
 }
