@@ -160,6 +160,13 @@ public class ConfigUI : MonoBehaviour
         }
     }
 
+    // _showWindowをfalseにしたときに行うべき処理をまとめたもの
+    void ClosePostTreatment()
+    {
+        OnMouseExit();
+        Util.SetCursor(Util.CursorType.Default);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(ToggleKey))
@@ -167,8 +174,7 @@ public class ConfigUI : MonoBehaviour
             this._showWindow = !this._showWindow;
             if (!this._showWindow)
             {
-                OnMouseExit();
-                Util.SetCursor(Util.CursorType.Default);
+                ClosePostTreatment();
             }
         }
 
@@ -260,6 +266,7 @@ public class ConfigUI : MonoBehaviour
         )
         {
             this._showWindow = false;
+            ClosePostTreatment();
         }
 
         // title bar
