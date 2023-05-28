@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>net.laoplus.LAOPLUS</AssemblyName>
         <Product>LAOPLUS</Product>
         <VersionPrefix>2.1.0</VersionPrefix>
@@ -10,12 +10,18 @@
         <DebugType>none</DebugType>
         <PackageProjectUrl>https://github.com/eai04191/laoplus</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-*" IncludeAssets="compile" />
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+        <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
         <PackageReference Include="LastOrigin.GameLibs" Version="*-*" />
+        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.*" />
     </ItemGroup>
 
     <ItemGroup>

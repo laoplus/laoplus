@@ -11,7 +11,7 @@ namespace LAOPLUS.Feature
         static void Postfix(Panel_Title __instance)
         {
             __instance._lblVersion.text +=
-                $"\n{PluginInfo.PLUGIN_NAME} {PluginInfo.PLUGIN_VERSION}";
+                $"\n{MyPluginInfo.PLUGIN_NAME} {MyPluginInfo.PLUGIN_VERSION}";
             LAOPLUS.Log.LogDebug($"TitlePatch: {__instance._lblVersion.text}");
         }
     }

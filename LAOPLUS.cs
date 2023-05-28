@@ -1,17 +1,18 @@
 using System;
 using BepInEx;
 using BepInEx.Configuration;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using LAOPLUS.Notification;
+using UnityEngine;
 
 namespace LAOPLUS
 {
-    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     // ReSharper disable once InconsistentNaming
     // ReSharper disable once ClassNeverInstantiated.Global
     public class LAOPLUS : BasePlugin
@@ -114,7 +115,7 @@ namespace LAOPLUS
         {
             Log.LogInfo($"{NotificationClients.Count} notification client(s) loaded.");
             SendMessageToAllNotificationClients(
-                $"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} loaded!"
+                $"{MyPluginInfo.PLUGIN_NAME} v{MyPluginInfo.PLUGIN_VERSION} loaded!"
             );
         }
 
@@ -165,11 +166,11 @@ namespace LAOPLUS
         public override void Load()
         {
             Log = base.Log;
-            Log.LogInfo($"{PluginInfo.PLUGIN_NAME} v{PluginInfo.PLUGIN_VERSION} is loaded!");
+            Log.LogInfo($"{MyPluginInfo.PLUGIN_NAME} v{MyPluginInfo.PLUGIN_VERSION} is loaded!");
 
             HttpClient.DefaultRequestHeaders.Add(
                 "User-Agent",
-                $"{PluginInfo.PLUGIN_NAME}/{PluginInfo.PLUGIN_VERSION}"
+                $"{MyPluginInfo.PLUGIN_NAME}/{MyPluginInfo.PLUGIN_VERSION}"
             );
 
             // Discord
