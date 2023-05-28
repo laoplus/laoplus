@@ -35,8 +35,6 @@ public class ConfigUI : MonoBehaviour
     readonly List<string> _obtainPcLog = new();
 
     bool _isResizing;
-    const CursorMode CursorMode = UnityEngine.CursorMode.Auto;
-    readonly Texture2D _resizeCursor = SkinTex.CursorResize;
 
     void ResetStats()
     {
@@ -79,6 +77,7 @@ public class ConfigUI : MonoBehaviour
         HandleResizeGrip();
     }
 
+    // クリック貫通の防止に関する処理
     void HandleMouseOver()
     {
         if (Event.current.type != EventType.Repaint)
@@ -122,6 +121,7 @@ public class ConfigUI : MonoBehaviour
         }
     }
 
+    // リサイズグリップの処理
     void HandleResizeGrip()
     {
         var setResizeCursor = this._isResizing;
@@ -137,7 +137,7 @@ public class ConfigUI : MonoBehaviour
         }
 
         // Update cursor
-        Cursor.SetCursor(setResizeCursor ? this._resizeCursor : null, Vector2.zero, CursorMode);
+        Util.SetCursor(setResizeCursor ? Util.CursorType.ResizeNs : Util.CursorType.Default);
 
         // Handle mouse events
         if (Event.current.type == EventType.MouseDown)
@@ -174,6 +174,11 @@ public class ConfigUI : MonoBehaviour
         if (Input.GetKeyDown(ToggleKey))
         {
             this._showWindow = !this._showWindow;
+            if (!this._showWindow)
+            {
+                OnMouseExit();
+                Util.SetCursor(Util.CursorType.Default);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Minus))

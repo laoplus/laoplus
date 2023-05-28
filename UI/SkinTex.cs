@@ -26,7 +26,7 @@ internal static class SkinTex
     public static readonly Texture2D NavButtonSelectedHover = Load("UI/Side Nav/Parts/Side Nav List Item Selected-hover.png");
     public static readonly Texture2D NavButtonSelectedPressed= Load("UI/Side Nav/Parts/Side Nav List Item Selected-pressed.png");
 
-    public static readonly Texture2D CursorResize = Load("UI/Cursors/Cursor/ResizeNS.png");
+    public static readonly Texture2D CursorResizeNs = Load("UI/Cursors/Cursor/ResizeNS.png");
 
     static string GetFullPath(string path)
     {

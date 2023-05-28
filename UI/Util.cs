@@ -67,5 +67,27 @@ namespace LAOPLUS.UI
             return Mathf.Abs(rect.xMax - Event.current.mousePosition.x) < magicNumber
                 && Mathf.Abs(rect.yMax - Event.current.mousePosition.y) < magicNumber;
         }
+
+        public enum CursorType
+        {
+            Default,
+            ResizeNs,
+        }
+
+        public static void SetCursor(CursorType cursorType)
+        {
+            const CursorMode cursorMode = CursorMode.Auto;
+
+            Cursor.SetCursor(
+                cursorType switch
+                {
+                    CursorType.Default => null,
+                    CursorType.ResizeNs => SkinTex.CursorResizeNs,
+                    _ => null
+                },
+                Vector2.zero,
+                cursorMode
+            );
+        }
     }
 }
