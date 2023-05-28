@@ -11,7 +11,6 @@ using LAOPLUS.Notification;
 using LAOPLUS.UI;
 using UnhollowerRuntimeLib;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace LAOPLUS
 {
@@ -280,13 +279,13 @@ namespace LAOPLUS
 
             ClassInjector.RegisterTypeInIl2Cpp<ConfigUI>();
             var configWindowGo = new GameObject("LAOPLUS-ConfigWindow");
-            Object.DontDestroyOnLoad(configWindowGo);
+            UnityEngine.Object.DontDestroyOnLoad(configWindowGo);
             configWindowGo.hideFlags |= HideFlags.HideAndDontSave;
             configWindowGo.AddComponent<ConfigUI>();
 
             ClassInjector.RegisterTypeInIl2Cpp<TouchObjectUpdater>();
             var singletonGo = new GameObject("LAOPLUS-Singleton");
-            Object.DontDestroyOnLoad(singletonGo);
+            UnityEngine.Object.DontDestroyOnLoad(singletonGo);
             singletonGo.hideFlags |= HideFlags.HideAndDontSave;
             singletonGo.AddComponent<TouchObjectUpdater>();
         }
