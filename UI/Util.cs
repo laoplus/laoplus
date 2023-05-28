@@ -52,5 +52,20 @@ namespace LAOPLUS.UI
                 _ => "??"
             };
         }
+
+        public static bool IsCursorWithinGameScreen()
+        {
+            var mousePosition = Input.mousePosition;
+            var screenPosition = new Vector3(Screen.width, Screen.height, 0);
+            var cursorInScreen = new Rect(Vector3.zero, screenPosition).Contains(mousePosition);
+            return cursorInScreen;
+        }
+
+        public static bool IsCursorNearResizeGrip(Rect rect)
+        {
+            const int magicNumber = 16 * CustomSkin.InternalRenderScale;
+            return Mathf.Abs(rect.xMax - Event.current.mousePosition.x) < magicNumber
+                && Mathf.Abs(rect.yMax - Event.current.mousePosition.y) < magicNumber;
+        }
     }
 }

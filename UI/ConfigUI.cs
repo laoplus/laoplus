@@ -126,34 +126,23 @@ public class ConfigUI : MonoBehaviour
     {
         var setResizeCursor = this._isResizing;
 
-        const int magicNumber = 16 * CustomSkin.InternalRenderScale;
-        if (
-            this._windowRect.Contains(Event.current.mousePosition)
-            && Mathf.Abs(this._windowRect.xMax - Event.current.mousePosition.x) < magicNumber
-            && Mathf.Abs(this._windowRect.yMax - Event.current.mousePosition.y) < magicNumber
-        )
+        if (Util.IsCursorNearResizeGrip(this._windowRect))
         {
             setResizeCursor = true;
         }
 
+        if (!Util.IsCursorWithinGameScreen())
+        {
+            setResizeCursor = false;
+        }
+
         // Update cursor
-        if (setResizeCursor)
-        {
-            Cursor.SetCursor(this._resizeCursor, new Vector2(0, 0), CursorMode);
-        }
-        else
-        {
-            Cursor.SetCursor(null, Vector2.zero, CursorMode);
-        }
+        Cursor.SetCursor(setResizeCursor ? this._resizeCursor : null, Vector2.zero, CursorMode);
 
         // Handle mouse events
         if (Event.current.type == EventType.MouseDown)
         {
-            if (
-                this._windowRect.Contains(Event.current.mousePosition)
-                && Mathf.Abs(this._windowRect.xMax - Event.current.mousePosition.x) < magicNumber
-                && Mathf.Abs(this._windowRect.yMax - Event.current.mousePosition.y) < magicNumber
-            )
+            if (Util.IsCursorNearResizeGrip(this._windowRect))
             {
                 this._isResizing = true;
             }
@@ -164,7 +153,7 @@ public class ConfigUI : MonoBehaviour
         }
         else if (Event.current.type == EventType.MouseDrag)
         {
-            if (!this._isResizing)
+            if (!this._isResizing || !Util.IsCursorWithinGameScreen())
             {
                 return;
             }
@@ -302,57 +291,22 @@ public class ConfigUI : MonoBehaviour
         }
         GUILayout.EndHorizontal();
 
-        GUILayout.BeginVertical();
-        {
-            if (GUILayout.Button("+WindowHeight"))
-            {
-                this._windowRect.height += 100;
-            }
-            if (GUILayout.Button("-WindowHeight"))
-            {
-                this._windowRect.height -= 100;
-            }
-            if (GUILayout.Button("+WindowWidth"))
-            {
-                this._windowRect.width += 100;
-            }
-            if (GUILayout.Button("-WindowWidth"))
-            {
-                this._windowRect.width -= 100;
-            }
-
-            if (GUILayout.Button("DefaultSize"))
-            {
-                this._windowRect.width = 500;
-                this._windowRect.height = 200;
-            }
-        }
-        GUILayout.EndVertical();
-
         GUILayout.BeginVertical(CustomSkin.ContentBox);
         {
-            GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical();
             {
                 GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
                 GUILayout.Label($"Total Drop Count: {this._dropCount}");
-            }
-            GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            {
                 GUILayout.Label($"Metal: {this._metal}");
                 GUILayout.Label($"Nutrient: {this._nutrient}");
                 GUILayout.Label($"Power: {this._power}");
-            }
-            GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            {
                 GUILayout.Label($"Normal Module: {this._normalModule}");
                 GUILayout.Label($"Advanced Module: {this._advancedModule}");
                 GUILayout.Label($"Special Module: {this._specialModule}");
             }
-            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
 
             GUILayout.Label("Unit Acquired History:");
             this._scrollPosition = GUILayout.BeginScrollView(this._scrollPosition);
