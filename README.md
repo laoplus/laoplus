@@ -147,6 +147,22 @@ https://user-images.githubusercontent.com/3516343/176680128-269b23a7-0f97-44ac-b
 
 </details>
 
+<details>
+<summary><b>役に立たないメッセージモーダルをトーストに変更</b></summary>
+
+https://user-images.githubusercontent.com/3516343/185730488-03dd44b1-52de-4228-b52b-889c95c0a1f9.mp4
+
+「閉じる」しかアクションがないメッセージモーダルをトーストに変更します。
+
+変更される例:
+
+-   オルタリウムの受け取り時
+-   「一度に分解できる戦闘員の数が上限に達しました。」
+
+---
+
+</details>
+
 ## 設定
 
 ![](https://user-images.githubusercontent.com/3516343/173232374-95b1b5c5-267f-4abe-8d1a-5d4bf236ae43.png)
