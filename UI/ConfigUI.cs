@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using UnityEngine;
@@ -22,8 +25,8 @@ public class ConfigUI : MonoBehaviour
     bool _enableDvdMode;
     Vector2 _dvdMovingDirection = Vector2.one;
     const KeyCode ToggleKey = KeyCode.F1;
-    Vector2 _scrollPosition;
-    Vector2 _scrollPosition2;
+    Vector2 _scrollPosNavArea;
+    Vector2 _scrollPosContentArea;
 
     int _metal;
     int _nutrient;
@@ -36,6 +39,22 @@ public class ConfigUI : MonoBehaviour
     readonly List<string> _obtainPcLog = new();
 
     bool _isResizing;
+
+    enum Navigation
+    {
+        Config,
+        About,
+        Debug
+    }
+
+    Navigation _selectedNav = Navigation.Config;
+    string _latestVersion;
+    bool? _isLatestVersion = null;
+
+    GUIStyle GetNavButtonStyle(Navigation nav)
+    {
+        return nav == this._selectedNav ? CustomSkin.NavButtonSelected : CustomSkin.NavButton;
+    }
 
     void ResetStats()
     {
@@ -269,7 +288,7 @@ public class ConfigUI : MonoBehaviour
             ClosePostTreatment();
         }
 
-        // title bar
+        // title bar for dragging
         var titleBarRect = new Rect(
             padding,
             padding,
@@ -281,52 +300,136 @@ public class ConfigUI : MonoBehaviour
 
         GUILayout.BeginHorizontal(CustomSkin.MainBox);
 
+        // navigation
+        this._scrollPosNavArea = GUILayout.BeginScrollView(
+            this._scrollPosNavArea,
+            GUILayout.MinWidth(220 * s),
+            GUILayout.MaxWidth(220 * s)
+        );
+        {
+            if (GUILayout.Button("Config", GetNavButtonStyle(Navigation.Config)))
+            {
+                this._selectedNav = Navigation.Config;
+            }
+            if (GUILayout.Button("About", GetNavButtonStyle(Navigation.About)))
+            {
+                this._selectedNav = Navigation.About;
+            }
+            if (GUILayout.Button("Debug", GetNavButtonStyle(Navigation.Debug)))
+            {
+                this._selectedNav = Navigation.Debug;
+            }
+        }
+        GUILayout.EndScrollView();
+
+        // content
+        this._scrollPosContentArea = GUILayout.BeginScrollView(this._scrollPosContentArea);
+        {
+            switch (this._selectedNav)
+            {
+                case Navigation.Config:
+                    RenderConfig();
+                    break;
+                case Navigation.About:
+                    RenderAbout();
+                    break;
+                case Navigation.Debug:
+                    RenderDebug();
+                    break;
+            }
+        }
+        GUILayout.EndScrollView();
+
+        GUILayout.EndHorizontal();
+    }
+
+    void RenderConfig()
+    {
+        var values = Plugin.Config.Values;
+        foreach (var entry in values)
+        {
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label($@"[{entry.Definition.Section}] {entry.Definition.Key}");
+                GUILayout.Label(entry.BoxedValue.ToString());
+            }
+            GUILayout.EndHorizontal();
+        }
+    }
+
+    void RenderAbout()
+    {
+        GUILayout.BeginVertical();
+        {
+            if (GUILayout.Button(SkinTex.BrandingHeader))
+            {
+                Application.OpenURL("https://github.com/laoplus/laoplus");
+            }
+            GUILayout.Label($"ver {MyPluginInfo.PLUGIN_VERSION}", CustomSkin.CenteredLabel);
+            GUILayout.Label($"by Eai and LAOPLUS Contributors", CustomSkin.CenteredLabel);
+            GUILayout.Label(
+                $"Unity {BepInEx.Unity.Common.UnityInfo.Version}",
+                CustomSkin.CenteredLabel
+            );
+            GUILayout.Label(
+                $"{this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
+            );
+            if (GUILayout.Button("Check for Updates"))
+            {
+                // create a new thread to avoid blocking the main thread
+                new Thread(() =>
+                {
+                    try
+                    {
+                        // TODO: use github api to get latest version
+                        this._isLatestVersion = false;
+                    }
+                    catch (Exception e)
+                    {
+                        LAOPLUS.Log.LogError(e);
+                    }
+                }).Start();
+                if (this._isLatestVersion != null)
+                {
+                    GUILayout.Label(
+                        this._isLatestVersion == true
+                            ? $"You are using the latest version of LAOPLUS"
+                            : $"There is a newer version of LAOPLUS available",
+                        CustomSkin.CenteredLabel
+                    );
+                }
+            }
+        }
+        GUILayout.EndVertical();
+    }
+
+    void RenderDebug()
+    {
+        Vector2 scrollPos = default;
         var gm = SingleTon<GameManager>.Instance;
+
+        GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
 
         GUILayout.BeginVertical();
         {
-            GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
-            if (GUILayout.Button("Reset"))
+            if (GUILayout.Button("Reset Stats"))
             {
-                LAOPLUS.Log.LogInfo("Button Reset");
                 ResetStats();
             }
+            GUILayout.Space(0f);
+            GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
+            GUILayout.Label($"Total Drop Count: {this._dropCount}");
 
-            this._scrollPosition2 = GUILayout.BeginScrollView(this._scrollPosition2);
-            {
-                var values = Plugin.Config.Values;
-                foreach (var entry in values)
-                {
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.Label($@"[{entry.Definition.Section}] {entry.Definition.Key}");
-                        GUILayout.Label(entry.BoxedValue.ToString());
-                    }
-                    GUILayout.EndHorizontal();
-                }
-            }
-            GUILayout.EndScrollView();
-        }
-        GUILayout.EndVertical();
-        GUILayout.BeginVertical(CustomSkin.ContentBox);
-        {
-            GUILayout.BeginVertical();
-            {
-                GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
-                GUILayout.Label($"Total Drop Count: {this._dropCount}");
+            GUILayout.Label($"Metal: {this._metal}");
+            GUILayout.Label($"Nutrient: {this._nutrient}");
+            GUILayout.Label($"Power: {this._power}");
 
-                GUILayout.Label($"Metal: {this._metal}");
-                GUILayout.Label($"Nutrient: {this._nutrient}");
-                GUILayout.Label($"Power: {this._power}");
-
-                GUILayout.Label($"Normal Module: {this._normalModule}");
-                GUILayout.Label($"Advanced Module: {this._advancedModule}");
-                GUILayout.Label($"Special Module: {this._specialModule}");
-            }
-            GUILayout.EndVertical();
+            GUILayout.Label($"Normal Module: {this._normalModule}");
+            GUILayout.Label($"Advanced Module: {this._advancedModule}");
+            GUILayout.Label($"Special Module: {this._specialModule}");
 
             GUILayout.Label("Unit Acquired History:");
-            this._scrollPosition = GUILayout.BeginScrollView(this._scrollPosition);
+            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(100));
             {
                 // 新しい順に表示したいので逆順にする
                 var tempObtainPcLog = new List<string>(this._obtainPcLog);
@@ -339,8 +442,6 @@ public class ConfigUI : MonoBehaviour
             GUILayout.EndScrollView();
         }
         GUILayout.EndVertical();
-
-        GUILayout.EndHorizontal();
     }
 
     public void IncreaseBattleStats(Table_PC tablePc)

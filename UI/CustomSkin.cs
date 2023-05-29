@@ -19,6 +19,9 @@ public static class CustomSkin
     public static GUIStyle NavButton;
     public static GUIStyle NavButtonSelected;
 
+    // Label
+    public static GUIStyle CenteredLabel;
+
     // Primitive
     public static GUIStyle Button;
     public static GUIStyle Label;
@@ -67,6 +70,9 @@ public static class CustomSkin
         // Button
         CreateCloseButton();
         CreateNavButton();
+
+        // Label
+        CreateCenteredLabel();
 
         // Primitive
         CreateButton();
@@ -250,6 +256,20 @@ public static class CustomSkin
             normal = { background = SkinTex.NavButtonSelectedRest },
             hover = { background = SkinTex.NavButtonSelectedHover },
             active = { background = SkinTex.NavButtonSelectedPressed },
+        };
+    }
+    #endregion
+
+    #region Label
+    static void CreateCenteredLabel()
+    {
+        CenteredLabel = new GUIStyle(GUI.skin.label)
+        {
+            name = nameof(CenteredLabel),
+            alignment = TextAnchor.MiddleCenter,
+            normal = { textColor = SkinColor.Light_FillColor_Text_Primary },
+            font = GameFont,
+            fontSize = 12 * InternalRenderScale,
         };
     }
     #endregion
