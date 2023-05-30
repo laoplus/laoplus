@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace LAOPLUS.UI;
 
-public class ConfigUI : MonoBehaviour
+public class UI : MonoBehaviour
 {
     public BasePlugin Plugin { get; set; }
 
@@ -32,12 +32,12 @@ public class ConfigUI : MonoBehaviour
     {
         Config,
         About,
-        Debug
+        Stats
     }
 
     Navigation _selectedNav = Navigation.Config;
     string _latestVersion;
-    bool? _isLatestVersion = null;
+    bool? _isLatestVersion;
 
     GUIStyle GetNavButtonStyle(Navigation nav)
     {
@@ -290,9 +290,9 @@ public class ConfigUI : MonoBehaviour
             {
                 this._selectedNav = Navigation.About;
             }
-            if (GUILayout.Button("Debug", GetNavButtonStyle(Navigation.Debug)))
+            if (GUILayout.Button("Stats", GetNavButtonStyle(Navigation.Stats)))
             {
-                this._selectedNav = Navigation.Debug;
+                this._selectedNav = Navigation.Stats;
             }
         }
         GUILayout.EndScrollView();
@@ -308,8 +308,8 @@ public class ConfigUI : MonoBehaviour
                 case Navigation.About:
                     RenderAbout();
                     break;
-                case Navigation.Debug:
-                    RenderDebug();
+                case Navigation.Stats:
+                    RenderStats();
                     break;
             }
         }
@@ -378,7 +378,7 @@ public class ConfigUI : MonoBehaviour
         GUILayout.EndVertical();
     }
 
-    void RenderDebug()
+    void RenderStats()
     {
         Vector2 scrollPos = default;
         var gm = SingleTon<GameManager>.Instance;
