@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using BepInEx.Unity.IL2CPP;
 using LAOPLUS.Singleton;
 using UnityEngine;
@@ -26,6 +25,22 @@ public class UI : MonoBehaviour
     Vector2 _scrollPosNavArea;
     Vector2 _scrollPosContentArea;
 
+    // 各コンテンツエリアで使い回すスクロールポジション
+    Vector2 _scrollPosContent1;
+    Vector2 _scrollPosContent2;
+    Vector2 _scrollPosContent3;
+    Vector2 _scrollPosContent4;
+    Vector2 _scrollPosContent5;
+
+    void ResetScrollPos()
+    {
+        this._scrollPosContent1 = Vector2.zero;
+        this._scrollPosContent2 = Vector2.zero;
+        this._scrollPosContent3 = Vector2.zero;
+        this._scrollPosContent4 = Vector2.zero;
+        this._scrollPosContent5 = Vector2.zero;
+    }
+
     bool _isResizing;
 
     enum Navigation
@@ -36,8 +51,9 @@ public class UI : MonoBehaviour
     }
 
     Navigation _selectedNav = Navigation.Config;
+
     string _latestVersion;
-    bool? _isLatestVersion;
+    int? _versionCheckResult;
 
     GUIStyle GetNavButtonStyle(Navigation nav)
     {
@@ -346,33 +362,45 @@ public class UI : MonoBehaviour
                 $"Unity {BepInEx.Unity.Common.UnityInfo.Version}",
                 CustomSkin.CenteredLabel
             );
+            GUILayout.Label("");
             GUILayout.Label(
-                $"{this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
+                $"UI Scale: {this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
             );
+            GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
+            GUILayout.Label($"Current FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}");
+            GUILayout.Label($"Current Time: {DateTime.Now}");
+            GUILayout.Label($"Current Game Mode: {GameManager.Instance.GameMode}");
+            GUILayout.Label($"Current StageIndex: {GameManager.Instance.CurrentStageIndex}");
+            GUILayout.Label($"Current SquadIndex: {GameManager.Instance.CurrentSquadIndex}");
+
             if (GUILayout.Button("Check for Updates"))
             {
-                // create a new thread to avoid blocking the main thread
-                new Thread(() =>
+                try
                 {
-                    try
-                    {
-                        // TODO: use github api to get latest version
-                        this._isLatestVersion = false;
-                    }
-                    catch (Exception e)
-                    {
-                        LAOPLUS.Log.LogError(e);
-                    }
-                }).Start();
-                if (this._isLatestVersion != null)
-                {
-                    GUILayout.Label(
-                        this._isLatestVersion == true
-                            ? $"You are using the latest version of LAOPLUS"
-                            : $"There is a newer version of LAOPLUS available",
-                        CustomSkin.CenteredLabel
-                    );
+                    var result = VersionChecker.IsLatestVersion();
+                    this._versionCheckResult = result.Item1;
+                    this._latestVersion = result.Item2;
                 }
+                catch (Exception e)
+                {
+                    LAOPLUS.Log.LogError(e);
+                }
+            }
+            if (this._versionCheckResult != null)
+            {
+                GUILayout.Label(
+                    this._versionCheckResult switch
+                    {
+                        -1 => $"Update Available!: v{this._latestVersion}",
+                        0 => "You are using the latest version!",
+                        _ => "Futures made of virtual insanity NOW!"
+                    },
+                    CustomSkin.CenteredLabel
+                );
+                GUILayout.Label(
+                    $"Current Version: {MyPluginInfo.PLUGIN_VERSION} | Latest Version: {this._latestVersion}",
+                    CustomSkin.CenteredLabel
+                );
             }
         }
         GUILayout.EndVertical();
@@ -380,12 +408,8 @@ public class UI : MonoBehaviour
 
     void RenderStats()
     {
-        Vector2 scrollPos = default;
         var gm = SingleTon<GameManager>.Instance;
-
         var statsManager = StatsManager.Instance;
-
-        GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
 
         GUILayout.BeginVertical();
         {
@@ -393,7 +417,7 @@ public class UI : MonoBehaviour
             {
                 statsManager.ResetStats();
             }
-            GUILayout.Space(0f);
+            GUILayout.Space(12f);
             GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
             GUILayout.Label($"Total Drop Count: {statsManager.DropCount}");
 
@@ -406,7 +430,10 @@ public class UI : MonoBehaviour
             GUILayout.Label($"Special Module: {statsManager.SpecialModule}");
 
             GUILayout.Label("Unit Acquired History:");
-            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(100));
+            this._scrollPosContent1 = GUILayout.BeginScrollView(
+                this._scrollPosContent1,
+                GUILayout.MaxHeight(100)
+            );
             {
                 // 新しい順に表示したいので逆順にする
                 var tempObtainPcLog = new List<string>(statsManager.ObtainPcLog);
