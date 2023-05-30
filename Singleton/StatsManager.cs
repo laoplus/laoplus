@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using LAOPLUS.UI;
 
 namespace LAOPLUS.Singleton;
 
@@ -8,16 +7,16 @@ public class StatsManager
 {
     static StatsManager _instance;
 
-    public int Metal { get; set; }
-    public int Nutrient { get; set; }
-    public int Power { get; set; }
-    public int NormalModule { get; set; }
-    public int AdvancedModule { get; set; }
-    public int SpecialModule { get; set; }
-    public int DropCount { get; set; }
+    public int Metal { get; private set; }
+    public int Nutrient { get; private set; }
+    public int Power { get; private set; }
+    public int NormalModule { get; private set; }
+    public int AdvancedModule { get; private set; }
+    public int SpecialModule { get; private set; }
+    public int DropCount { get; private set; }
 
-    public List<Table_PC> ObtainPcList { get; set; }
-    public List<string> ObtainPcLog { get; set; }
+    public List<Table_PC> ObtainPcList { get; private set; }
+    public List<string> ObtainPcLog { get; private set; }
 
     // singleton accessor
     public static StatsManager Instance => _instance ??= new StatsManager();
@@ -27,7 +26,8 @@ public class StatsManager
 
     public void ResetStats()
     {
-        LAOPLUS.Log.LogInfo("StatsManager.ResetStats()");
+        LAOPLUS.Log.LogDebug("StatsManager.ResetStats()");
+
         Metal = 0;
         Nutrient = 0;
         Power = 0;
@@ -41,7 +41,8 @@ public class StatsManager
 
     public void IncreaseBattleStats(Table_PC tablePc)
     {
-        LAOPLUS.Log.LogInfo("StatsManager.IncreaseBattleStats()");
+        LAOPLUS.Log.LogDebug("StatsManager.IncreaseBattleStats()");
+
         var dm = SingleTon<DataManager>.Instance;
 
         DropCount++;
