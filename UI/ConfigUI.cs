@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading;
 using BepInEx.Unity.IL2CPP;
-using HarmonyLib;
+using LAOPLUS.Singleton;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,16 +26,6 @@ public class ConfigUI : MonoBehaviour
     Vector2 _scrollPosNavArea;
     Vector2 _scrollPosContentArea;
 
-    int _metal;
-    int _nutrient;
-    int _power;
-    int _normalModule;
-    int _advancedModule;
-    int _specialModule;
-    int _dropCount;
-    readonly List<Table_PC> _obtainPcList = new();
-    readonly List<string> _obtainPcLog = new();
-
     bool _isResizing;
 
     enum Navigation
@@ -54,19 +42,6 @@ public class ConfigUI : MonoBehaviour
     GUIStyle GetNavButtonStyle(Navigation nav)
     {
         return nav == this._selectedNav ? CustomSkin.NavButtonSelected : CustomSkin.NavButton;
-    }
-
-    void ResetStats()
-    {
-        this._metal = 0;
-        this._nutrient = 0;
-        this._power = 0;
-        this._normalModule = 0;
-        this._advancedModule = 0;
-        this._specialModule = 0;
-        this._dropCount = 0;
-        this._obtainPcList.Clear();
-        this._obtainPcLog.Clear();
     }
 
     void OnGUI()
@@ -408,31 +383,33 @@ public class ConfigUI : MonoBehaviour
         Vector2 scrollPos = default;
         var gm = SingleTon<GameManager>.Instance;
 
+        var statsManager = StatsManager.Instance;
+
         GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
 
         GUILayout.BeginVertical();
         {
             if (GUILayout.Button("Reset Stats"))
             {
-                ResetStats();
+                statsManager.ResetStats();
             }
             GUILayout.Space(0f);
             GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
-            GUILayout.Label($"Total Drop Count: {this._dropCount}");
+            GUILayout.Label($"Total Drop Count: {statsManager.DropCount}");
 
-            GUILayout.Label($"Metal: {this._metal}");
-            GUILayout.Label($"Nutrient: {this._nutrient}");
-            GUILayout.Label($"Power: {this._power}");
+            GUILayout.Label($"Metal: {statsManager.Metal}");
+            GUILayout.Label($"Nutrient: {statsManager.Nutrient}");
+            GUILayout.Label($"Power: {statsManager.Power}");
 
-            GUILayout.Label($"Normal Module: {this._normalModule}");
-            GUILayout.Label($"Advanced Module: {this._advancedModule}");
-            GUILayout.Label($"Special Module: {this._specialModule}");
+            GUILayout.Label($"Normal Module: {statsManager.NormalModule}");
+            GUILayout.Label($"Advanced Module: {statsManager.AdvancedModule}");
+            GUILayout.Label($"Special Module: {statsManager.SpecialModule}");
 
             GUILayout.Label("Unit Acquired History:");
             scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(100));
             {
                 // 新しい順に表示したいので逆順にする
-                var tempObtainPcLog = new List<string>(this._obtainPcLog);
+                var tempObtainPcLog = new List<string>(statsManager.ObtainPcLog);
                 tempObtainPcLog.Reverse();
                 foreach (var log in tempObtainPcLog)
                 {
@@ -442,107 +419,5 @@ public class ConfigUI : MonoBehaviour
             GUILayout.EndScrollView();
         }
         GUILayout.EndVertical();
-    }
-
-    public void IncreaseBattleStats(Table_PC tablePc)
-    {
-        var dm = SingleTon<DataManager>.Instance;
-
-        this._dropCount++;
-        this._obtainPcList.Add(tablePc);
-        this._obtainPcLog.Add(
-            $"[{Util.GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
-        );
-
-        var researchMultipliers = Util.GetDisassembleMultipliers();
-
-        var metal = 0;
-        var nutrient = 0;
-        var power = 0;
-        var normalModule = 0;
-        var advancedModule = 0;
-        var specialModule = 0;
-
-        foreach (var pc in this._obtainPcList)
-        {
-            var disassembleTable = dm.GetTableDisassemble(pc.Disassemblekey);
-            metal += disassembleTable.MetalObtain;
-            nutrient += disassembleTable.NutrientObtain;
-            power += disassembleTable.PowerObtain;
-
-            var itemCountClone = new List<int>();
-            var itemKeyClone = new List<string>();
-            foreach (var count in disassembleTable.GiveItemCount)
-            {
-                itemCountClone.Add(count);
-            }
-
-            foreach (var itemKey in disassembleTable.GiveItemKeyString)
-            {
-                itemKeyClone.Add(itemKey);
-            }
-
-            var itemCountDict = itemKeyClone
-                .Zip(itemCountClone, (k, v) => new { k, v })
-                .ToDictionary(x => x.k, x => x.v);
-
-            foreach (var (key, count) in itemCountDict)
-            {
-                switch (key)
-                {
-                    case "Normal_Module":
-                        normalModule += count;
-                        break;
-                    case "Advanced_Module":
-                        advancedModule += count;
-                        break;
-                    case "Special_Module":
-                        specialModule += count;
-                        break;
-                }
-            }
-        }
-
-        this._metal = (int)(metal * researchMultipliers.total);
-        this._nutrient = (int)(nutrient * researchMultipliers.total);
-        this._power = (int)(power * researchMultipliers.total);
-        this._normalModule = normalModule;
-        this._advancedModule = advancedModule;
-        this._specialModule = specialModule;
-    }
-}
-
-[HarmonyPatch(typeof(Panel_RewardCha), nameof(Panel_RewardCha.GetPc))]
-internal class GetPcEventWatcher
-{
-    static void Postfix(Panel_RewardCha __instance, Table_PC tablePc)
-    {
-        // よくわからないがPanel_RewardCha以外のインスタンスで呼ばれることがある
-        // その時にメンバを参照してしまうと落ちるのでスキップする
-        // 判定方法がこれでいいのかは謎
-
-        if (!__instance.ToString().Contains("Panel_RewardCha"))
-        {
-            return;
-        }
-
-        if (tablePc.ToString() == "System.Action")
-        {
-            return;
-        }
-
-        LAOPLUS.Log.LogInfo($"tablePc: {tablePc.ToString()}");
-        LAOPLUS.Log.LogInfo($"instance: {__instance.ToString()}");
-        LAOPLUS.Log.LogInfo($"GetPc: {tablePc.Name}");
-
-        var statsWindows = Resources.FindObjectsOfTypeAll<ConfigUI>();
-        var statsWindow = statsWindows.FirstOrDefault();
-        if (statsWindow == null)
-        {
-            LAOPLUS.Log.LogInfo("Not Found Sample");
-            return;
-        }
-
-        statsWindow.IncreaseBattleStats(tablePc);
     }
 }
