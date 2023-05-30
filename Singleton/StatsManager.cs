@@ -47,10 +47,10 @@ public class StatsManager
         DropCount++;
         ObtainPcList.Add(tablePc);
         ObtainPcLog.Add(
-            $"[{Util.GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
+            $"[{Util.StatsUtil.GradeToRank(tablePc.StartGrade)}] {dm.GetLocalization(tablePc.Name)}"
         );
 
-        var researchMultipliers = Util.GetDisassembleMultipliers();
+        var researchMultipliers = Util.StatsUtil.GetDisassembleMultipliers();
 
         var metal = 0;
         var nutrient = 0;

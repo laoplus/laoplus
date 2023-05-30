@@ -58,7 +58,7 @@ public class ConfigUI : MonoBehaviour
             new Vector3(this._guiScale, this._guiScale, 1)
         );
 
-        this._windowRect = Util.ClampToScreen(
+        this._windowRect = UiUtil.ClampToScreen(
             GUI.Window(
                 21,
                 this._windowRect,
@@ -111,23 +111,23 @@ public class ConfigUI : MonoBehaviour
     {
         var setResizeCursor = this._isResizing;
 
-        if (Util.IsCursorNearResizeGrip(this._windowRect))
+        if (UiUtil.IsCursorNearResizeGrip(this._windowRect))
         {
             setResizeCursor = true;
         }
 
-        if (!Util.IsCursorWithinGameScreen())
+        if (!UiUtil.IsCursorWithinGameScreen())
         {
             setResizeCursor = false;
         }
 
         // Update cursor
-        Util.SetCursor(setResizeCursor ? Util.CursorType.ResizeNs : Util.CursorType.Default);
+        UiUtil.SetCursor(setResizeCursor ? UiUtil.CursorType.ResizeNs : UiUtil.CursorType.Default);
 
         // Handle mouse events
         if (Event.current.type == EventType.MouseDown)
         {
-            if (Util.IsCursorNearResizeGrip(this._windowRect))
+            if (UiUtil.IsCursorNearResizeGrip(this._windowRect))
             {
                 this._isResizing = true;
             }
@@ -138,7 +138,7 @@ public class ConfigUI : MonoBehaviour
         }
         else if (Event.current.type == EventType.MouseDrag)
         {
-            if (!this._isResizing || !Util.IsCursorWithinGameScreen())
+            if (!this._isResizing || !UiUtil.IsCursorWithinGameScreen())
             {
                 return;
             }
@@ -158,7 +158,7 @@ public class ConfigUI : MonoBehaviour
     void ClosePostTreatment()
     {
         OnMouseExit();
-        Util.SetCursor(Util.CursorType.Default);
+        UiUtil.SetCursor(UiUtil.CursorType.Default);
     }
 
     void Update()
