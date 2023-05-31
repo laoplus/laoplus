@@ -11,7 +11,6 @@
         <PackageProjectUrl>https://github.com/laoplus/laoplus</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RestoreAdditionalProjectSources>
-            https://api.nuget.org/v3/index.json;
             https://nuget.bepinex.dev/v3/index.json;
             https://nuget.samboy.dev/v3/index.json
         </RestoreAdditionalProjectSources>

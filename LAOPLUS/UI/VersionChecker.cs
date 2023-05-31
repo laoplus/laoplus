@@ -28,7 +28,7 @@ namespace LAOPLUS.UI
             return (compareResult, latestVersion);
         }
 
-        static int CompareSemanticVersions(string version1, string version2)
+        public static int CompareSemanticVersions(string version1, string version2)
         {
             var semver1 = new SemanticVersioning.Version(version1);
             var semver2 = new SemanticVersioning.Version(version2);
