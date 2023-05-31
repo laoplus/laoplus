@@ -15,4 +15,7 @@ obj/
 
 .vs
 
+# NuGet
+packages/
+
 LAOPLUS.sln.DotSettings.user
