@@ -18,4 +18,6 @@ obj/
 # NuGet
 packages/
 
+Dist/
+
 LAOPLUS.sln.DotSettings.user
