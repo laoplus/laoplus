@@ -371,6 +371,7 @@ public class UI : MonoBehaviour
 
     void RenderConfig()
     {
+        GUILayout.Label("Config", CustomSkin.TitleLabel);
         var values = Plugin.Config.Values;
         foreach (var entry in values)
         {
@@ -403,17 +404,8 @@ public class UI : MonoBehaviour
                 $"Unity {BepInEx.Unity.Common.UnityInfo.Version}",
                 CustomSkin.CenteredLabel
             );
-            GUILayout.Label("");
-            GUILayout.Label(
-                $"UI Scale: {this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
-            );
-            GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
-            GUILayout.Label($"Current FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}");
-            GUILayout.Label($"Current Time: {DateTime.Now}");
-            GUILayout.Label($"Current Game Mode: {GameManager.Instance.GameMode}");
-            GUILayout.Label($"Current StageIndex: {GameManager.Instance.CurrentStageIndex}");
-            GUILayout.Label($"Current SquadIndex: {GameManager.Instance.CurrentSquadIndex}");
 
+            GUILayout.Label("Update", CustomSkin.SubtitleLabel);
             if (GUILayout.Button("Check for Updates"))
             {
                 try
@@ -433,6 +425,17 @@ public class UI : MonoBehaviour
                     CustomSkin.CenteredLabel
                 );
             }
+
+            GUILayout.Label("Debug", CustomSkin.SubtitleLabel);
+            GUILayout.Label(
+                $"UI Scale: {this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
+            );
+            GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
+            GUILayout.Label($"Current FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}");
+            GUILayout.Label($"Current Time: {DateTime.Now}");
+            GUILayout.Label($"Current Game Mode: {GameManager.Instance.GameMode}");
+            GUILayout.Label($"Current StageIndex: {GameManager.Instance.CurrentStageIndex}");
+            GUILayout.Label($"Current SquadIndex: {GameManager.Instance.CurrentSquadIndex}");
         }
         GUILayout.EndVertical();
     }
@@ -442,6 +445,7 @@ public class UI : MonoBehaviour
         var gm = SingleTon<GameManager>.Instance;
         var statsManager = StatsManager.Instance;
 
+        GUILayout.Label("Stats", CustomSkin.TitleLabel);
         GUILayout.BeginVertical();
         {
             if (GUILayout.Button("Reset Stats"))

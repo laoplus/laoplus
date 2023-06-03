@@ -21,6 +21,8 @@ public static class CustomSkin
 
     // Label
     public static GUIStyle CenteredLabel;
+    public static GUIStyle TitleLabel;
+    public static GUIStyle SubtitleLabel;
 
     // Primitive
     public static GUIStyle Button;
@@ -71,6 +73,7 @@ public static class CustomSkin
         CreateNavButton();
 
         // Label
+        CreateTitleLabels();
         CreateCenteredLabel();
 
         // Primitive
@@ -260,6 +263,28 @@ public static class CustomSkin
     #endregion
 
     #region Label
+
+    static void CreateTitleLabels()
+    {
+        // https://learn.microsoft.com/en-us/windows/apps/design/signature-experiences/typography#type-ramp
+        var baseStyle = new GUIStyle(GUI.skin.label)
+        {
+            alignment = TextAnchor.MiddleLeft,
+            normal = { textColor = SkinColor.Light_FillColor_Text_Primary },
+            font = GameFont,
+        };
+        TitleLabel = new GUIStyle(baseStyle)
+        {
+            name = nameof(TitleLabel),
+            fontSize = 28 * InternalRenderScale,
+        };
+        SubtitleLabel = new GUIStyle(baseStyle)
+        {
+            name = nameof(SubtitleLabel),
+            fontSize = 20 * InternalRenderScale,
+        };
+    }
+
     static void CreateCenteredLabel()
     {
         CenteredLabel = new GUIStyle(GUI.skin.label)
