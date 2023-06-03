@@ -32,7 +32,6 @@ public static class CustomSkin
     // ディスプレイ拡大率が200%: 最終的に1.0倍する
     public const int InternalRenderScale = 2;
 
-    // static readonly Font GameFont = ResourceManager.LoadFont("FontB_sc");
     static readonly Font GameFont;
 
     static AssetBundle LoadAssetBundle(string bundlePath)
