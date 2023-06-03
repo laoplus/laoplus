@@ -21,7 +21,6 @@ public class UI : MonoBehaviour
     float _guiScale = 0.5f;
     bool _showWindow = true;
     bool _enableDvdMode;
-    Vector2 _dvdMovingDirection = Vector2.one;
     const KeyCode ToggleKey = KeyCode.F1;
     Vector2 _scrollPosNavArea;
     Vector2 _scrollPosContentArea;
@@ -211,34 +210,35 @@ public class UI : MonoBehaviour
     // moving rect like a bouncing dvd logo
     void Dvd()
     {
+        var dvdMovingDirection = Vector2.one;
         var screenSizeMultiplier = 1 / this._guiScale;
         var screenWidth = Screen.width * screenSizeMultiplier;
         var screenHeight = Screen.height * screenSizeMultiplier;
 
         var rect = this._windowRect;
-        rect.x += this._dvdMovingDirection.x;
-        rect.y += this._dvdMovingDirection.y;
+        rect.x += dvdMovingDirection.x;
+        rect.y += dvdMovingDirection.y;
 
         if (rect.x < 0)
         {
             rect.x = 0;
-            this._dvdMovingDirection.x *= -1;
+            dvdMovingDirection.x *= -1;
         }
         else if (rect.x + rect.width > screenWidth)
         {
             rect.x = screenWidth - rect.width;
-            this._dvdMovingDirection.x *= -1;
+            dvdMovingDirection.x *= -1;
         }
 
         if (rect.y < 0)
         {
             rect.y = 0;
-            this._dvdMovingDirection.y *= -1;
+            dvdMovingDirection.y *= -1;
         }
         else if (rect.y + rect.height > screenHeight)
         {
             rect.y = screenHeight - rect.height;
-            this._dvdMovingDirection.y *= -1;
+            dvdMovingDirection.y *= -1;
         }
 
         this._windowRect = rect;
