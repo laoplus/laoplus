@@ -347,6 +347,7 @@ public class UI : MonoBehaviour
         GUILayout.EndScrollView();
 
         // content
+        GUILayout.BeginVertical(CustomSkin.ContentBox);
         this._scrollPosContentArea = GUILayout.BeginScrollView(this._scrollPosContentArea);
         {
             switch (this._selectedNav)
@@ -363,6 +364,7 @@ public class UI : MonoBehaviour
             }
         }
         GUILayout.EndScrollView();
+        GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
     }
