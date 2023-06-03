@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace LAOPLUS.UI
 {
@@ -9,14 +12,23 @@ namespace LAOPLUS.UI
 
     public static class VersionChecker
     {
-        public static (int, string) IsLatestVersion()
+        public static IEnumerator IsLatestVersionCoroutine(Action<(int, string)> callback)
         {
             const string owner = "laoplus";
             const string repo = "laoplus";
             const string latestReleaseEndpointUrl =
                 $@"https://api.github.com/repos/{owner}/{repo}/releases/latest";
-            var response = LAOPLUS.HttpClient.GetAsync(latestReleaseEndpointUrl).Result;
-            var responseContent = response.Content.ReadAsStringAsync().Result;
+
+            var fetchTask = GetAsync(latestReleaseEndpointUrl);
+
+            // Wait for the task to complete
+            while (!fetchTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            var responseContent = fetchTask.Result;
+
             LAOPLUS.Log.LogDebug($"JSON: {responseContent}");
             var release = JsonSerializer.Deserialize<GithubRelease>(responseContent);
 
@@ -25,7 +37,14 @@ namespace LAOPLUS.UI
             LAOPLUS.Log.LogInfo($"Current Ver: {currentVersion}, Latest Ver: {release.name}");
             var compareResult = CompareSemanticVersions(currentVersion, latestVersion);
 
-            return (compareResult, latestVersion);
+            callback((compareResult, latestVersion));
+        }
+
+        async static Task<string> GetAsync(string uri)
+        {
+            var httpClient = LAOPLUS.HttpClient;
+            var response = await httpClient.GetAsync(uri);
+            return await response.Content.ReadAsStringAsync();
         }
 
         public static int CompareSemanticVersions(string version1, string version2)

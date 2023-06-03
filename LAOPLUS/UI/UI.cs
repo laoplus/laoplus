@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BepInEx.Unity.IL2CPP;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using LAOPLUS.Singleton;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -54,10 +55,16 @@ public class UI : MonoBehaviour
 
     string _latestVersion;
     int? _versionCheckResult;
+    string _versionCheckMessage;
 
     GUIStyle GetNavButtonStyle(Navigation nav)
     {
         return nav == this._selectedNav ? CustomSkin.NavButtonSelected : CustomSkin.NavButton;
+    }
+
+    void Start()
+    {
+        CallVersionCheckCoroutine();
     }
 
     void OnGUI()
@@ -74,13 +81,11 @@ public class UI : MonoBehaviour
             new Vector3(this._guiScale, this._guiScale, 1)
         );
 
+        var windowTitle =
+            $"{MyPluginInfo.PLUGIN_NAME} {MyPluginInfo.PLUGIN_VERSION} {(this._versionCheckResult == -1 ? "[⚠️NEW VERSION AVAILABLE!]" : "")}";
+
         this._windowRect = UiUtil.ClampToScreen(
-            GUI.Window(
-                21,
-                this._windowRect,
-                (GUI.WindowFunction)WindowFunc,
-                $"{MyPluginInfo.PLUGIN_NAME} {MyPluginInfo.PLUGIN_VERSION} ({this._guiScale}x) ({this._windowRect.width}x{this._windowRect.height})"
-            ),
+            GUI.Window(21, this._windowRect, (GUI.WindowFunction)WindowFunc, windowTitle),
             this._guiScale
         );
 
@@ -256,6 +261,34 @@ public class UI : MonoBehaviour
         }
     }
 
+    void CallVersionCheckCoroutine()
+    {
+        this._versionCheckResult = null;
+        this._latestVersion = null;
+        this._versionCheckMessage = "Checking for updates...";
+
+        var coroutine = VersionChecker.IsLatestVersionCoroutine(
+            (result) =>
+            {
+                this._versionCheckResult = result.Item1;
+                this._latestVersion = result.Item2;
+
+                this._versionCheckMessage = this._versionCheckResult switch
+                {
+                    -1 => $"New Version Available!: v{this._latestVersion}",
+                    0 => "You are using the latest version!",
+                    _
+                        => string.Join(
+                            "\n",
+                            "Futures made of virtual insanity NOW!",
+                            "(You are using a newer version than the latest release)"
+                        )
+                };
+            }
+        );
+        StartCoroutine(coroutine.WrapToIl2Cpp());
+    }
+
     void WindowFunc(int windowID)
     {
         const int s = CustomSkin.InternalRenderScale;
@@ -377,9 +410,7 @@ public class UI : MonoBehaviour
             {
                 try
                 {
-                    var result = VersionChecker.IsLatestVersion();
-                    this._versionCheckResult = result.Item1;
-                    this._latestVersion = result.Item2;
+                    CallVersionCheckCoroutine();
                 }
                 catch (Exception e)
                 {
@@ -388,15 +419,7 @@ public class UI : MonoBehaviour
             }
             if (this._versionCheckResult != null)
             {
-                GUILayout.Label(
-                    this._versionCheckResult switch
-                    {
-                        -1 => $"Update Available!: v{this._latestVersion}",
-                        0 => "You are using the latest version!",
-                        _ => "Futures made of virtual insanity NOW!"
-                    },
-                    CustomSkin.CenteredLabel
-                );
+                GUILayout.Label($"{this._versionCheckMessage}", CustomSkin.CenteredLabel);
                 GUILayout.Label(
                     $"Current Version: {MyPluginInfo.PLUGIN_VERSION} | Latest Version: {this._latestVersion}",
                     CustomSkin.CenteredLabel
