@@ -387,7 +387,13 @@ public class UI : MonoBehaviour
     {
         GUILayout.BeginVertical();
         {
-            if (GUILayout.Button(SkinTex.BrandingHeader))
+            if (
+                GUILayout.Button(
+                    SkinTex.BrandingHeader,
+                    new GUIStyle { alignment = TextAnchor.MiddleCenter },
+                    GUILayout.MinWidth(0)
+                )
+            )
             {
                 Application.OpenURL("https://github.com/laoplus/laoplus");
             }
