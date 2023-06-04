@@ -26,11 +26,14 @@ public class UI : MonoBehaviour
     Vector2 _scrollPosContentArea;
 
     // 各コンテンツエリアで使い回すスクロールポジション
+    // ReSharper disable NotAccessedField.Local
     Vector2 _scrollPosContent1;
     Vector2 _scrollPosContent2;
     Vector2 _scrollPosContent3;
     Vector2 _scrollPosContent4;
     Vector2 _scrollPosContent5;
+
+    // ReSharper restore NotAccessedField.Local
 
     void ResetScrollPos()
     {
@@ -55,6 +58,12 @@ public class UI : MonoBehaviour
     string _latestVersion;
     int? _versionCheckResult;
     string _versionCheckMessage;
+
+    void SetNav(Navigation nav)
+    {
+        this._selectedNav = nav;
+        ResetScrollPos();
+    }
 
     GUIStyle GetNavButtonStyle(Navigation nav)
     {
@@ -333,15 +342,15 @@ public class UI : MonoBehaviour
         {
             if (GUILayout.Button("Config", GetNavButtonStyle(Navigation.Config)))
             {
-                this._selectedNav = Navigation.Config;
+                SetNav(Navigation.Config);
             }
             if (GUILayout.Button("About", GetNavButtonStyle(Navigation.About)))
             {
-                this._selectedNav = Navigation.About;
+                SetNav(Navigation.About);
             }
             if (GUILayout.Button("Stats", GetNavButtonStyle(Navigation.Stats)))
             {
-                this._selectedNav = Navigation.Stats;
+                SetNav(Navigation.Stats);
             }
         }
         GUILayout.EndScrollView();
