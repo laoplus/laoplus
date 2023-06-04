@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Unity.IL2CPP;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using LAOPLUS.Singleton;
@@ -10,6 +11,62 @@ namespace LAOPLUS.UI;
 
 public class UI : MonoBehaviour
 {
+    class NavManager
+    {
+        public enum Navigation
+        {
+            Config,
+            About,
+            Stats
+        }
+
+        Navigation _nav;
+
+        readonly Dictionary<string, Vector2> _scrollPositions = new();
+
+        // すべてのスクロール位置をリセットする
+        void ResetScrollPos()
+        {
+            var keys = new List<string>(this._scrollPositions.Keys);
+            foreach (var key in keys)
+            {
+                this._scrollPositions[key] = Vector2.zero;
+            }
+        }
+
+        public Vector2 GetScrollPos(string id)
+        {
+            if (!this._scrollPositions.TryGetValue(id, out var scrollPos))
+            {
+                scrollPos = Vector2.zero;
+                this._scrollPositions[id] = scrollPos;
+            }
+            return this._scrollPositions[id];
+        }
+
+        public void SetScrollPos(string id, Vector2 value)
+        {
+            this._scrollPositions[id] = value;
+        }
+
+        public Navigation Nav
+        {
+            get => this._nav;
+            set
+            {
+                this._nav = value;
+                ResetScrollPos();
+            }
+        }
+
+        public GUIStyle GetNavButtonStyle(Navigation nav)
+        {
+            return nav == this._nav ? CustomSkin.NavButtonSelected : CustomSkin.NavButton;
+        }
+    }
+
+    readonly NavManager _navManager = new();
+
     public BasePlugin Plugin { get; set; }
 
     const int InitialWindowWidth = 500;
@@ -22,53 +79,12 @@ public class UI : MonoBehaviour
     bool _showWindow = true;
     bool _enableDvdMode;
     const KeyCode ToggleKey = KeyCode.F1;
-    Vector2 _scrollPosNavArea;
-    Vector2 _scrollPosContentArea;
-
-    // 各コンテンツエリアで使い回すスクロールポジション
-    // ReSharper disable NotAccessedField.Local
-    Vector2 _scrollPosContent1;
-    Vector2 _scrollPosContent2;
-    Vector2 _scrollPosContent3;
-    Vector2 _scrollPosContent4;
-    Vector2 _scrollPosContent5;
-
-    // ReSharper restore NotAccessedField.Local
-
-    void ResetScrollPos()
-    {
-        this._scrollPosContent1 = Vector2.zero;
-        this._scrollPosContent2 = Vector2.zero;
-        this._scrollPosContent3 = Vector2.zero;
-        this._scrollPosContent4 = Vector2.zero;
-        this._scrollPosContent5 = Vector2.zero;
-    }
 
     bool _isResizing;
-
-    enum Navigation
-    {
-        Config,
-        About,
-        Stats
-    }
-
-    Navigation _selectedNav = Navigation.Config;
 
     string _latestVersion;
     int? _versionCheckResult;
     string _versionCheckMessage;
-
-    void SetNav(Navigation nav)
-    {
-        this._selectedNav = nav;
-        ResetScrollPos();
-    }
-
-    GUIStyle GetNavButtonStyle(Navigation nav)
-    {
-        return nav == this._selectedNav ? CustomSkin.NavButtonSelected : CustomSkin.NavButton;
-    }
 
     void Start()
     {
@@ -333,41 +349,61 @@ public class UI : MonoBehaviour
 
         GUILayout.BeginHorizontal(CustomSkin.MainBox);
 
-        // navigation
-        this._scrollPosNavArea = GUILayout.BeginScrollView(
-            this._scrollPosNavArea,
-            GUILayout.MinWidth(220 * s),
-            GUILayout.MaxWidth(220 * s)
+        this._navManager.SetScrollPos(
+            "_nav",
+            GUILayout.BeginScrollView(
+                this._navManager.GetScrollPos("_nav"),
+                GUILayout.MinWidth(220 * s),
+                GUILayout.MaxWidth(220 * s)
+            )
         );
         {
-            if (GUILayout.Button("Config", GetNavButtonStyle(Navigation.Config)))
+            if (
+                GUILayout.Button(
+                    "Config",
+                    this._navManager.GetNavButtonStyle(NavManager.Navigation.Config)
+                )
+            )
             {
-                SetNav(Navigation.Config);
+                this._navManager.Nav = NavManager.Navigation.Config;
             }
-            if (GUILayout.Button("About", GetNavButtonStyle(Navigation.About)))
+            if (
+                GUILayout.Button(
+                    "About",
+                    this._navManager.GetNavButtonStyle(NavManager.Navigation.About)
+                )
+            )
             {
-                SetNav(Navigation.About);
+                this._navManager.Nav = NavManager.Navigation.About;
             }
-            if (GUILayout.Button("Stats", GetNavButtonStyle(Navigation.Stats)))
+            if (
+                GUILayout.Button(
+                    "Stats",
+                    this._navManager.GetNavButtonStyle(NavManager.Navigation.Stats)
+                )
+            )
             {
-                SetNav(Navigation.Stats);
+                this._navManager.Nav = NavManager.Navigation.Stats;
             }
         }
         GUILayout.EndScrollView();
 
         // content
         GUILayout.BeginVertical(CustomSkin.ContentBox);
-        this._scrollPosContentArea = GUILayout.BeginScrollView(this._scrollPosContentArea);
+        this._navManager.SetScrollPos(
+            "_content",
+            GUILayout.BeginScrollView(this._navManager.GetScrollPos("_content"))
+        );
         {
-            switch (this._selectedNav)
+            switch (this._navManager.Nav)
             {
-                case Navigation.Config:
+                case NavManager.Navigation.Config:
                     RenderConfig();
                     break;
-                case Navigation.About:
+                case NavManager.Navigation.About:
                     RenderAbout();
                     break;
-                case Navigation.Stats:
+                case NavManager.Navigation.Stats:
                     RenderStats();
                     break;
             }
@@ -382,14 +418,15 @@ public class UI : MonoBehaviour
     {
         GUILayout.Label("Config", CustomSkin.TitleLabel);
         var values = Plugin.Config.Values;
-        foreach (var entry in values)
+        var groupedEntries = values.GroupBy(entry => entry.Definition.Section);
+        foreach (var group in groupedEntries)
         {
-            GUILayout.BeginHorizontal();
+            GUILayout.Label(group.Key, CustomSkin.SubtitleLabel);
+            foreach (var entry in group)
             {
-                GUILayout.Label($@"[{entry.Definition.Section}] {entry.Definition.Key}");
-                GUILayout.Label(entry.BoxedValue.ToString());
+                GUILayout.Label($"{entry.Definition.Key}");
+                GUILayout.Label($"- {entry.BoxedValue.ToString()}");
             }
-            GUILayout.EndHorizontal();
         }
     }
 
@@ -474,9 +511,13 @@ public class UI : MonoBehaviour
             GUILayout.Label($"Special Module: {statsManager.SpecialModule}");
 
             GUILayout.Label("Unit Acquired History:");
-            this._scrollPosContent1 = GUILayout.BeginScrollView(
-                this._scrollPosContent1,
-                GUILayout.MaxHeight(100)
+
+            this._navManager.SetScrollPos(
+                "Unit Acquired History",
+                GUILayout.BeginScrollView(
+                    this._navManager.GetScrollPos("Unit Acquired History"),
+                    GUILayout.MaxHeight(100)
+                )
             );
             {
                 // 新しい順に表示したいので逆順にする
