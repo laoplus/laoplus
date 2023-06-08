@@ -362,6 +362,7 @@ public class UI : MonoBehaviour
 
     void RenderConfig()
     {
+        GUILayout.BeginVertical();
         GUILayout.Label("Config", CustomSkin.TitleLabel);
         var values = Plugin.Config.Values;
         var groupedEntries = values.GroupBy(entry => entry.Definition.Section);
@@ -370,10 +371,43 @@ public class UI : MonoBehaviour
             GUILayout.Label(group.Key, CustomSkin.SubtitleLabel);
             foreach (var entry in group)
             {
-                GUILayout.Label($"{entry.Definition.Key}");
-                GUILayout.Label($"- {entry.BoxedValue.ToString()}");
+                GUILayout.Label($"{entry.Definition.Key.Replace(" / ", "\n")}");
+                switch (entry.BoxedValue)
+                {
+                    case bool value:
+                    {
+                        if (GUILayout.Button(value ? "True" : "False"))
+                        {
+                            entry.BoxedValue = !value;
+                        }
+
+                        break;
+                    }
+                    case string value:
+                    {
+                        GUILayout.Label(value);
+                        GUILayout.BeginHorizontal();
+
+                        if (GUILayout.Button("Copy"))
+                        {
+                            GUIUtility.systemCopyBuffer = value;
+                        }
+                        if (GUILayout.Button("Paste"))
+                        {
+                            entry.BoxedValue = GUIUtility.systemCopyBuffer;
+                        }
+
+                        GUILayout.EndHorizontal();
+
+                        break;
+                    }
+                    default:
+                        GUILayout.Label($"{entry.BoxedValue.GetType()}: {entry.BoxedValue}");
+                        break;
+                }
             }
         }
+        GUILayout.EndVertical();
     }
 
     void RenderAbout()
