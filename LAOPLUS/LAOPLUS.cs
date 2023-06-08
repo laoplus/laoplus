@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Reflection;
 using Il2CppInterop.Runtime.Injection;
 using LAOPLUS.Notification;
-using LAOPLUS.UI;
 using UnityEngine;
 
 namespace LAOPLUS
