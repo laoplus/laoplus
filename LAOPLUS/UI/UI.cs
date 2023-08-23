@@ -458,16 +458,16 @@ public class UI : MonoBehaviour
                 );
             }
 
-            GUILayout.Label("Debug", CustomSkin.SubtitleLabel);
-            GUILayout.Label(
-                $"UI Scale: {this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
-            );
-            GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
-            GUILayout.Label($"Current FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}");
-            GUILayout.Label($"Current Time: {DateTime.Now}");
-            GUILayout.Label($"Current Game Mode: {GameManager.Instance.GameMode}");
-            GUILayout.Label($"Current StageIndex: {GameManager.Instance.CurrentStageIndex}");
-            GUILayout.Label($"Current SquadIndex: {GameManager.Instance.CurrentSquadIndex}");
+            // GUILayout.Label("Debug", CustomSkin.SubtitleLabel);
+            // GUILayout.Label(
+            //     $"UI Scale: {this._guiScale}x ({this._windowRect.width}x{this._windowRect.height})"
+            // );
+            // GUILayout.Label($"Current Scene: {SceneManager.GetActiveScene().name}");
+            // GUILayout.Label($"Current FPS: {Mathf.RoundToInt(1 / Time.deltaTime)}");
+            // GUILayout.Label($"Current Time: {DateTime.Now}");
+            // GUILayout.Label($"Current Game Mode: {GameManager.Instance.GameMode}");
+            // GUILayout.Label($"Current StageIndex: {GameManager.Instance.CurrentStageIndex}");
+            // GUILayout.Label($"Current SquadIndex: {GameManager.Instance.CurrentSquadIndex}");
         }
         GUILayout.EndVertical();
     }
