@@ -163,6 +163,12 @@ public class UI : MonoBehaviour
             }
         }
 
+        // これ以降はウィンドウが表示されていないときは何もしない
+        if (!this._showWindow)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Minus))
         {
             this._guiScale = Mathf.Max(0.5f, this._guiScale - 0.25f);
