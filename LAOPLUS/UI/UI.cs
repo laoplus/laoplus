@@ -366,6 +366,11 @@ public class UI : MonoBehaviour
         GUILayout.EndHorizontal();
     }
 
+    private float RoundToNearestTenth(float value)
+    {
+        return (float)Math.Round(value, 1);
+    }
+
     void RenderConfig()
     {
         GUILayout.BeginVertical();
@@ -382,7 +387,7 @@ public class UI : MonoBehaviour
                 {
                     case bool value:
                     {
-                        if (GUILayout.Button(value ? "True" : "False"))
+                        if (GUILayout.Button(value ? "On / オン" : "Off / オフ"))
                         {
                             entry.BoxedValue = !value;
                         }
@@ -391,18 +396,64 @@ public class UI : MonoBehaviour
                     }
                     case string value:
                     {
-                        GUILayout.Label(value);
+                        if (value == "")
+                        {
+                            GUILayout.Label("No value is set. / なにも値が設定されていません");
+                        }
+                        else
+                        {
+                            GUILayout.Label(value);
+                        }
                         GUILayout.BeginHorizontal();
-
-                        if (GUILayout.Button("Copy"))
+                        if (GUILayout.Button("Copy / コピー"))
                         {
                             GUIUtility.systemCopyBuffer = value;
                         }
-                        if (GUILayout.Button("Paste"))
+                        if (GUILayout.Button("Paste / 貼り付け"))
                         {
                             entry.BoxedValue = GUIUtility.systemCopyBuffer;
                         }
 
+                        GUILayout.EndHorizontal();
+
+                        break;
+                    }
+                    case float value:
+                    {
+                        GUILayout.Label(value.ToString());
+                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("-1"))
+                        {
+                            entry.BoxedValue = RoundToNearestTenth(value - 1);
+                        }
+                        if (GUILayout.Button("-0.1"))
+                        {
+                            entry.BoxedValue = RoundToNearestTenth(value - 0.1f);
+                        }
+                        if (GUILayout.Button("+0.1"))
+                        {
+                            entry.BoxedValue = RoundToNearestTenth(value + 0.1f);
+                        }
+                        if (GUILayout.Button("+1"))
+                        {
+                            entry.BoxedValue = RoundToNearestTenth(value + 1);
+                        }
+                        GUILayout.EndHorizontal();
+
+                        break;
+                    }
+                    case int value:
+                    {
+                        GUILayout.Label(value.ToString());
+                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("-1"))
+                        {
+                            entry.BoxedValue = value - 1;
+                        }
+                        if (GUILayout.Button("+1"))
+                        {
+                            entry.BoxedValue = value + 1;
+                        }
                         GUILayout.EndHorizontal();
 
                         break;
@@ -484,6 +535,8 @@ public class UI : MonoBehaviour
             {
                 statsManager.ResetStats();
             }
+            GUILayout.Space(12f);
+            GUILayout.Label($"この機能はまだ正しく実装されていません。", CustomSkin.TitleLabel);
             GUILayout.Space(12f);
             GUILayout.Label($"Battle Repeat Count: {gm.BattleRepeatCount}");
             GUILayout.Label($"Total Drop Count: {statsManager.DropCount}");
