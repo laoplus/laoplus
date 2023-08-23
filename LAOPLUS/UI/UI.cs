@@ -172,10 +172,10 @@ public class UI : MonoBehaviour
             this._guiScale = Mathf.Min(1, this._guiScale + 0.25f);
         }
 
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            this._enableDvdMode = !this._enableDvdMode;
-        }
+        // if (Input.GetKeyDown(KeyCode.F3))
+        // {
+        //     this._enableDvdMode = !this._enableDvdMode;
+        // }
     }
 
     // moving rect like a bouncing dvd logo
