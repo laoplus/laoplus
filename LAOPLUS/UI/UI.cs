@@ -483,10 +483,12 @@ public class UI : MonoBehaviour
             }
             GUILayout.Label($"ver {MyPluginInfo.PLUGIN_VERSION}", CustomSkin.CenteredLabel);
             GUILayout.Label($"by Eai and LAOPLUS Contributors", CustomSkin.CenteredLabel);
-            GUILayout.Label(
-                $"Unity {BepInEx.Unity.Common.UnityInfo.Version}",
-                CustomSkin.CenteredLabel
-            );
+            // System.MissingMethodException: Method not found: 'AssetRipper.Primitives.UnityVersion BepInEx.Unity.Common.UnityInfo.get_Version()'.
+            // が発生するのでコメントアウト
+            // GUILayout.Label(
+            //     $"Unity {BepInEx.Unity.Common.UnityInfo.Version}",
+            //     CustomSkin.CenteredLabel
+            // );
 
             GUILayout.Label("Update", CustomSkin.SubtitleLabel);
             if (GUILayout.Button("Check for Updates"))
