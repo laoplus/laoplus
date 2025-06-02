@@ -2,9 +2,9 @@
 
 ## 必要なもの
 
--   git, .NET, Unity などの知識
--   .NET 6.0 SDK
-    -   https://dotnet.microsoft.com/download/dotnet/6.0
+- git, .NET, Unity などの知識
+- .NET 6.0 SDK
+    - https://dotnet.microsoft.com/download/dotnet/6.0
 
 ## LAOPLUS のビルド
 
