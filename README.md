@@ -151,7 +151,7 @@ https://user-images.githubusercontent.com/3516343/176680128-269b23a7-0f97-44ac-b
 
 ![](https://user-images.githubusercontent.com/3516343/173232374-95b1b5c5-267f-4abe-8d1a-5d4bf236ae43.png)
 
-AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
+ゲーム中に<kbd>F1</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
 
 **設定項目の変更後は上の`Save Preferences`を押して保存することを忘れないでください。**
 
@@ -205,8 +205,6 @@ LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちら�
 > AIO.zip はこれだけで導入が完了できるように
 >
 > - [最新の BepinEx の Bleeding Edge ビルド](https://builds.bepinex.dev/projects/bepinex_be)
-> - [BepInExConfigManager](https://github.com/sinai-dev/BepInExConfigManager)
-> - [UniverseLib](https://github.com/sinai-dev/UniverseLib)
 > - LAOPLUS
 >
 > が含まれています。
