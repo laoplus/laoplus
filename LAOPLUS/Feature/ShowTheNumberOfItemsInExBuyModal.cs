@@ -3,6 +3,7 @@ using HarmonyLib;
 namespace LAOPLUS.Feature
 {
     [HarmonyPatch(typeof(Panel_ExShopBuyMsg), nameof(Panel_ExShopBuyMsg.SetExShopData))]
+    [HarmonyPatch(new[] { typeof(Table_ExShop), typeof(Panel_ExShop) })]
     public class ShowTheNumberOfItemsInExBuyModal
     {
         static void SetLabel(UILabel label, int amount)
