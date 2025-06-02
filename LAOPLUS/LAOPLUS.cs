@@ -7,6 +7,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
+using Il2CppInterop.Runtime.Injection;
 using LAOPLUS.Notification;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace LAOPLUS
     public class LAOPLUS : BasePlugin
     {
         internal new static ManualLogSource Log;
-        static readonly HttpClient HttpClient = new();
+        public static readonly HttpClient HttpClient = new();
 
         const string ConfigDiscordLabel = "Discord";
         public static ConfigEntry<string> ConfigDiscordWebhookUrl;
@@ -274,6 +275,13 @@ namespace LAOPLUS
 
             InitNotificationClients();
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+
+            ClassInjector.RegisterTypeInIl2Cpp<UI.UI>();
+            var configWindowGo = new GameObject("LAOPLUS-ConfigWindow");
+            UnityEngine.Object.DontDestroyOnLoad(configWindowGo);
+            configWindowGo.hideFlags |= HideFlags.HideAndDontSave;
+            var configUi = configWindowGo.AddComponent<UI.UI>();
+            configUi.Plugin = this;
         }
     }
 }

@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 6.0.x
 
@@ -19,10 +19,17 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore --configuration Release ${{ github.workspace }}/LAOPLUS/LAOPLUS.csproj
+
+      - name: Prepare artifact
+        run: |
+          cd ${{ github.workspace }}
+          mkdir Dist
+          cp -r Assets/ Dist/
+          cp LAOPLUS/bin/Release/net6.0/net.laoplus.LAOPLUS.dll Dist/
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          path: /home/runner/work/laoplus/laoplus/bin/Debug/net6.0/net.laoplus.LAOPLUS.dll
+          path: ${{ github.workspace }}/Dist/
           if-no-files-found: error

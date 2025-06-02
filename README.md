@@ -13,8 +13,8 @@
 
 0.x, 1.x は過去にリリースされていたブラウザ版向けの userscript でした。5 月 24 日のブラウザ版のサービス終了と DMM GAME PLAYER 版への移行に伴い、LAOPLUS も移行されました。
 
--   [1.x のソースコード](https://github.com/eai04191/laoplus/tree/b55df450060082db4c42fdcffcd327b009bc154a)
--   [最終ビルド](https://github.com/eai04191/laoplus/tree/7c676e887ec491e8811c786c90ef7bad75e796db)
+- [1.x のソースコード](https://github.com/eai04191/laoplus/tree/b55df450060082db4c42fdcffcd327b009bc154a)
+- [最終ビルド](https://github.com/eai04191/laoplus/tree/7c676e887ec491e8811c786c90ef7bad75e796db)
 
 ---
 
@@ -149,11 +149,9 @@ https://user-images.githubusercontent.com/3516343/176680128-269b23a7-0f97-44ac-b
 
 ## 設定
 
-![](https://user-images.githubusercontent.com/3516343/173232374-95b1b5c5-267f-4abe-8d1a-5d4bf236ae43.png)
+![](./docs/images/laoplus-ui.png)
 
-AIO を導入している場合、ゲーム中に<kbd>F5</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
-
-**設定項目の変更後は上の`Save Preferences`を押して保存することを忘れないでください。**
+ゲーム中に<kbd>F1</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
 
 > **Note**
 >
@@ -204,10 +202,8 @@ LAOPLUS は「ラストオリジン」「ラストオリジン R」のどちら�
 >
 > AIO.zip はこれだけで導入が完了できるように
 >
-> -   [最新の BepinEx の Bleeding Edge ビルド](https://builds.bepinex.dev/projects/bepinex_be)
-> -   [BepInExConfigManager](https://github.com/sinai-dev/BepInExConfigManager)
-> -   [UniverseLib](https://github.com/sinai-dev/UniverseLib)
-> -   LAOPLUS
+> - [最新の BepinEx の Bleeding Edge ビルド](https://builds.bepinex.dev/projects/bepinex_be)
+> - LAOPLUS
 >
 > が含まれています。
 >
@@ -242,10 +238,10 @@ LastOrigin のインストールフォルダにある `winhttp.dll` を、デス
 
 LastOrigin のインストールフォルダにある
 
--   winhttp.dll
--   doorstop_config.ini
--   mono フォルダ
--   BepInEx フォルダ
+- winhttp.dll
+- doorstop_config.ini
+- mono フォルダ
+- BepInEx フォルダ
 
 を削除してください。
 
@@ -258,9 +254,9 @@ LastOrigin のインストールフォルダにある
 <details>
 <summary><b>Android版でも使えますか</b></summary>
 
--   無理です
--   Android 版ゲームに BepinEx のようなゲームパッチャーを導入できれば使えるかもしれません
--   できそうな知見があればご連絡ください
+- 無理です
+- Android 版ゲームに BepinEx のようなゲームパッチャーを導入できれば使えるかもしれません
+- できそうな知見があればご連絡ください
 
 ---
 
@@ -269,8 +265,8 @@ LastOrigin のインストールフォルダにある
 <details>
 <summary><b>LAOPLUS を使うとBANされますか</b></summary>
 
--   少なくとも[私](https://github.com/eai04191)はされていません
--   私が BAN されたくないので BAN されるような機能を実装するつもりもありません
+- 少なくとも[私](https://github.com/eai04191)はされていません
+- 私が BAN されたくないので BAN されるような機能を実装するつもりもありません
 
 ---
 
@@ -292,7 +288,7 @@ https://pig.games/ja/terms.html
 <details>
 <summary><b>使い方がわからない・エラーが出る・その他聞きたいことがある</b></summary>
 
--   [Discord](https://discord.gg/EGWqTuhjrE) か [作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
+- [Discord](https://discord.gg/EGWqTuhjrE) か [作者 Twitter](https://twitter.com/eai04191) の DM で聞いてください
 
 ---
 
@@ -301,7 +297,7 @@ https://pig.games/ja/terms.html
 <details>
 <summary><b>ヘッチュンヘプチュ。ヘッチュチュンヘッチュ。ムチチムチ?</b></summary>
 
--   しらん
+- しらん
 
 ---
 
