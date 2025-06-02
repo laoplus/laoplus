@@ -149,11 +149,9 @@ https://user-images.githubusercontent.com/3516343/176680128-269b23a7-0f97-44ac-b
 
 ## 設定
 
-![](https://user-images.githubusercontent.com/3516343/173232374-95b1b5c5-267f-4abe-8d1a-5d4bf236ae43.png)
+![](./docs/images/laoplus-ui.png)
 
 ゲーム中に<kbd>F1</kbd>キーで設定が開き、LAOPLUS の各種設定を行えます。
-
-**設定項目の変更後は上の`Save Preferences`を押して保存することを忘れないでください。**
 
 > **Note**
 >
