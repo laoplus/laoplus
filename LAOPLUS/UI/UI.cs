@@ -328,15 +328,15 @@ public class UI : MonoBehaviour
             {
                 this._navManager.Nav = NavManager.Navigation.About;
             }
-            if (
-                GUILayout.Button(
-                    "Stats",
-                    this._navManager.GetNavButtonStyle(NavManager.Navigation.Stats)
-                )
-            )
-            {
-                this._navManager.Nav = NavManager.Navigation.Stats;
-            }
+            // if (
+            //     GUILayout.Button(
+            //         "Stats",
+            //         this._navManager.GetNavButtonStyle(NavManager.Navigation.Stats)
+            //     )
+            // )
+            // {
+            //     this._navManager.Nav = NavManager.Navigation.Stats;
+            // }
         }
         GUILayout.EndScrollView();
 
